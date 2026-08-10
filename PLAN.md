@@ -1,308 +1,407 @@
 # Plan: A fully-random-character DCSS bot that gets as far as possible
 
-**Goal.** Build a system that (1) launches Dungeon Crawl Stone Soup, (2) rolls a
-*completely random* character (any legal species × background × weapon), and
+**Revision 2.** This version incorporates the author self-review
+(`review/SELF_REVIEW.md`) and the independent review + synthesis
+(`review/INDEPENDENT_REVIEW.md`, `review/REVIEW_SYNTHESIS.md`), applying the
+synthesis's consolidated 12-item edit list. Major changes from v1: an explicit
+randomness contract; a resolved version-targeting decision; a source-backed
+telemetry design (local console builds do **not** write the `milestones` file
+by default); an outcome-vector metric replacing the linear milestone ladder;
+a real experiment protocol; a runner state machine with run accounting; an
+enforceable fairness contract; and acceptance-test phase exits.
+
+**Goal.** Build a system that (1) launches Dungeon Crawl Stone Soup, (2) rolls
+a random character under a precisely defined distribution (see §2), and
 (3) plays that character autonomously as deep into the game as it can get,
 over and over, with measurable progress.
-
-This document is a reviewed-before-building plan: what exists today, the
-implementation options, a concrete recommendation, and a phased roadmap.
 
 ---
 
 ## 1. Success criteria
 
-"As far as possible" needs a metric, because wins will be rare with random
-characters (many random combos are objectively bad, and even the best bot ever
-written has a low win rate). Proposed primary metrics, in order:
+"As far as possible" needs a metric, and wins will be rare: random characters
+include many objectively weak combos, and even the best existing bot has a low
+win rate with hand-picked ones. v1's single "milestone ladder" was a route,
+not a measurement — Temple is optional, Orc/Lair order varies, branch choice
+varies — so progress is recorded as an **outcome vector of independent
+monotone indicators** per game:
 
-1. **Milestone ladder** per game: D:1 → Temple → Lair → Orc → first Lair
-   branch → first rune → Vaults → Depths → second/third rune → Zot → Orb →
-   win. Zot entry requires 3 runes, so runes are the natural "distance" unit.
-2. **Score** (crawl's own score formula: XP-weighted, +10k per rune plus a
-   quadratic rune bonus, +250k for a win) — comparable across combos.
-3. **XL and max dungeon depth reached** as tiebreakers.
+- branch entered / branch end reached, per branch (Temple, Lair, Orc, each
+  Lair sub-branch, Vaults, Depths, Zot, plus extended branches);
+- rune count; Orb picked up; game won;
+- XL reached, score, turns/auts survived, deepest level *per branch*
+  (cross-branch depth is not comparable and is never summed);
+- terminal status (death/quit/timeout/crash — see §6 state machine) and
+  death cause where applicable.
 
-Aggregate metrics across many games: median/best milestone, milestone
-histogram per species and background, win count. A run archive (morgues +
-logfile + milestones) is the ground truth; crawl writes all of these natively.
+Reports keep the full vector, stratified by species, background, and
+archetype. When a scalar is needed for tuning, the declared optimization
+objective is **lexicographic: (runes, Zot entered, Depths entered, Vaults
+entered, first-Lair-branch entered, Lair entered, XL), ties broken by
+score** — chosen because rune count is the game's own difficulty gate (Zot
+requires 3 runes). Changing this objective is a versioned decision, not a
+reporting tweak.
 
-Explicit non-goal for v1: winning consistently. The first bot to ever win DCSS
-unassisted (`qw`) peaked around ~15% wins with its *single best* combo and ~1%
-for 15-rune games; a uniformly random combo pool will be far below that. The
-interesting output is the progress distribution and pushing it upward.
+Explicit non-goal for v1: winning consistently. Historical context (treat as
+dated evidence, not a benchmark: elliptic-era qw README and arXiv 1902.01769):
+qw's best offline 3-rune winrate was reported ~15% with Deep Dwarf Fighter — a
+species since removed — and ~1% for 15-rune games with its best combo. A
+random pool will be far below that. The deliverable is the progress
+distribution and the machinery to push it upward.
 
 ---
 
-## 2. What already exists (research summary)
+## 2. Randomness contract
 
-Three research passes were done against the crawl source tree, the qw source,
-and the broader ecosystem. Key facts the plan relies on:
+"Completely random" is defined here precisely, because crawl's own
+`fully_random` option is **not** uniform: per 0.32-era `newgame.cc`, native
+fully-random chargen randomly picks whether to resolve species or background
+first, samples that dimension, then samples a compatible value in the other —
+which weights pairs unevenly. We define our own distribution instead of
+emulating crawl's:
 
-### 2.1 Ways to control crawl programmatically
+**Default treatment — `uniform-pairs`:**
+1. Enumerate the legal (species, background) pairs **from the pinned crawl
+   executable** (via `-list-combos`, an undocumented-but-real flag that emits
+   pairs only; pin-tested in Phase 0). Hash and archive this manifest.
+2. Sample one pair uniformly, using a dedicated character-RNG seeded from the
+   run manifest — separate from the game seed.
+3. If the background offers a starting-weapon choice, sample **uniformly over
+   that background's legal weapon options** for the chosen species (option set
+   enumerated from the pinned executable at Phase 0, since `-list-combos`
+   does not cover weapons). Backgrounds without a weapon choice have no
+   weapon dimension.
+4. Never reroll for any reason (stats, equipment, god availability, map).
+5. Log: manifest hash, RNG seed, sampled indices, resolved character.
+
+**Named alternative treatments** (config-selected, never the default, always
+labeled in reports): `curated-weapons` (hypercombogen-style "sensible" weapon
+per combo — useful for comparability with qw's historical results, but it is
+curation, not randomness); `crawl-native` (`fully_random = true`, crawl's own
+distribution, kept as a behavioral cross-check).
+
+**Validation (Phase 0/1 acceptance tests):** the sampler's support set must
+exactly equal the executable's legal set (diff test); a large-sample
+goodness-of-fit test must match the declared uniform probabilities; fixed
+seeds must reproduce identical characters.
+
+---
+
+## 3. Version targeting decision
+
+qw is version-coupled (one release per crawl version; public master's
+changelog targets DCSS 0.32-a0, last commit July 2024). v1 was internally
+inconsistent about this; resolved as follows:
+
+- **The product targets the qw-compatible pair, not current DCSS.** Phase 0
+  selects and pins **exact immutable commits** of both crawl and qw that are
+  demonstrated compatible (starting from qw master + a crawl commit near the
+  0.32-a0 changelog reference, adjusting empirically). Every run manifest
+  records both hashes plus patch/config/schema hashes.
+- All species/background statements in this plan are therefore about the
+  pinned version, and the legal-character manifest is generated from the
+  pinned binary — not from trunk documentation. (Trunk-era facts from v1,
+  e.g. Poltergeist, may simply not exist in the pinned pool.)
+- Compatibility is proven by **canaries**, not one smoke test: a Phase 0
+  suite covering a weapon-choice background, a zealot (god-locked)
+  background, a caster, and restrictive species (at minimum Felid, Mummy,
+  Gnoll, Demigod, Formicid, plus the default GrBe) each running N decisions
+  without protocol error.
+- Revisiting the pin (e.g. when qw supports a newer crawl) is a versioned
+  decision with a fresh manifest and canary pass. The cost of being behind
+  trunk is accepted and documented, not denied.
+
+---
+
+## 4. What already exists (research summary)
+
+Verified-vs-unverified status for every claim here is tracked in
+`review/REVIEW_PACKET.md` §3; unverified numbers are labeled hypotheses.
+
+### 4.1 Ways to control crawl programmatically
 
 | Interface | What it is | Pros | Cons |
 |---|---|---|---|
-| **clua (rc-file Lua)** | Lua embedded in the game; `ready()` hook fires before every input prompt; full read API (`you`, `monster`, `view`, `items` modules) + key/command injection (`crawl.sendkeys`, `crawl.do_commands`) | Structured state, no parsing, runs in-process at full speed, proven (qw) | Logic must be Lua inside the game process; public servers throttle Lua CPU/memory |
-| **WebTiles WebSocket (JSON)** | The web client protocol: zlib-compressed JSON messages (`player`, `map`, `msgs`, `input_mode` in; `key`/`input` out) against a local or public webtiles server | Language-agnostic external process; full symbolic state; existing client libs (`dcss-api` Rust/Python, supports 0.29–0.34; dcss-ai-wrapper; nkhoit/dcss-ai's pure-Python client) | Must run/manage a server (trivial locally: Tornado + `WEBTILES=y` build); protocol plumbing (compression, batching, menus/prompts) |
-| **pty screen-scraping** | Drive console crawl via pexpect/tmux and parse the ANSI screen | Works anywhere | No structured state; fragile; strictly worse than the above — rejected |
+| **clua (rc-file Lua)** | Lua embedded in the game; `ready()` hook fires before every input prompt; player-knowledge-limited read API (`you`, `monster`, `view`, `items`) + key/command injection | Structured state, no parsing, in-process speed, proven (qw) | Logic must be Lua inside the game process; servers throttle it |
+| **WebTiles WebSocket (JSON)** | The web client protocol: structured `player`/`map`/`msgs`/`input_mode` messages from the crawl binary itself | Language-agnostic external process; existing clients (`dcss-api`, 0.29–0.34) | Server/protocol plumbing; not needed for the core deliverable |
+| **pty screen-scraping** | Parse the ANSI screen | Works anywhere | Lossy, fragile — rejected |
 
-There is **no official "crawl API"**; clua and webtiles are the two sanctioned
-surfaces. A useful hybrid exists: helper clua in the rc file that pre-digests
-state or auto-answers prompts, while an external process drives keys.
+There is no official "crawl API"; clua and webtiles are the sanctioned
+surfaces. The clua read API is player-knowledge-limited by construction
+(monster damage in bands, unseen monsters return nil, item info
+identification-gated — verified in `l-moninf.cc`/`l-item.cc`), which is the
+basis of the fairness contract in §7.
 
-### 2.2 Character randomization is built in
+### 4.2 Prior art
 
-Crawl natively supports fully random characters with zero menu interaction:
+- **qw** (github.com/crawl/qw, devteam-maintained; ~19k lines of Lua, 43
+  modules): the only bot with unassisted DCSS wins. rc-file clua; `ready()`
+  drives a coroutine main loop; prioritized plan cascade (emergency → attack
+  → rest → explore); threat-scored retreat/flee/stairdancing; equipment-set
+  optimization; skill-training utility functions; 13 partially-supported
+  gods; `GOALS` route language; Abyss/Pan/Zig/Tomb special cases; cross-game
+  persistence (`c_persist`); `COMBO_CYCLE_LIST` for per-game combos.
+  Weaknesses: essentially no spellcasting (casters played as weak melee),
+  many abilities unused, low win rate outside favored melee combos.
+- **dcss-api** (EricFecteau): maintained Rust+Python webtiles client with a
+  scenario builder — relevant only to the deferred webtiles track.
+- **dcss-ai-wrapper** (dtdannen) and **nkhoit/dcss-ai** (LLM agent): prior
+  research interfaces; no deep autonomous runs documented.
+- **LLM-agent evidence** (secondary sources, labeled hypothesis-grade):
+  frontier LLMs score single-digit progression on NetHack (BALROG); the
+  NetHack Challenge was won by a symbolic bot. Conclusion stands: an LLM
+  cannot be the inner loop; it may serve as a low-frequency advisor (§9).
 
-- rc options: `name = <s>` (bypasses the main menu) + `fully_random = true`
-  (any legal combo), or `species = viable` / `background = viable`
-  (recommended-only randomness), or explicit `combo = MiBe.handaxe` /
-  multi-value lists (random pick among entries), `weapon = random|viable`.
-- CLI: `-name`, `-species`, `-background`, `-rc`, `-seed <n>`, `-wizard`,
-  `-headless`, `-lua-max-memory <MB>`, `-no-throttle`, and
-  `-extra-opt-last "opt=val"` to inject any rc option.
-- `crawl -list-combos` enumerates every legal combo (qw's
-  `util/hypercombogen.sh` already turns this into a combo list with sensible
-  starting weapons) — this gives us *controlled* full randomness: our harness
-  can sample uniformly and log exactly what was rolled.
+### 4.3 Options considered (unchanged from v1)
 
-Current game (0.34/trunk): **27 species × 26 backgrounds ≈ ~700 legal
-combos**, including pathological ones a bot must survive: Mummy (no potions),
-Felid (no weapons/armour), Gnoll (no selective skill training), Djinn (HP=MP
-pool), Demigod (no gods), Poltergeist (no body armour), Coglin (no jewellery),
-Formicid (no teleport/berserk/haste), Octopode (no armour, 8 rings).
-Impossible combos (e.g. Felid Gladiator) are excluded from the legal list by
-the game itself.
-
-### 2.3 Prior art
-
-- **qw** (github.com/crawl/qw, maintained by the DCSS devteam; ~19k lines of
-  Lua across 43 modules) is the state of the art and the only bot with
-  unassisted wins, including 15-rune wins and the first-ever Djinni/Demigod
-  wins (0.31 tournament, 2024). It runs entirely as rc-file clua: a `ready()`
-  hook drives a coroutine main loop; a prioritized **plan cascade**
-  (emergency → attack → rest → explore) picks one action per turn; subsystems
-  cover threat-scored retreat/flee/stairdancing, equipment-set optimization,
-  skill-training utility functions, 13 partially-supported gods, a `GOALS`
-  route language ("Normal" ≈ optimal 3-rune route), Abyss/Pan/Zig/Tomb/Hell
-  special cases, and cross-game persistence (`c_persist`) with a
-  **`COMBO_CYCLE_LIST`** mechanism for cycling combos between games.
-  Weaknesses: essentially no spellcasting (casters are played as bad melee),
-  many god/species abilities unused, low win rate outside its favored
-  melee combos (best: GrFi/GrBe/MiFi/MiBe/GrHu/MiHu with Okawaru/Trog/Ru).
-  Version coupling: one qw release per crawl version (0.1.0→0.29 …
-  master→0.32-a0); no runtime version abstraction.
-- **dcss-api** (EricFecteau): maintained Rust+Python webtiles client,
-  DCSS 0.29–0.34, plus a YAML scenario builder for reproducible tests.
-- **dcss-ai-wrapper** (dtdannen): research-oriented webtiles API (PDDL/RL
-  state), the main academic use of DCSS; low activity since ~2022.
-- **nkhoit/dcss-ai** (2025–26): LLM agent (fresh session per life, 39 discrete
-  tools, `learnings.md` carried across deaths) on a local Dockerized webtiles
-  server. No documented deep runs yet.
-- **LLM-agent reality check**: on BALROG, frontier LLMs still score
-  single-digit progression on NetHack (a comparable roguelike); the NetHack
-  Challenge was won decisively by a *symbolic* bot (AutoAscend). Pokémon runs
-  needed 100k+ actions and weeks even with heavy harnesses. Conclusion: an
-  LLM cannot be the *inner loop* of a DCSS bot today — a full game is tens of
-  thousands of turns and permadeath punishes every hallucination — but an LLM
-  can plausibly help as a low-frequency strategic layer or as an offline
-  policy-improvement tool.
+**A.** qw + randomization/metrics harness — fastest to deep runs; inherit
+qw's weaknesses, patch incrementally. **B.** Fresh webtiles bot — full
+ownership, months to re-derive tactical knowledge. **C.** Pure LLM agent —
+plateaus far below the Orb; add-on, not foundation. **D.** RL — out of
+scope. **Recommendation: A**, with the harness designed so the player engine
+sits behind a narrow adapter interface (§5) — reuse of the harness for B/C is
+plausible but *not* claimed to be free: lifecycle, transport, and prompt
+handling would change; only the artifact schema and reporting carry over
+as-is.
 
 ---
 
-## 3. Options considered
-
-**A. Adopt qw + build a randomization/metrics harness around it.**
-Proven engine; "random character" and "run forever, measure progress" become
-harness features (combo sampling, batch running, stats). Fastest route to deep
-runs; we inherit qw's weaknesses (no casting) but can patch them incrementally
-upstream-style in Lua.
-
-**B. Write a fresh external bot on webtiles (Python, via dcss-api or a small
-custom client).** Full ownership, nicer language/tooling, LLM-integration
-friendly, testable with seeded scenarios. But we'd be re-deriving years of
-tactical edge-case handling (stairdancing, threat scoring, Abyss recovery,
-prompt handling); realistically months to reach "sometimes gets a rune".
-
-**C. Pure LLM agent.** Highest novelty, worst floor: cost/latency per
-decision, and the evidence says it plateaus far above the dungeon floor but
-far below the Orb. Better as an add-on than a foundation.
-
-**D. RL.** Out of scope: no existing DCSS gym at the full-game level,
-enormous sample cost, and the action/observation engineering alone dwarfs
-options A+B.
-
-**Recommendation: A as the backbone, B's harness as the shell, C as an
-optional experimental layer.** Concretely: a Python **harness** owns game
-lifecycle, character randomization, logging and stats; **qw (pinned +
-patched)** is the player. This is also the least-regret path: the harness
-(Phase 1) is identical no matter which player engine sits inside it, so if we
-later want to grow our own webtiles bot or an LLM layer, the
-launcher/metrics/archive infrastructure carries over unchanged.
-
----
-
-## 4. Recommended architecture
+## 5. Recommended architecture
 
 ```
 ┌────────────────────────── harness (Python) ──────────────────────────┐
-│ runner.py      – spawn crawl per game, timeouts, crash recovery      │
-│ combos.py      – sample uniformly from `crawl -list-combos` output;  │
-│                  emit per-game rc fragment (combo, god/goal hints)   │
-│ collect.py     – parse logfile/milestones/morgues into SQLite        │
-│ report.py      – progress histograms, per-species/background tables, │
-│                  best-run leaderboard (markdown/HTML report)         │
+│ runner.py      – run state machine, per-run dirs, timeouts, recovery │
+│ combos.py      – randomness contract (§2): manifest, sampler, tests  │
+│ collect.py     – telemetry (§6) → SQLite; write-ahead run accounting │
+│ report.py      – outcome-vector reports, stratified tables, CIs      │
+│ adapter.py     – narrow player-adapter interface (launch cmd, rc     │
+│                  fragment, end-of-run artifact spec) — qw impl only  │
 └──────────────┬───────────────────────────────────────────────────────┘
-               │  crawl -rc generated.rc -name bot### -seed ... 
+               │  crawl -rc generated.rc -name <run_id> -seed ...
 ┌──────────────▼───────────────────────────────────────────────────────┐
-│ crawl (pinned source build, console/headless, -lua-max-memory 128    │
-│        -no-throttle)                                                 │
-│   └── qw.lua (pinned qw + our patches) — ready() hook plays the game │
+│ crawl (pinned commit, console build + telemetry define (§6),         │
+│        -lua-max-memory 128 -no-throttle)                             │
+│   └── qw.lua (pinned commit + patches) — ready() hook plays the game │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-Key design decisions:
+Key decisions:
 
-1. **Local pinned build, not public servers.** qw is explicitly not allowed on
-   official servers (Lua CPU/memory limits), and local play is orders of
-   magnitude faster (qw finishes games in minutes of wall-clock). Pin crawl to
-   the version qw master targets (0.32-a0 at last check; verify against qw's
-   changelog at build time) via a submodule or documented commit hash.
-   Build: `make` in `crawl-ref/source` (console build; no tiles needed).
-2. **Randomization lives in the harness, not in `fully_random = true`.**
-   Generating the combo per game ourselves (from `-list-combos`) gives us:
-   uniform-vs-weighted sampling as a config choice, exact logging of the roll,
-   reproducible re-runs (combo + `-seed`), and the ability to attach per-combo
-   god/goal configuration (qw's `COMBO_CYCLE_LIST` syntax `SpBg.weapon^gods`
-   already supports this). `fully_random = true` remains a documented
-   fallback and a purity check that our sampler matches the game's own
-   legal-combo set.
-3. **God choice policy for random characters:** zealot backgrounds keep their
-   start god; otherwise default `GOD_LIST = Okawaru/Trog/Makhleb` (qw's
-   strongest), with a per-species override table we grow over time (e.g.
-   Demigod → no god; casters → whatever we teach qw to use). This table is
-   one of the main tuning surfaces.
-4. **One game = one process invocation**, wizard mode off, `AUTO_START` on,
-   `QUIT_TURNS` safety net on (qw quits after 1000 stuck turns) plus a
-   harness-level wall-clock timeout with save-backup, so a single hung game
-   never stalls the fleet. Batch parallelism via N independent crawl dirs
-   (qw's `util/batch-qw.sh` shows the pattern; we'll own our version).
-5. **Everything is a run artifact.** Per game: sampled combo, seed, qw
-   version, crawl version, final milestone, score, turn count, death reason,
-   morgue path — one SQLite row. Reports are regenerated from the DB.
-
-### Repository layout (proposed)
-
-```
-dcss-automation/
-├── PLAN.md                  (this file)
-├── harness/                 Python package: runner, combos, collect, report
-├── player/qw/               qw checkout (submodule) + patches/ overlay
-├── vendor/crawl/            crawl checkout (submodule, pinned)
-├── config/                  rc templates, god-policy table, sampler weights
-├── scripts/                 build-crawl.sh, run-batch.sh, make-report.sh
-└── runs/                    (gitignored) morgues, logfiles, results.sqlite
-```
+1. **Local pinned builds only** (§3). qw is not allowed on public servers
+   (Lua CPU/memory limits). "Local play takes minutes per game" is a
+   hypothesis — Phase 0 measures median/p95 wall-clock, CPU, and memory per
+   game *before* fleet sizing, timeouts, or campaign budgets are chosen.
+2. **Randomization lives in the harness** per the §2 contract; crawl-native
+   `fully_random` is retained only as a named alternative treatment.
+3. **God choice policy:** zealots keep their start god; otherwise default
+   `GOD_LIST = Okawaru/Trog/Makhleb` (qw's strongest), with a per-species
+   override table (Demigod → none, etc.). The god policy is *play* policy,
+   not part of the randomness contract, and is versioned config.
+4. **Vendoring:** exact-commit checkouts of crawl and qw. Mechanism
+   (submodule vs. pinned shallow clone) and qw patch mechanism (overlay vs.
+   fork) are Phase 0 decisions recorded in a short decision note — they are
+   workflow preferences, not correctness issues.
+5. **Everything is a run artifact** (§6): write-ahead manifest before launch,
+   append-only event capture, one reconciled SQLite row per scheduled run.
 
 ---
 
-## 5. Roadmap
+## 6. Telemetry, runner state machine, and run accounting
 
-### Phase 0 — Foundation (short)
-- Vendor + build pinned crawl; vendor qw at the matching tag; `make-qw.sh`.
-- Smoke test: one manual qw game with the stock `GrBe.handaxe` runs to
-  completion (death or win) headlessly.
-- **Exit criterion:** `scripts/run-one.sh` plays a full unattended game and a
-  morgue file appears.
+### Telemetry (corrected from v1)
 
-### Phase 1 — Random-character fleet (the core deliverable)
-- Combo sampler from `-list-combos` (+ starting-weapon assignment à la
-  hypercombogen); per-game rc generation; god policy table v0.
-- Batch runner with timeouts, crash/save recovery, parallel instances.
-- SQLite collector + report generator (progress ladder, per-species and
-  per-background tables, score distribution).
-- **Exit criterion:** a 500–1,000 game random-combo campaign completes
-  unattended and produces a report. This *is* the user-visible goal: start
-  DCSS, random character, go as far as possible — measured.
+v1 assumed local crawl writes a `milestones` file natively. **It does not:**
+`mark_milestone` writes the milestones xlog only under the `DGL_MILESTONES`
+define, which stock `AppHdr.h` enables inside the `DGAMELAUNCH` (server)
+block — a plain local console build produces no milestones file (verified
+against 0.32-era source by the independent review).
 
-### Phase 2 — Raise the floor (iterative, data-driven)
-Use Phase 1's report to attack the worst buckets. Expected early findings and
-matching work items, in likely priority order:
-- **Caster backgrounds** (~40% of the combo pool): teach qw minimal
-  spellcasting — cast the starting attack spell when it beats melee, train
-  the school, learn the level-2/3 book follow-ups. Even "Magic Dart until
-  Lair" massively beats qw's current played-as-melee behavior.
-- **Special species handling:** Felid (no-weapon combat plans), Mummy (never
-  plan around potions), Gnoll (skip training logic), Djinn (HP-cost casting),
-  Formicid (no-teleport escapes), Demigod (no-god goals).
-- **God coverage:** extend the per-species/background god policy; consider
-  adding basic support for currently-unused strong gods where it moves the
-  needle.
-- Each change ships behind a config flag and is validated by an A/B campaign
-  (same seeds, sampler, and game version) — the harness makes this cheap.
-- **Exit criterion (target):** median random-combo game reaches Lair; ≥10% of
-  games reach a rune; first random-combo wins observed.
+Design, in preference order, resolved in Phase 0:
+1. **Build with `DGL_MILESTONES` enabled** (small build-flag/patch; Phase 0
+   verifies the file appears and asserts exact expected event records and
+   fields for a scripted game — branch entry, rune, death).
+2. **Fallback — reduced metric set** from artifacts a stock build does
+   produce: the final logfile row (`place`, `urune`, `xl`, `sc`, `tmsg`, …)
+   plus the morgue's turn-stamped notes. If the fallback is used, the report
+   drops any indicator the final xlog cannot prove and says so — no silent
+   degradation.
 
-### Phase 3 — Experimental layers (optional, parallel)
-- **LLM strategic advisor:** at low-frequency decision points (god choice,
-  branch order, "should I dive or grind", shopping) export qw's state and let
-  an LLM adjust the `GOALS`/config knobs between levels or between games —
-  the inner loop stays symbolic. Cross-game: an LLM post-mortem over morgues
-  proposing god-policy/sampler/config patches ("policy improvement by PR").
-- **Webtiles spectating:** run a local `WEBTILES=y` server so humans can watch
-  the bot live; also enables the dcss-api scenario builder for regression
-  tests of tactical situations.
-- **Own-bot track (long shot):** if we outgrow Lua, port the plan-cascade
-  architecture to Python over webtiles, using qw as the reference
-  implementation and the Phase 1 harness unchanged.
+The Phase 0 exit asserts *correct parsed events*, not "a morgue appeared".
+
+### Runner state machine
+
+Every run terminates in exactly one status:
+`won | died | quit_intentional | quit_stuck (qw QUIT_TURNS) | lua_error |
+crashed | timeout_turns | timeout_wall | invalid_telemetry | harness_failure`.
+
+- **Budgets are in-game:** the per-run cap is a *turn/action* budget
+  (`timeout_turns`), because a wall-clock cap makes policy speed and host
+  load affect game outcomes — an evaluation confound. Wall-clock
+  (`timeout_wall`) exists only as a generous operational circuit breaker and
+  those runs are excluded from gameplay metrics (counted and reported as
+  infrastructure failures).
+- **Hang detection is progress-based** (no save/logfile/message mtime change
+  for N minutes), not just elapsed time; on trigger, capture crawl's message
+  log and stderr, attempt one graceful save, then kill.
+- **No resume into metrics:** "one game = one process invocation" is kept
+  strict for measured runs — a run that dies mid-flight is terminal with its
+  status; resume-from-save exists only as a debugging tool and resumed games
+  never enter campaign metrics (this resolves v1's save-backup/resume
+  contradiction).
+- **Per-run isolation:** unique run ID, own crawl dir, own name; no shared
+  save/rc/logfile state between parallel workers.
+
+### Run accounting
+
+A **write-ahead manifest** row (run ID, character, seeds, all version/config
+hashes) is committed *before* launch; the collector reconciles scheduled vs.
+terminal runs so a crash that produces no final logfile row is still
+attributed, never silently dropped, and retries (infrastructure failures
+only) carry lineage and are never double-counted. A report invariant checks:
+every scheduled run appears exactly once with a terminal status.
 
 ---
 
-## 6. Risks and open questions
+## 7. Fairness contract (observation boundary)
+
+The bot must act only on player-knowable information. Current status: the
+qw/clua path is fair **by construction** (§4.1), verified against the clua
+source. To keep it true as the system grows, the contract is explicit:
+
+- A live policy may receive only state exposed through the
+  player-knowledge-limited clua surface (or a future adapter audited to the
+  same standard).
+- The following never reach a live policy: the game seed, raw save data,
+  source/full-map internals, final telemetry of the current run, and any
+  knowledge from a *prior attempt at the same evaluation seed*.
+- `c_persist` (qw's cross-game memory) is cleared between games in any
+  campaign that reuses seeds; campaigns with fresh random seeds may keep it.
+- Wizard-mode runs never enter evaluation metrics (rule, not default).
+- Telemetry files are read-only to the game process during a run.
+- Each future adapter (webtiles, LLM advisor) requires a fresh fairness
+  audit before its runs count.
+
+Phase 1 includes probe tests: assert that unseen monsters and unidentified
+item identities are absent from everything the policy layer can read.
+
+---
+
+## 8. Experiment protocol
+
+Applies to every claimed improvement (Phase 2 onward):
+
+- **Frozen manifests:** an experiment fixes a manifest of (character, seed)
+  pairs generated under the §2 contract; both policy arms run every entry
+  from clean state (cleared `c_persist`, fresh dirs).
+- **Splits:** development seeds (used freely), validation seeds (compared
+  against, sparingly), and an untouched holdout set evaluated only at
+  release points. Identifying weak buckets and validating their fixes on the
+  same campaign data is overfitting; bucket-targeted fixes are confirmed on
+  fresh seeds.
+- **Seed semantics, stated precisely:** a seed fixes the initial PRNG state
+  (dungeon and gameplay); once policies act differently they consume the
+  stream differently and trajectories diverge. Same-seed arms are variance
+  control, not paired observations — analysis treats runs as independent
+  samples per arm.
+- **Pre-declared analysis:** primary outcome(s) named in advance (default:
+  rune-rate and Lair-entry rate), effect sizes with confidence intervals,
+  a minimum practically-meaningful effect, and a sample size sized for it
+  (at low base rates this is hundreds-to-thousands of games per arm — the
+  Phase 0 throughput measurement feeds this budget). Non-game-ending
+  outcomes (`timeout_wall`, `crashed`, …) are counted per the §6 status
+  taxonomy and reported, never silently excluded. Multiple comparisons
+  across many buckets are acknowledged and corrected for, or demoted to
+  exploratory.
+- **Provenance:** every run records crawl/qw/patch/config/sampler/schema
+  hashes; an experiment is reproducible from its manifest alone.
+
+---
+
+## 9. Roadmap
+
+### Phase 0 — Foundation and reconnaissance
+Work: pin exact crawl+qw commits (§3); build with the telemetry define (§6);
+generate and archive the legal-character manifest and weapon-option sets
+(§2); measure per-game wall-clock/CPU/memory over ~50 mixed games; write the
+vendoring/patch-mechanism decision note; verify `-list-combos` behavior on
+the pinned binary.
+**Exit (acceptance tests, not existence checks):**
+- reproducible build from the lock info on a clean machine;
+- telemetry test asserts exact expected milestone/logfile records for a
+  scripted short game;
+- canary suite (§3: GrBe + weapon-choice, zealot, caster, Felid, Mummy,
+  Gnoll, Demigod, Formicid) each completes N decisions without protocol
+  error, hang, or unclassified prompt;
+- sampler support-set diff vs. the executable's legal set is empty;
+- throughput report exists and feeds Phase 1 sizing.
+
+### Phase 1 — Random-character fleet (core deliverable)
+Work: sampler + per-game rc generation; god policy v0; runner state machine,
+write-ahead accounting, progress-based hang detection (§6); collector +
+outcome-vector report (§1) with stratified tables.
+**Exit (acceptance tests):**
+- sampler goodness-of-fit test passes at campaign scale;
+- forced-failure drills (induced Lua error, kill -9, hang) each land in the
+  correct terminal status with artifacts attributed;
+- parallel-isolation test: N workers, zero cross-contamination;
+- reconciliation invariant holds on a fixed campaign of ≥500 games with
+  invalid-run rate below a declared threshold (target <2%);
+- the report reproduces byte-identically from the SQLite DB.
+This campaign is the baseline that all Phase 2 claims measure against.
+
+### Phase 2 — Raise the floor (iterative, hypothesis-driven)
+Candidate work items, each a *hypothesis* until measured under §8: minimal
+spellcasting for caster backgrounds (share of pool computed from the pinned
+manifest, not assumed); special species handling (Felid no-weapon plans,
+Mummy no-potion planning, Gnoll training skip, Djinn HP-casting, Formicid
+escapes, Demigod goals); god-policy extensions. Each ships behind a config
+flag and is validated per the experiment protocol.
+**Exit:** baseline-relative improvements with pre-declared minimum effects
+and confidence bounds on held-out seeds (e.g. "rune-rate +X pts CI-excluding
+zero"). A first random-combo win is reported as an event, never used as a
+gate.
+
+### Phase 3 — Experimental layers (deferred by design)
+LLM strategic advisor (config-knob adjustments between levels/games; subject
+to a fresh §7 audit — postmortem knowledge must not leak into live play on
+evaluation seeds); webtiles spectating; own-bot track. None of these
+influence the core design beyond the narrow adapter interface in §5.
+
+---
+
+## 10. Risks
 
 | Risk | Mitigation |
 |---|---|
-| qw master lags crawl trunk (last public commit mid-2024; targets 0.32-a0) | Pin crawl to qw's supported version — we control the whole stack locally, so being one version behind costs nothing. Revisit per qw release. |
-| Random combos crash qw's assumptions (untested species/background paths) | qw's stuck-plans + `QUIT_TURNS` + harness timeout bound the damage; failures land in the report as their own bucket and become Phase 2 work items. |
-| clua Lua memory/CPU limits | `-lua-max-memory 128 -no-throttle` locally (qw's documented requirements). |
-| Long-tail hangs / infinite loops across ~700 combos × many games | Per-game wall-clock kill + save backup + resume-or-abandon logic in the runner. |
-| Score/milestone parsing drifts across versions | Parse crawl's own logfile/milestones (stable, machine-readable) rather than morgue text. |
+| qw incompatible with some random combos on the pinned crawl | Phase 0 canaries; per-status buckets in reports; failures become Phase 2 items |
+| Telemetry define doesn't work as expected | Phase 0 gate with explicit fallback to reduced metric set (§6) — decided by test, not assumption |
+| Undocumented `-list-combos` changes/breaks | Pin-tested; manifest archived, so the sampler never depends on it at run time |
+| Long-tail hangs across ~hundreds of combos × many games | Progress-based detection, turn budgets, forced-failure drills (Phase 1 exit) |
+| Evaluation overfits campaign data | Holdout seeds, pre-declared analysis, fresh-seed confirmation (§8) |
+| Wall-clock effects contaminate results | In-game turn budgets for metrics; wall time as circuit breaker only (§6) |
+| Fairness regressions as adapters are added | §7 contract + probe tests; per-adapter re-audit |
+| clua memory/CPU limits | `-lua-max-memory 128 -no-throttle` (qw's documented requirements) |
 
-Open questions for review (defaults chosen, but flagging):
-1. **Uniform over all legal combos, or over species (then background)?**
-   Default: uniform over combos. (Uniform-over-species doubles the weight of
-   restricted species like Felid/Demigod that ban many backgrounds.)
-2. **Should weapon choice be random too, or "best for combo"?** Default:
-   sensible starting weapon per combo (hypercombogen style); pure-random
-   weapon is a config flag.
-3. **Wizard-mode metrics runs?** qw supports `WIZMODE_DEATH` for faster
-   iteration, but scores/milestones are only "real" in normal mode. Default:
-   normal mode for campaigns, wizard mode allowed for debugging.
-4. **Is the LLM layer (Phase 3) in scope at all, or symbolic-only?**
+Open questions (defaults chosen, flagged for review):
+1. Sampling: uniform over pairs (default) vs. uniform over species-then-
+   background. Uniform-over-species doubles the weight of restricted species.
+2. Lexicographic objective (§1): is rune-first the right ordering, or should
+   score lead?
+3. LLM layer (Phase 3): in scope at all, or symbolic-only?
 
 ---
 
-## 7. Appendix: primary sources
+## 11. Appendix: sources
 
-- crawl source: github.com/crawl/crawl — `l-you.cc`, `l-moninf.cc`,
-  `l-view.cc`, `l-item.cc`, `l-crawl.cc` (clua API); `newgame.cc` (random
-  chargen keys `*`/`+`/`!`/`#`); `docs/options_guide.txt` (`fully_random`,
-  `combo`, `species/background/weapon = viable`); `main.cc` (CLI flags,
-  `-headless`, `-seed`, `-lua-max-memory`, `-no-throttle`, `-list-combos`);
-  `hiscores.cc` (score formula); `webserver/` + `tileweb.cc` (webtiles
-  protocol).
-- qw: github.com/crawl/qw (43-module source, `qw.rc`, `make-qw.sh`,
-  `util/hypercombogen.sh`, `util/batch-qw.sh`, `docs/accomplishments.md`,
-  changelog with per-crawl-version tags); historical repo github.com/elliptic/qw.
-- Ecosystem: github.com/EricFecteau/dcss-api (webtiles client, 0.29–0.34),
-  github.com/dtdannen/dcss-ai-wrapper (+ arXiv 1902.01769 "DCSS as an
-  Evaluation Domain for AI"), github.com/nkhoit/dcss-ai (LLM agent),
-  github.com/alotofdavid/beem.
-- LLM-agent evidence: BALROG benchmark (arXiv 2411.13543), NetPlay (arXiv
-  2403.00690), NetHack Challenge/AutoAscend, Claude/Gemini Pokémon runs.
+Primary: github.com/crawl/crawl (`l-you.cc`, `l-moninf.cc`, `l-view.cc`,
+`l-item.cc`, `l-crawl.cc`, `newgame.cc`, `main.cc`, `hiscores.cc`,
+`docs/options_guide.txt`, `AppHdr.h`/`hiscores.cc` for `DGL_MILESTONES`);
+github.com/crawl/qw (source, `qw.rc`, `make-qw.sh`, `util/`, docs) and
+github.com/elliptic/qw. Ecosystem: dcss-api, dcss-ai-wrapper (+ arXiv
+1902.01769), nkhoit/dcss-ai. LLM evidence (secondary): BALROG (arXiv
+2411.13543), NetPlay (arXiv 2403.00690), NetHack Challenge/AutoAscend.
 
-*Facts above were gathered from the crawl and qw source trees and public docs
-in August 2026; items that could not be fully verified (exact current qw↔crawl
-trunk compatibility, some historical win statistics) are treated as
-assumptions to re-check during Phase 0.*
+Review provenance: `review/REVIEW_PACKET.md` (verification ledger),
+`review/SELF_REVIEW.md` (author findings), `review/INDEPENDENT_REVIEW.md`
+and `review/REVIEW_SYNTHESIS.md` (independent reviewer; source-verified the
+`DGL_MILESTONES` and native-`fully_random` corrections adopted above).
