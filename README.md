@@ -32,8 +32,25 @@ self-contained work order with acceptance-test exit criteria.
   [`AUTOMATION_PLAN_REVIEW.md`](reference/AUTOMATION_PLAN_REVIEW.md), the
   independent review of it explaining why the qw-based plan was preferred.
 
+## Autonomous operation
+
+This repo is developed by an unattended agent loop. Live state is
+[`docs/JOURNAL.md`](docs/JOURNAL.md) — read its last **Next step** to see where
+work stands.
+
+- [`CLAUDE.md`](CLAUDE.md) — operating conventions and guardrails (auto-loaded)
+- [`PROMPT.md`](PROMPT.md) — standing work order for worker iterations
+- [`ORCHESTRATOR.md`](ORCHESTRATOR.md) — periodic strong-model review pass
+- [`ops/supervise.sh`](ops/supervise.sh) — the restart loop;
+  [`ops/config.env`](ops/config.env) tunes models and brakes
+- [`docs/decisions/`](docs/decisions/) — one file per decision made without a human
+
+Runtime is an isolated WSL2 distro (`dcss-agent`). Start with
+`ops/supervise.sh`; stop it with `touch ops/STOP`.
+
 ## Status
 
-Planning complete. Next milestone: Phase 0 (pin crawl+qw commits, build with
-telemetry, generate the legal-character manifest, run compatibility
-canaries, measure throughput) — see `PLAN.md` §9 for the exit criteria.
+Planning complete; autonomous runtime provisioned. Next milestone: Phase 0 (pin
+crawl+qw commits, build with telemetry, generate the legal-character manifest,
+run compatibility canaries, measure throughput) — see `PLAN.md` §9 for the exit
+criteria.

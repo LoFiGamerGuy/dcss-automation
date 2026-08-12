@@ -1,0 +1,17 @@
+# Supervisor + agent runtime state
+logs/
+ops/.state/
+ops/STOP
+
+# Vendored upstreams — pinned by lock file, never committed
+vendor/
+
+# Campaign artifacts (per-run dirs, saves, morgues). Reports are committed.
+runs/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
