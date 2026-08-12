@@ -1156,3 +1156,143 @@ experiment-protocol scaffolding if it doesn't exist yet (seed splits,
 pre-declaration file format) — the protocol must exist before the first
 experiment, not be retrofitted. Do not delete `data/runs/phase1-500-*` yet;
 the lua_error diagnostics need the raw artifacts.
+
+## 2026-08-12 (cont.) — First Phase 2 item: two real qw Lua bugs found, fixed, flagged; experiment running
+
+**Did:** Replayed the 26 `phase1-500` lua_error runs against the pinned
+binary to find the actual crash text (not just `runner.py`'s "matched 'Lua
+error' in output"). Found replay is **not** exactly reproducible even at a
+fixed char/game seed — 2 of 5 replayed runs hit the same crash, 3 instead
+played out to an uneventful natural death — most likely un-seeded Lua-level
+tie-breaking inside qw itself; not chased further, but means bug-hunting
+had to lean on source reading + live console verification, not on trusting
+replay to reproduce the original 26 exactly.
+
+The 2 reproducing replays gave 2 distinct, real qw bugs, both confirmed by
+reading `vendor/qw/source/*.lua` directly:
+1. `equipment.lua`'s `equip_letter_for_item` indexes `inventory_equip()`'s
+   result directly; that function's memoization wrapper (`turn_memo_args`)
+   caches a `nil` result as `false` (table can't otherwise distinguish
+   "uncached" from "cached nil"), so a character with zero equipped items
+   (unarmed Felid, etc.) crashes with "attempt to index ... a boolean
+   value" the first time a ring or (Coglin) 2h-weapon slot is checked.
+2. `plans-rest.lua`'s `should_rest()` references `hostile_servants_timer`,
+   a global assigned **nowhere** in qw's source (grepped the whole tree) —
+   every Makhleb worshipper crashes here unconditionally, first tick after
+   joining.
+
+Fixed both with minimal call-site guards (`patches/qw/0001-fix-lua-errors.patch`,
+applied by the existing `ops/fetch-vendor.sh` overlay mechanism), gated by
+a new rc-settable `QW_BUGFIX_LUA_ERRORS` flag (default true) so the
+original crashes stay reproducible as an experiment control arm — threaded
+through `campaign.rc.tmpl` → `rc-gen.py` → `runner.py` → `campaign.py`
+(`--disable-bugfix-lua-errors`). Full writeup, source citations, and
+alternatives considered in `docs/decisions/011-lua-error-root-cause.md`.
+
+Verified both fixes live against the real pinned+patched binary with
+`ops/bugfix-lua-errors-test.py`: drives crawl's wizard-mode dlua console
+(`&`, confirm, Ctrl-U) to call the two new guard functions directly and
+assert flag-on returns a safe value while flag-off reproduces the original
+crash class. Building this hit a real choreography bug worth remembering:
+a *second* `&` keypress is not "reopen the wizard command prompt", it's
+itself a wizard sub-command (`wizard_list_companions()`) — a blind-timed
+version of the drill reliably misfired onto that instead of the console;
+fixed by `pexpect.expect()`-ing each prompt's exact text before sending the
+next key rather than guessing at timing. **4/4 drills pass.**
+
+`ops/fetch-vendor.sh` re-fetch (to pick up the qw patch) wipes the built
+crawl binary along with the vendor dir; rebuilt clean (`EXTERNAL_DEFINES="-DDGL_MILESTONES"
+-j18`, ~90s, `logs/crawl-rebuild-qwfix.log`) and confirmed via `-version`
+(DGL_MILESTONES + WIZARD present). Re-ran the **entire** existing test
+suite after the `rc-gen.py`/`runner.py`/`campaign.py`/`collector.py`
+signature changes (new `bugfix_lua_errors` param threaded through all
+four, new `bugfix_lua_errors` column in the `runs` table): collector,
+sampler, rc-gen, runner-drills, telemetry, campaign-isolation, fairness —
+**all still pass unchanged.**
+
+Built `ops/experiment.py`, the PLAN §8 protocol scaffolding the prior
+entry flagged as required *before* any Phase 2 experiment: deterministic
+hash-based seed splits (`split_seed`/`seeds_for_split` — dev/validation/
+holdout, no stored membership list, decorrelated from seed allocation
+order so a contiguous seed range doesn't correlate with split membership),
+a write-once `Predeclaration` file format (refuses to overwrite — the
+whole point of a predeclaration is it's fixed before results exist), and
+stdlib-only Wilson score / Newcombe-Wilson interval math for effect-size
+comparisons (same "no scipy/numpy" constraint `sampler-test.py` already
+worked around). `ops/experiment-test.py`: seed-split determinism/coverage/
+disjointness, Wilson intervals cross-checked against a hand-computed
+reference (5/20 → (0.1119, 0.4687) — my first attempt used a misremembered
+reference value and the test correctly failed until I recomputed it by
+hand from the formula), predeclaration write-once + evaluate correctness
+on synthetic clear-effect/no-effect cases. **All pass.**
+
+Gave `campaign.py` a `--seeds-file` option (explicit JSON list of
+char_seeds, overriding the default contiguous base+n allocation) so an
+experiment can drive exactly the seeds `experiment.seeds_for_split()`
+selects rather than "the next N in order" — re-ran `campaign-test.py`
+after this change, still passes unchanged.
+
+Declared the first real experiment,
+`data/experiments/lua-error-bugfix/predeclaration.json`: hypothesis
+(the fix reduces `lua_error` rate vs. the frozen phase1-500 baseline,
+5.2%), primary outcome `lua_error_rate`, direction decrease, minimum
+effect 2 points, alpha 0.05, 300 games/arm, seed_split validation, arms
+`control` (`bugfix_lua_errors=false`) / `treatment` (`bugfix_lua_errors=true`),
+baseline_ref `data/phase1-500.db`. 300 validation-split char_seeds drawn
+from a fresh pool (`3000000..3002999`, disjoint from the baseline's
+`0..499`) via `experiment.seeds_for_split`, written to
+`data/experiments/lua-error-bugfix/seeds.json`.
+
+Committed and pushed everything above (`3e7d5df`) — **before** launching
+the long-running experiment run, per `CLAUDE.md` (caught myself having
+launched the campaign slightly ahead of the commit; committed immediately
+after rather than continuing further uncommitted work).
+
+**Started detached** (`setsid nohup ... & disown`, the confirmed-working
+hardened form): a wrapper script running both arms of the experiment
+sequentially (control then treatment, each 300 games via `--seeds-file`,
+`--turn-budget 20000 --wall-cap-secs 900 --workers 16`, run prefixes
+`exp-luafix-control-`/`exp-luafix-treatment-`) —
+
+    setsid nohup /tmp/run_lua_error_experiment.sh > logs/lua-error-experiment.log 2>&1 < /dev/null &
+    disown
+
+Driver **PID 41226**, confirmed alive with 16 live `campaign.py` worker
+children for the control arm. Log: `logs/lua-error-experiment.log`.
+Per-arm summaries land at
+`data/experiments/lua-error-bugfix/{control,treatment}-summary.json`; the
+script prints `EXPERIMENT_DONE` on completion. Sequential (not both arms
+concurrently), specifically to avoid 32 workers competing for 24 CPUs —
+based on phase1-500's throughput (500 games/~711s at 16 workers), expect
+very roughly ~7-15 min per arm, more for the control arm since more of its
+games will hit the (now-unfixed-again) hang-after-crash path instead of a
+clean death.
+
+**Result:** Phase 2's first item (lua_error root cause + fix + config flag
++ regression test + §8 scaffolding) is code-complete and committed. The
+experiment measuring its actual effect is running, not yet collected.
+
+**Next step:** Check `ps -p 41226` / `tail logs/lua-error-experiment.log` /
+existence of `data/experiments/lua-error-bugfix/treatment-summary.json`
+(the last thing the script writes before `EXPERIMENT_DONE`). Once both
+summaries exist: run `ops/collector.py --runs-dir data/runs --db
+data/experiments/lua-error-bugfix/results.db --strict`, then compute each
+arm's `lua_error` count/n from that DB (`WHERE run_id LIKE
+'exp-luafix-control-%'` / `'exp-luafix-treatment-%'`), call
+`experiment.evaluate_predeclaration` with those counts, and write the
+result JSON to `data/experiments/lua-error-bugfix/result.json`. Sanity-
+check before trusting the numbers: control-arm `lua_error` rate should be
+in the same ballpark as the phase1-500 baseline's 5.2% (it's running the
+literal original bug), and status mixes for both arms should look like
+organic gameplay variance (varied wall_secs/output_bytes per run), not the
+suspiciously-uniform signature that flagged the relative-path pilot
+contamination bug earlier in this project. Commit
+`data/experiments/lua-error-bugfix/{results.db,result.json,*-summary.json}`
+once collected. If the fix clears its predeclared 2pt minimum effect with
+the CI excluding zero, write up the result in `docs/decisions/011`'s
+follow-up section (or a short addendum) and consider `QW_BUGFIX_LUA_ERRORS`
+proven — no code change needed either way since the flag already defaults
+to fixed-on. If still running: leave it (detached), do not idle-wait —
+there's no other blocking Phase 2 item, so use the wait for light work
+(re-reading PLAN §8/§352-359 for the next Phase 2 candidate item after this
+one closes) rather than sitting idle.
