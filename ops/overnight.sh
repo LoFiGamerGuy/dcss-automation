@@ -13,10 +13,13 @@ set -uo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT" || exit 1
-# shellcheck source=/dev/null
-source "$REPO_ROOT/ops/config.env"
+# Order matters: local.env assigns the profile, config.env fills in anything the
+# profile left alone via ${VAR:-default}. Sourcing config.env first would make
+# its defaults win and silently discard the profile (e.g. no runtime deadline).
 # shellcheck source=/dev/null
 source "$REPO_ROOT/ops/local.env"
+# shellcheck source=/dev/null
+source "$REPO_ROOT/ops/config.env"
 
 CHECK_ONLY=0
 [ "${1:-}" = "--check" ] && CHECK_ONLY=1

@@ -10,10 +10,11 @@ set -uo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT" || exit 1
-# shellcheck source=/dev/null
-source "$REPO_ROOT/ops/config.env"
+# local.env first — see the note in ops/overnight.sh about override precedence.
 # shellcheck source=/dev/null
 source "$REPO_ROOT/ops/local.env"
+# shellcheck source=/dev/null
+source "$REPO_ROOT/ops/config.env"
 
 STATE_DIR="$REPO_ROOT/ops/.state"
 LOG_DIR="$REPO_ROOT/logs/gateway"
