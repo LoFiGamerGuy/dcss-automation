@@ -56,6 +56,7 @@ timeout 900 env \
   "ANTHROPIC_AUTH_TOKEN=$WORKER_AUTH_TOKEN" \
   "ANTHROPIC_DEFAULT_HAIKU_MODEL=$WORKER_SMALL_MODEL" \
   "ANTHROPIC_SMALL_FAST_MODEL=$WORKER_SMALL_MODEL" \
+  "CLAUDE_CODE_MAX_CONTEXT_TOKENS=${WORKER_CONTEXT_TOKENS:-64000}" \
   claude -p "Use the Write tool to create the file $PROBE whose entire contents are the single word PREFLIGHT_OK. Then stop." \
     --model "$WORKER_MODEL" \
     --permission-mode bypassPermissions \

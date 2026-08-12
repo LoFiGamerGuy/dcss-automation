@@ -103,6 +103,8 @@ while :; do
       runner+=( "ANTHROPIC_DEFAULT_HAIKU_MODEL=$WORKER_SMALL_MODEL" \
                 "ANTHROPIC_SMALL_FAST_MODEL=$WORKER_SMALL_MODEL" )
     fi
+    [ -n "${WORKER_CONTEXT_TOKENS:-}" ] && \
+      runner+=( "CLAUDE_CODE_MAX_CONTEXT_TOKENS=$WORKER_CONTEXT_TOKENS" )
   fi
 
   timeout --signal=INT --kill-after=60 "$ITER_TIMEOUT" \
