@@ -1,16 +1,18 @@
 {
   "crawl": {
     "repo": "https://github.com/crawl/crawl.git",
-    "commit": "a7cece931a0f6eb29acd71721463a2d2f9d4cde7",
-    "ref_label": "tags/0.32-a0",
-    "note": "Annotated tag 0.32-a0 dereferences to this commit. qw master's changelog.md states 'This version supports DCSS 0.32-a0.' (PLAN.md §3)."
+    "commit": "a504a9fe27e86e3ae0ab4abfa21f257b016f344d",
+    "ref_label": "master@2024-07-15 (still within tags/0.32-a0's describe epoch)",
+    "describe_tag": "0.32-a0",
+    "note": "Superseded the original tags/0.32-a0 pin (a7cece93, 2024-01-12) — see docs/decisions/004-repin-crawl-to-match-qw-vintage.md. This commit is date-matched to qw's actual last commit (2024-07-15, not the 2026-08-12 fetch date) so both vendors reflect the same real development window; `git describe` still resolves to the 0.32-a0 epoch (0.32-a0-1739-g...) since 0.32-b1 wasn't cut yet."
   },
   "qw": {
     "repo": "https://github.com/crawl/qw.git",
     "commit": "8698adcf9b7103524abb7080dbc8e5fcd36465f6",
     "ref_label": "heads/master",
-    "note": "master tip as of 2026-08-12; changelog top entry declares 0.32-a0 support, matching the crawl pin above."
+    "describe_tag": "pinned",
+    "note": "master tip as of 2026-08-12 fetch, but the commit itself dates to 2024-07-15 — qw's master branch has not moved since. The crawl pin above is date-matched to this, not to the fetch date."
   },
   "pinned_date": "2026-08-12",
-  "decision": "docs/decisions/002-vendoring-mechanism.md"
+  "decision": "docs/decisions/002-vendoring-mechanism.md, docs/decisions/004-repin-crawl-to-match-qw-vintage.md"
 }

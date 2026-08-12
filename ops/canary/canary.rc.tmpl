@@ -1,0 +1,12 @@
+# Generated canary wrapper rc — do not hand-edit, see ops/run-canary.py.
+# Loads qw's own rc unmodified, then its bot logic (qw.rc's own
+# `include = qw.lua` line ships commented out — see README.md "Method 1" —
+# so it must be pulled in explicitly here), then overrides just what Phase 0
+# canaries need: non-interactive start and a forced combo (so each canary
+# tests one specific species/background/weapon deterministically).
+include = qw.rc
+include = qw.lua
+
+: AUTO_START = true
+: DELAYED = false
+combo = __COMBO__

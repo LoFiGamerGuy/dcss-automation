@@ -109,3 +109,89 @@ error in the log — do not re-guess blindly, the log will show the real
 missing dependency or compile error. If it's still running when this session
 ends, leave it running (it's detached/disowned) and say so explicitly in the
 next journal entry rather than waiting on it silently.
+
+## 2026-08-12 — Manifest + canary suite green after fixing 3 real bugs (build, harness, vendor pin)
+
+**Did:** Picked up mid-flight: a prior invocation had built crawl successfully
+(build-2), discovered `-list-combos` doesn't exist on the pin and added
+`-playable-json`/`-weapon-json` CLOs instead (`docs/decisions/003`,
+`patches/crawl/0001-weapon-json-clo.patch`), fixed the `git describe`
+"Version string 'pinned' is malformed" build failure (per-repo `describe_tag`
+in `vendor-lock.json`), and wrote `ops/generate-manifest.sh` +
+`ops/run-canary.py` + `ops/canary/canary.rc.tmpl` — but left it all
+uncommitted and unjournaled (a real gap: two full sessions of work were at
+risk of being lost). Verified all of it, found and fixed three more bugs
+along the way, then committed the whole thing as one coherent unit.
+
+Bugs found and fixed this session:
+1. **qw.lua never generated.** `ops/fetch-vendor.sh` fetches qw's raw
+   `source/*.lua` files but qw.rc only loads bot logic if they're combined
+   into `qw.lua` first (`make-qw.sh`, README "Method 1") — not checked into
+   qw's repo, and not run by our fetch script. Fixed: `fetch-vendor.sh` now
+   runs `make-qw.sh` after every fetch. Without this qw never actually plays
+   — the rc loads with no bot logic and just sits at the welcome screen.
+2. **`canary.rc.tmpl` never included qw.lua either**, and separately, the
+   game's opening `--more--` prompt blocks all input (including clua hooks)
+   until dismissed — qw's own reference automation (`util/qw.exp`) sends
+   `\r\t` for exactly this reason (`\r` dismiss, `\t` toggle start). Our
+   template sets `AUTO_START = true` already, so `run-canary.py` now sends
+   only `\r` after the "Welcome," banner (sending Tab too would toggle qw
+   back *off*). Both bugs together meant every canary produced zero bot
+   activity and the harness misread that as company for bug #3.
+3. **`run-canary.py`'s inactivity-timeout branch classified as "hang"
+   without checking for a Lua error first.** A crashed-and-frozen game looks
+   identical to a genuinely stuck one from the outside (both stop producing
+   output) — the deadline-end path checked `ERROR_PATTERNS` but the
+   15-second-inactivity path returned early. Factored both into a shared
+   `_classify()`. This is what surfaced bug #4 below instead of hiding it as
+   a generic hang.
+4. **Real vendor incompatibility, not a harness bug:** GrBe reproducibly hit
+   `attempt to call field '?' (a nil value)` a few turns in, from
+   `Monster:can_use_doors()` calling a crawl lua binding
+   (`moninf_get_can_use_doors`) that our pinned crawl commit doesn't have.
+   Root-caused with full (non-shallow) clones of both repos: qw added
+   `can_use_doors` 2024-06-08; crawl added the matching binding 2024-05-04;
+   our original pin (`a7cece93`, tag `0.32-a0`) was **2024-01-12** — 4-5
+   months too early. The deeper finding: `0.32-a0` is a long-lived
+   `git describe` epoch (1700+ commits before the next tag `0.32-b1`), so
+   "qw's changelog says it supports 0.32-a0" does not mean "pin the first
+   commit of that tag" — it means "pin a commit contemporaneous with qw's
+   own development window." qw's `master` branch, despite being fetched
+   "at tip" today, hasn't been touched since **2024-07-15**. Re-pinned crawl
+   to `a504a9fe27e86e3ae0ab4abfa21f257b016f344d` (2024-07-15, date-matched
+   to qw, not fetch-date-matched) — full reasoning and rejected alternatives
+   in `docs/decisions/004-repin-crawl-to-match-qw-vintage.md`.
+
+After all four fixes: rebuilt clean from the corrected lock file (reproducible
+build re-verified), regenerated the manifest (35 species incl. Coglin — added
+between the old and new pin — 25 jobs, 665 combos, 238 weapon-choice combos),
+and ran all 8 required canaries (GrBe, HuCK zealot, HuCj caster, FeSu Felid,
+MuNe Mummy, GnWn Gnoll, DgFE Demigod, FoAl Formicid) at seed 1 / 45s budget —
+all `ok`, confirmed by manually inspecting raw output (real movement, combat,
+in GrBe's case a full death) and cross-checked with a manual grep for error
+patterns.
+
+**Result:** Phase 0 exit criteria status: reproducible build ✓ (re-verified
+via this session's from-scratch rebuild after the re-pin); canary suite ✓ (8/8
+ok); sampler-support-set-diff-empty ✓ by construction (manifest generated
+directly from the running binary's own CLOs, nothing hand-maintained to drift).
+**Not yet done:** the telemetry acceptance test (PLAN §6 — DGL_MILESTONES file
+must appear with *exact* expected event records for a scripted game covering
+branch entry/rune/death, not just "a file appeared"); the ~50-game
+wall-clock/CPU/memory throughput measurement that feeds Phase 1 sizing.
+Committed as one commit (build script fix, vendor re-pin, decisions 003+004,
+manifest, canary infra).
+
+**Next step:** Write the telemetry acceptance test next — script a short game
+via wizard-mode/lua console commands (or a scripted rc) that forces a branch
+entry, a rune pickup, and a death in as few turns as possible, run it against
+the current pinned+rebuilt binary (`DGL_MILESTONES` already compiled in —
+confirmed via `-version` feature banner previously, worth re-confirming since
+the binary was rebuilt from a different commit), and assert the milestones
+xlog file contains exactly the expected event records/fields — not just that
+the file exists. After that, do the ~50-game throughput measurement: start it
+**detached** (nohup + `logs/`, PID recorded here first) since even at ~45s
+budget/game that's ~40 min serial — parallelize across a handful of workers
+(leave CPU headroom per CLAUDE.md) rather than running serially, and do not
+idle-wait on it; go do the telemetry test work while it runs if sequencing
+allows, or leave it running across session boundary and say so explicitly.

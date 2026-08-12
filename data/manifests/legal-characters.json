@@ -1,0 +1,5675 @@
+{
+  "crawl_commit": "a504a9fe27e86e3ae0ab4abfa21f257b016f344d",
+  "crawl_version": "0.32-a0",
+  "species": [
+    {
+      "name": "Human",
+      "abbr": "Hu",
+      "apts": {
+        "Fighting": 0,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": 0,
+        "Throwing": 0,
+        "Armour": 0,
+        "Dodging": 0,
+        "Stealth": 1,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": 0,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": 0,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Berserker",
+        "Cinder Acolyte",
+        "Conjurer",
+        "Necromancer",
+        "Ice Elementalist"
+      ]
+    },
+    {
+      "name": "Deep Elf",
+      "abbr": "DE",
+      "apts": {
+        "Fighting": -2,
+        "Short Blades": 0,
+        "Long Blades": -1,
+        "Axes": -2,
+        "Maces & Flails": -3,
+        "Polearms": -3,
+        "Staves": 0,
+        "Ranged Weapons": 3,
+        "Throwing": 0,
+        "Armour": -2,
+        "Dodging": 2,
+        "Stealth": 3,
+        "Shields": -2,
+        "Unarmed Combat": -2,
+        "Spellcasting": 3,
+        "Conjurations": 1,
+        "Hexes": 3,
+        "Summonings": 1,
+        "Necromancy": 2,
+        "Translocations": 1,
+        "Fire Magic": 1,
+        "Ice Magic": 1,
+        "Air Magic": 1,
+        "Earth Magic": 1,
+        "Alchemy": 1,
+        "Invocations": 1,
+        "Evocations": 1,
+        "Shapeshifting": 0
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": -2,
+        "mp": 2,
+        "wl": 4
+      },
+      "recommended_jobs": [
+        "Hedge Wizard",
+        "Conjurer",
+        "Summoner",
+        "Necromancer",
+        "Fire Elementalist",
+        "Ice Elementalist",
+        "Air Elementalist",
+        "Earth Elementalist",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Kobold",
+      "abbr": "Ko",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 3,
+        "Long Blades": -2,
+        "Axes": -2,
+        "Maces & Flails": -1,
+        "Polearms": -2,
+        "Staves": -1,
+        "Ranged Weapons": 3,
+        "Throwing": 1,
+        "Armour": -2,
+        "Dodging": 2,
+        "Stealth": 4,
+        "Shields": -2,
+        "Unarmed Combat": 0,
+        "Spellcasting": 0,
+        "Conjurations": 0,
+        "Hexes": 0,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 2,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": 1,
+        "hp": -2,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Brigand",
+        "Berserker",
+        "Hexslinger",
+        "Enchanter",
+        "Conjurer",
+        "Earth Elementalist"
+      ]
+    },
+    {
+      "name": "Mummy",
+      "abbr": "Mu",
+      "apts": {
+        "Fighting": 0,
+        "Short Blades": -2,
+        "Long Blades": -2,
+        "Axes": -2,
+        "Maces & Flails": -2,
+        "Polearms": -2,
+        "Staves": -2,
+        "Ranged Weapons": -2,
+        "Throwing": -2,
+        "Armour": -2,
+        "Dodging": -2,
+        "Stealth": -1,
+        "Shields": -2,
+        "Unarmed Combat": -2,
+        "Spellcasting": 2,
+        "Conjurations": -2,
+        "Hexes": -1,
+        "Summonings": -2,
+        "Necromancy": 0,
+        "Translocations": -2,
+        "Fire Magic": -2,
+        "Ice Magic": -2,
+        "Air Magic": -2,
+        "Earth Magic": -2,
+        "Alchemy": -2,
+        "Invocations": -1,
+        "Evocations": -2
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 0,
+        "mp": 0,
+        "wl": 5
+      },
+      "recommended_jobs": [
+        "Cinder Acolyte",
+        "Hedge Wizard",
+        "Conjurer",
+        "Necromancer",
+        "Ice Elementalist",
+        "Summoner"
+      ]
+    },
+    {
+      "name": "Naga",
+      "abbr": "Na",
+      "apts": {
+        "Fighting": 0,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Armour": -2,
+        "Dodging": -2,
+        "Stealth": 5,
+        "Shields": -1,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": 0,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 2,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": 2,
+        "mp": 0,
+        "wl": 5
+      },
+      "recommended_jobs": [
+        "Berserker",
+        "Shapeshifter",
+        "Enchanter",
+        "Fire Elementalist",
+        "Ice Elementalist",
+        "Warper",
+        "Hedge Wizard",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Oni",
+      "abbr": "On",
+      "apts": {
+        "Fighting": 3,
+        "Short Blades": -1,
+        "Long Blades": -1,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -3,
+        "Throwing": 0,
+        "Armour": -1,
+        "Dodging": -1,
+        "Stealth": -2,
+        "Shields": -1,
+        "Unarmed Combat": -1,
+        "Spellcasting": 1,
+        "Conjurations": -1,
+        "Hexes": -1,
+        "Summonings": -1,
+        "Necromancy": -1,
+        "Translocations": -1,
+        "Fire Magic": -1,
+        "Ice Magic": -1,
+        "Air Magic": -1,
+        "Earth Magic": -1,
+        "Alchemy": -1,
+        "Invocations": 2,
+        "Evocations": -2,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": 3,
+        "mp": 0,
+        "wl": 4
+      },
+      "recommended_jobs": [
+        "Gladiator",
+        "Berserker",
+        "Cinder Acolyte",
+        "Hedge Wizard",
+        "Air Elementalist",
+        "Fire Elementalist"
+      ]
+    },
+    {
+      "name": "Troll",
+      "abbr": "Tr",
+      "apts": {
+        "Fighting": -2,
+        "Short Blades": -2,
+        "Long Blades": -2,
+        "Axes": -2,
+        "Maces & Flails": -1,
+        "Polearms": -2,
+        "Staves": -2,
+        "Ranged Weapons": -4,
+        "Throwing": -1,
+        "Armour": -2,
+        "Dodging": -2,
+        "Stealth": -5,
+        "Shields": -1,
+        "Unarmed Combat": 0,
+        "Spellcasting": -5,
+        "Conjurations": -3,
+        "Hexes": -4,
+        "Summonings": -3,
+        "Necromancy": -2,
+        "Translocations": -3,
+        "Fire Magic": -3,
+        "Ice Magic": -3,
+        "Air Magic": -4,
+        "Earth Magic": -1,
+        "Alchemy": -3,
+        "Invocations": -1,
+        "Evocations": -3,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 3,
+        "mp": -1,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Fighter",
+        "Gladiator",
+        "Berserker",
+        "Warper",
+        "Earth Elementalist",
+        "Hedge Wizard"
+      ]
+    },
+    {
+      "name": "Red Draconian",
+      "abbr": "Dr",
+      "derives": "Draconian",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 2,
+        "Ice Magic": -2,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": []
+    },
+    {
+      "name": "White Draconian",
+      "abbr": "Dr",
+      "derives": "Draconian",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": -2,
+        "Ice Magic": 2,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": []
+    },
+    {
+      "name": "Green Draconian",
+      "abbr": "Dr",
+      "derives": "Draconian",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 2,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": []
+    },
+    {
+      "name": "Yellow Draconian",
+      "abbr": "Dr",
+      "derives": "Draconian",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": []
+    },
+    {
+      "name": "Grey Draconian",
+      "abbr": "Dr",
+      "derives": "Draconian",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": -2,
+        "Earth Magic": 2,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": []
+    },
+    {
+      "name": "Black Draconian",
+      "abbr": "Dr",
+      "derives": "Draconian",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 2,
+        "Earth Magic": -2,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": []
+    },
+    {
+      "name": "Purple Draconian",
+      "abbr": "Dr",
+      "derives": "Draconian",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": 1,
+        "Conjurations": 0,
+        "Hexes": 1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 1,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 6
+      },
+      "recommended_jobs": []
+    },
+    {
+      "name": "Pale Draconian",
+      "abbr": "Dr",
+      "derives": "Draconian",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 1,
+        "Ice Magic": 0,
+        "Air Magic": 1,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 1,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": []
+    },
+    {
+      "name": "Draconian",
+      "abbr": "Dr",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Berserker",
+        "Shapeshifter",
+        "Conjurer",
+        "Fire Elementalist",
+        "Ice Elementalist",
+        "Air Elementalist",
+        "Earth Elementalist",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Demigod",
+      "abbr": "Dg",
+      "apts": {
+        "Fighting": -1,
+        "Short Blades": -1,
+        "Long Blades": -1,
+        "Axes": -1,
+        "Maces & Flails": -1,
+        "Polearms": -1,
+        "Staves": -1,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Armour": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": -1,
+        "Unarmed Combat": -1,
+        "Spellcasting": -2,
+        "Conjurations": -1,
+        "Hexes": -1,
+        "Summonings": -1,
+        "Necromancy": -1,
+        "Translocations": -1,
+        "Fire Magic": -1,
+        "Ice Magic": -1,
+        "Air Magic": -1,
+        "Earth Magic": -1,
+        "Alchemy": -1,
+        "Evocations": -1,
+        "Shapeshifting": -2
+      },
+      "modifiers": {
+        "xp": -2,
+        "hp": 1,
+        "mp": 2,
+        "wl": 4
+      },
+      "recommended_jobs": [
+        "Shapeshifter",
+        "Conjurer",
+        "Fire Elementalist",
+        "Ice Elementalist",
+        "Air Elementalist",
+        "Earth Elementalist"
+      ]
+    },
+    {
+      "name": "Spriggan",
+      "abbr": "Sp",
+      "apts": {
+        "Fighting": -2,
+        "Short Blades": 1,
+        "Long Blades": -2,
+        "Axes": -2,
+        "Maces & Flails": -3,
+        "Polearms": -3,
+        "Staves": -3,
+        "Ranged Weapons": 0,
+        "Throwing": 0,
+        "Armour": -3,
+        "Dodging": 3,
+        "Stealth": 5,
+        "Shields": -3,
+        "Unarmed Combat": -2,
+        "Spellcasting": 2,
+        "Conjurations": -3,
+        "Hexes": 2,
+        "Summonings": -2,
+        "Necromancy": -1,
+        "Translocations": 4,
+        "Fire Magic": -2,
+        "Ice Magic": -2,
+        "Air Magic": -1,
+        "Earth Magic": -1,
+        "Alchemy": 1,
+        "Invocations": 0,
+        "Evocations": 3,
+        "Shapeshifting": 2
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": -3,
+        "mp": 1,
+        "wl": 7
+      },
+      "recommended_jobs": [
+        "Brigand",
+        "Artificer",
+        "Warper",
+        "Enchanter",
+        "Conjurer",
+        "Earth Elementalist",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Minotaur",
+      "abbr": "Mi",
+      "apts": {
+        "Fighting": 2,
+        "Short Blades": 1,
+        "Long Blades": 2,
+        "Axes": 2,
+        "Maces & Flails": 2,
+        "Polearms": 2,
+        "Staves": 2,
+        "Ranged Weapons": 1,
+        "Throwing": 0,
+        "Armour": 2,
+        "Dodging": 1,
+        "Stealth": -1,
+        "Shields": 2,
+        "Unarmed Combat": 1,
+        "Spellcasting": -4,
+        "Conjurations": -3,
+        "Hexes": -4,
+        "Summonings": -3,
+        "Necromancy": -3,
+        "Translocations": -3,
+        "Fire Magic": -3,
+        "Ice Magic": -3,
+        "Air Magic": -3,
+        "Earth Magic": -2,
+        "Alchemy": -3,
+        "Invocations": 0,
+        "Evocations": -1,
+        "Shapeshifting": -3
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": -1,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Fighter",
+        "Gladiator",
+        "Monk",
+        "Hunter",
+        "Berserker"
+      ]
+    },
+    {
+      "name": "Demonspawn",
+      "abbr": "Ds",
+      "apts": {
+        "Fighting": 0,
+        "Short Blades": -1,
+        "Long Blades": -1,
+        "Axes": -1,
+        "Maces & Flails": -1,
+        "Polearms": -1,
+        "Staves": -1,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Armour": -1,
+        "Dodging": -1,
+        "Stealth": 0,
+        "Shields": -1,
+        "Unarmed Combat": -1,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": 0,
+        "Summonings": 0,
+        "Necromancy": 1,
+        "Translocations": -1,
+        "Fire Magic": -1,
+        "Ice Magic": -1,
+        "Air Magic": -1,
+        "Earth Magic": -1,
+        "Alchemy": 0,
+        "Invocations": 3,
+        "Evocations": 0,
+        "Shapeshifting": -2
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 0,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Gladiator",
+        "Berserker",
+        "Hedge Wizard",
+        "Necromancer",
+        "Fire Elementalist",
+        "Ice Elementalist",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Ghoul",
+      "abbr": "Gh",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": -1,
+        "Long Blades": -1,
+        "Axes": -1,
+        "Maces & Flails": -1,
+        "Polearms": -1,
+        "Staves": -1,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Armour": -1,
+        "Dodging": -1,
+        "Stealth": 2,
+        "Shields": -1,
+        "Unarmed Combat": 1,
+        "Spellcasting": -2,
+        "Conjurations": -2,
+        "Hexes": -2,
+        "Summonings": -1,
+        "Necromancy": 0,
+        "Translocations": -1,
+        "Fire Magic": -2,
+        "Ice Magic": 1,
+        "Air Magic": -2,
+        "Earth Magic": 1,
+        "Alchemy": -1,
+        "Invocations": 1,
+        "Evocations": -1
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Warper",
+        "Gladiator",
+        "Monk",
+        "Necromancer",
+        "Ice Elementalist",
+        "Earth Elementalist"
+      ]
+    },
+    {
+      "name": "Tengu",
+      "abbr": "Te",
+      "apts": {
+        "Fighting": 0,
+        "Short Blades": 1,
+        "Long Blades": 1,
+        "Axes": 1,
+        "Maces & Flails": 1,
+        "Polearms": 1,
+        "Staves": 1,
+        "Ranged Weapons": 1,
+        "Throwing": 0,
+        "Armour": 1,
+        "Dodging": 1,
+        "Stealth": 1,
+        "Shields": 0,
+        "Unarmed Combat": 1,
+        "Spellcasting": -1,
+        "Conjurations": 3,
+        "Hexes": -3,
+        "Summonings": 2,
+        "Necromancy": 1,
+        "Translocations": -2,
+        "Fire Magic": 1,
+        "Ice Magic": -1,
+        "Air Magic": 3,
+        "Earth Magic": -3,
+        "Alchemy": -1,
+        "Invocations": -1,
+        "Evocations": 0,
+        "Shapeshifting": -2
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": -2,
+        "mp": 1,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Berserker",
+        "Reaver",
+        "Hedge Wizard",
+        "Conjurer",
+        "Summoner",
+        "Fire Elementalist",
+        "Air Elementalist"
+      ]
+    },
+    {
+      "name": "Merfolk",
+      "abbr": "Mf",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 2,
+        "Long Blades": 2,
+        "Axes": -2,
+        "Maces & Flails": -2,
+        "Polearms": 3,
+        "Staves": -2,
+        "Ranged Weapons": -2,
+        "Throwing": 0,
+        "Armour": -3,
+        "Dodging": 3,
+        "Stealth": 2,
+        "Shields": 0,
+        "Unarmed Combat": 1,
+        "Spellcasting": -1,
+        "Conjurations": -2,
+        "Hexes": 0,
+        "Summonings": 0,
+        "Necromancy": -2,
+        "Translocations": -2,
+        "Fire Magic": -3,
+        "Ice Magic": 1,
+        "Air Magic": -2,
+        "Earth Magic": -2,
+        "Alchemy": 3,
+        "Invocations": 1,
+        "Evocations": 0,
+        "Shapeshifting": 2
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": 0,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Gladiator",
+        "Berserker",
+        "Shapeshifter",
+        "Summoner",
+        "Ice Elementalist",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Vampire",
+      "abbr": "Vp",
+      "apts": {
+        "Fighting": -1,
+        "Short Blades": 1,
+        "Long Blades": 0,
+        "Axes": -1,
+        "Maces & Flails": -2,
+        "Polearms": -1,
+        "Staves": -2,
+        "Ranged Weapons": -2,
+        "Throwing": -2,
+        "Armour": -2,
+        "Dodging": 1,
+        "Stealth": 5,
+        "Shields": -1,
+        "Unarmed Combat": 1,
+        "Spellcasting": -1,
+        "Conjurations": -3,
+        "Hexes": 4,
+        "Summonings": 0,
+        "Necromancy": 1,
+        "Translocations": -2,
+        "Fire Magic": -2,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 1,
+        "Invocations": -1,
+        "Evocations": -1,
+        "Shapeshifting": 0
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 0,
+        "mp": 0,
+        "wl": 4
+      },
+      "recommended_jobs": [
+        "Gladiator",
+        "Brigand",
+        "Enchanter",
+        "Necromancer",
+        "Earth Elementalist",
+        "Ice Elementalist",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Felid",
+      "abbr": "Fe",
+      "apts": {
+        "Fighting": 0,
+        "Dodging": 3,
+        "Stealth": 4,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": -1,
+        "Hexes": 4,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 4,
+        "Fire Magic": -1,
+        "Ice Magic": -1,
+        "Air Magic": -1,
+        "Earth Magic": -1,
+        "Alchemy": -1,
+        "Invocations": 0,
+        "Evocations": 1,
+        "Shapeshifting": -2
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": -3,
+        "mp": 1,
+        "wl": 6
+      },
+      "recommended_jobs": [
+        "Berserker",
+        "Enchanter",
+        "Shapeshifter",
+        "Ice Elementalist",
+        "Air Elementalist",
+        "Conjurer",
+        "Summoner"
+      ]
+    },
+    {
+      "name": "Octopode",
+      "abbr": "Op",
+      "apts": {
+        "Fighting": 0,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": 0,
+        "Throwing": 0,
+        "Dodging": 0,
+        "Stealth": 4,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 0,
+        "Hexes": 0,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 1,
+        "Invocations": 1,
+        "Evocations": 1,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": -1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Shapeshifter",
+        "Hedge Wizard",
+        "Conjurer",
+        "Brigand",
+        "Fire Elementalist",
+        "Earth Elementalist",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Djinni",
+      "abbr": "Dj",
+      "apts": {
+        "Fighting": 0,
+        "Short Blades": -1,
+        "Long Blades": -1,
+        "Axes": -2,
+        "Maces & Flails": -2,
+        "Polearms": -2,
+        "Staves": -1,
+        "Ranged Weapons": -2,
+        "Throwing": -2,
+        "Armour": 0,
+        "Dodging": 1,
+        "Stealth": -1,
+        "Shields": 0,
+        "Unarmed Combat": 0,
+        "Spellcasting": 11,
+        "Conjurations": 11,
+        "Hexes": 11,
+        "Summonings": 11,
+        "Necromancy": 11,
+        "Translocations": 11,
+        "Fire Magic": 11,
+        "Ice Magic": 11,
+        "Air Magic": 11,
+        "Earth Magic": 11,
+        "Alchemy": 11,
+        "Invocations": 0,
+        "Evocations": 0,
+        "Shapeshifting": -2
+      },
+      "modifiers": {
+        "xp": 1,
+        "hp": -1,
+        "mp": 0,
+        "wl": 4
+      },
+      "recommended_jobs": [
+        "Gladiator",
+        "Shapeshifter",
+        "Hedge Wizard",
+        "Fire Elementalist",
+        "Ice Elementalist"
+      ]
+    },
+    {
+      "name": "Gargoyle",
+      "abbr": "Gr",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": -1,
+        "Long Blades": -1,
+        "Axes": -1,
+        "Maces & Flails": 0,
+        "Polearms": -1,
+        "Staves": 0,
+        "Ranged Weapons": 0,
+        "Throwing": -1,
+        "Armour": 1,
+        "Dodging": -2,
+        "Stealth": 2,
+        "Shields": 1,
+        "Unarmed Combat": 0,
+        "Spellcasting": -1,
+        "Conjurations": 1,
+        "Hexes": -1,
+        "Summonings": -1,
+        "Necromancy": -2,
+        "Translocations": -1,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": -2,
+        "Earth Magic": 2,
+        "Alchemy": -2,
+        "Invocations": 1,
+        "Evocations": -1,
+        "Shapeshifting": -3
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": -2,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Fighter",
+        "Gladiator",
+        "Monk",
+        "Berserker",
+        "Fire Elementalist",
+        "Earth Elementalist",
+        "Reaver"
+      ]
+    },
+    {
+      "name": "Formicid",
+      "abbr": "Fo",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": 0,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": 0,
+        "Polearms": 0,
+        "Staves": 0,
+        "Ranged Weapons": 0,
+        "Throwing": 0,
+        "Armour": 1,
+        "Dodging": -1,
+        "Stealth": 3,
+        "Shields": 3,
+        "Unarmed Combat": 0,
+        "Spellcasting": 0,
+        "Conjurations": -1,
+        "Hexes": 2,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": -1,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": -2,
+        "Earth Magic": 2,
+        "Alchemy": 3,
+        "Invocations": 2,
+        "Evocations": 1,
+        "Shapeshifting": 0
+      },
+      "modifiers": {
+        "xp": 1,
+        "hp": 0,
+        "mp": 0,
+        "wl": 4
+      },
+      "recommended_jobs": [
+        "Fighter",
+        "Hunter",
+        "Hexslinger",
+        "Earth Elementalist",
+        "Alchemist"
+      ]
+    },
+    {
+      "name": "Vine Stalker",
+      "abbr": "VS",
+      "apts": {
+        "Fighting": -1,
+        "Short Blades": -1,
+        "Long Blades": -1,
+        "Axes": -1,
+        "Maces & Flails": -1,
+        "Polearms": -1,
+        "Staves": -1,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Armour": -2,
+        "Dodging": -2,
+        "Stealth": 3,
+        "Shields": -1,
+        "Unarmed Combat": 0,
+        "Spellcasting": 0,
+        "Conjurations": 0,
+        "Hexes": 0,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": 0,
+        "Ice Magic": 0,
+        "Air Magic": 0,
+        "Earth Magic": 0,
+        "Alchemy": 0,
+        "Invocations": 0,
+        "Evocations": -1,
+        "Shapeshifting": -1
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": -3,
+        "mp": 1,
+        "wl": 5
+      },
+      "recommended_jobs": [
+        "Fighter",
+        "Brigand",
+        "Berserker",
+        "Enchanter",
+        "Conjurer",
+        "Necromancer",
+        "Ice Elementalist"
+      ]
+    },
+    {
+      "name": "Barachi",
+      "abbr": "Ba",
+      "apts": {
+        "Fighting": 2,
+        "Short Blades": 1,
+        "Long Blades": 2,
+        "Axes": 1,
+        "Maces & Flails": 1,
+        "Polearms": 0,
+        "Staves": 1,
+        "Ranged Weapons": 0,
+        "Throwing": 0,
+        "Armour": 2,
+        "Dodging": 1,
+        "Stealth": 0,
+        "Shields": 1,
+        "Unarmed Combat": 1,
+        "Spellcasting": 0,
+        "Conjurations": 1,
+        "Hexes": 1,
+        "Summonings": 2,
+        "Necromancy": -1,
+        "Translocations": 1,
+        "Fire Magic": 1,
+        "Ice Magic": 2,
+        "Air Magic": 1,
+        "Earth Magic": 0,
+        "Alchemy": 1,
+        "Invocations": -1,
+        "Evocations": 1,
+        "Shapeshifting": 0
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": 0,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Fighter",
+        "Berserker",
+        "Warper",
+        "Hexslinger",
+        "Summoner",
+        "Ice Elementalist",
+        "Reaver"
+      ]
+    },
+    {
+      "name": "Gnoll",
+      "abbr": "Gn",
+      "apts": {
+        "Fighting": 8,
+        "Short Blades": 8,
+        "Long Blades": 8,
+        "Axes": 8,
+        "Maces & Flails": 8,
+        "Polearms": 8,
+        "Staves": 8,
+        "Ranged Weapons": 8,
+        "Throwing": 8,
+        "Armour": 8,
+        "Dodging": 8,
+        "Stealth": 8,
+        "Shields": 8,
+        "Unarmed Combat": 8,
+        "Spellcasting": 8,
+        "Conjurations": 6,
+        "Hexes": 6,
+        "Summonings": 6,
+        "Necromancy": 6,
+        "Translocations": 6,
+        "Fire Magic": 6,
+        "Ice Magic": 6,
+        "Air Magic": 6,
+        "Earth Magic": 6,
+        "Alchemy": 6,
+        "Invocations": 9,
+        "Evocations": 8,
+        "Shapeshifting": 7
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": 0,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Cinder Acolyte",
+        "Reaver",
+        "Warper",
+        "Hexslinger",
+        "Shapeshifter",
+        "Wanderer"
+      ]
+    },
+    {
+      "name": "Armataur",
+      "abbr": "At",
+      "apts": {
+        "Fighting": -1,
+        "Short Blades": -1,
+        "Long Blades": -1,
+        "Axes": -2,
+        "Maces & Flails": -1,
+        "Polearms": -2,
+        "Staves": -1,
+        "Ranged Weapons": -3,
+        "Throwing": -1,
+        "Armour": 2,
+        "Dodging": -3,
+        "Stealth": 2,
+        "Shields": 1,
+        "Unarmed Combat": -1,
+        "Spellcasting": -2,
+        "Conjurations": -1,
+        "Hexes": -1,
+        "Summonings": -2,
+        "Necromancy": -2,
+        "Translocations": 0,
+        "Fire Magic": -1,
+        "Ice Magic": -1,
+        "Air Magic": -1,
+        "Earth Magic": -1,
+        "Alchemy": -1,
+        "Invocations": 0,
+        "Evocations": 0,
+        "Shapeshifting": -2
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 3
+      },
+      "recommended_jobs": [
+        "Fighter",
+        "Berserker",
+        "Warper",
+        "Hedge Wizard"
+      ]
+    },
+    {
+      "name": "Mountain Dwarf",
+      "abbr": "MD",
+      "apts": {
+        "Fighting": 1,
+        "Short Blades": -2,
+        "Long Blades": -1,
+        "Axes": 2,
+        "Maces & Flails": 2,
+        "Polearms": 0,
+        "Staves": 1,
+        "Ranged Weapons": -2,
+        "Throwing": -2,
+        "Armour": 1,
+        "Dodging": -3,
+        "Stealth": -2,
+        "Shields": 1,
+        "Unarmed Combat": 0,
+        "Spellcasting": -2,
+        "Conjurations": -1,
+        "Hexes": 0,
+        "Summonings": 0,
+        "Necromancy": 1,
+        "Translocations": -2,
+        "Fire Magic": 2,
+        "Ice Magic": -1,
+        "Air Magic": -3,
+        "Earth Magic": 1,
+        "Alchemy": -2,
+        "Invocations": 3,
+        "Evocations": 1,
+        "Shapeshifting": -2
+      },
+      "modifiers": {
+        "xp": -1,
+        "hp": 1,
+        "mp": 0,
+        "wl": 4
+      },
+      "recommended_jobs": [
+        "Fighter",
+        "Monk",
+        "Berserker",
+        "Cinder Acolyte",
+        "Reaver",
+        "Fire Elementalist"
+      ]
+    },
+    {
+      "name": "Coglin",
+      "abbr": "Co",
+      "apts": {
+        "Fighting": 0,
+        "Short Blades": -1,
+        "Long Blades": 0,
+        "Axes": 0,
+        "Maces & Flails": -1,
+        "Polearms": -1,
+        "Staves": -1,
+        "Ranged Weapons": -1,
+        "Throwing": -1,
+        "Armour": -1,
+        "Dodging": -1,
+        "Stealth": -1,
+        "Shields": -3,
+        "Unarmed Combat": -1,
+        "Spellcasting": -2,
+        "Conjurations": -1,
+        "Hexes": -1,
+        "Summonings": 0,
+        "Necromancy": 0,
+        "Translocations": 0,
+        "Fire Magic": -1,
+        "Ice Magic": -1,
+        "Air Magic": -1,
+        "Earth Magic": -1,
+        "Alchemy": 1,
+        "Invocations": -2,
+        "Evocations": 3,
+        "Shapeshifting": -2
+      },
+      "modifiers": {
+        "xp": 0,
+        "hp": 0,
+        "mp": 0,
+        "wl": 5
+      },
+      "recommended_jobs": [
+        "Artificer",
+        "Hunter",
+        "Gladiator",
+        "Warper",
+        "Berserker",
+        "Alchemist"
+      ]
+    }
+  ],
+  "jobs": [
+    {
+      "name": "Fighter",
+      "abbr": "Fi",
+      "recommended_species": [
+        "Mountain Dwarf",
+        "Troll",
+        "Minotaur",
+        "Gargoyle",
+        "Armataur",
+        "Formicid"
+      ]
+    },
+    {
+      "name": "Hedge Wizard",
+      "abbr": "HW",
+      "recommended_species": [
+        "Deep Elf",
+        "Naga",
+        "Draconian",
+        "Octopode",
+        "Human",
+        "Djinni"
+      ]
+    },
+    {
+      "name": "Gladiator",
+      "abbr": "Gl",
+      "recommended_species": [
+        "Mountain Dwarf",
+        "Merfolk",
+        "Minotaur",
+        "Gargoyle",
+        "Coglin",
+        "Vine Stalker"
+      ]
+    },
+    {
+      "name": "Necromancer",
+      "abbr": "Ne",
+      "recommended_species": [
+        "Deep Elf",
+        "Djinni",
+        "Mountain Dwarf",
+        "Demonspawn",
+        "Mummy",
+        "Vampire"
+      ]
+    },
+    {
+      "name": "Brigand",
+      "abbr": "Br",
+      "recommended_species": [
+        "Troll",
+        "Spriggan",
+        "Demonspawn",
+        "Vampire",
+        "Vine Stalker",
+        "Gnoll"
+      ]
+    },
+    {
+      "name": "Berserker",
+      "abbr": "Be",
+      "recommended_species": [
+        "Mountain Dwarf",
+        "Oni",
+        "Merfolk",
+        "Minotaur",
+        "Gargoyle",
+        "Armataur"
+      ]
+    },
+    {
+      "name": "Hunter",
+      "abbr": "Hu",
+      "recommended_species": [
+        "Minotaur",
+        "Gnoll",
+        "Barachi",
+        "Kobold",
+        "Spriggan"
+      ]
+    },
+    {
+      "name": "Conjurer",
+      "abbr": "Cj",
+      "recommended_species": [
+        "Deep Elf",
+        "Naga",
+        "Tengu",
+        "Draconian",
+        "Demigod",
+        "Djinni"
+      ]
+    },
+    {
+      "name": "Enchanter",
+      "abbr": "En",
+      "recommended_species": [
+        "Deep Elf",
+        "Felid",
+        "Kobold",
+        "Spriggan",
+        "Naga",
+        "Vampire"
+      ]
+    },
+    {
+      "name": "Fire Elementalist",
+      "abbr": "FE",
+      "recommended_species": [
+        "Deep Elf",
+        "Mountain Dwarf",
+        "Naga",
+        "Tengu",
+        "Demigod",
+        "Gargoyle",
+        "Djinni"
+      ]
+    },
+    {
+      "name": "Ice Elementalist",
+      "abbr": "IE",
+      "recommended_species": [
+        "Merfolk",
+        "Barachi",
+        "Draconian",
+        "Demigod",
+        "Gargoyle",
+        "Djinni"
+      ]
+    },
+    {
+      "name": "Summoner",
+      "abbr": "Su",
+      "recommended_species": [
+        "Deep Elf",
+        "Mountain Dwarf",
+        "Vine Stalker",
+        "Merfolk",
+        "Tengu",
+        "Vampire"
+      ]
+    },
+    {
+      "name": "Air Elementalist",
+      "abbr": "AE",
+      "recommended_species": [
+        "Deep Elf",
+        "Tengu",
+        "Draconian",
+        "Naga",
+        "Vine Stalker",
+        "Djinni"
+      ]
+    },
+    {
+      "name": "Earth Elementalist",
+      "abbr": "EE",
+      "recommended_species": [
+        "Deep Elf",
+        "Spriggan",
+        "Gargoyle",
+        "Demigod",
+        "Ghoul",
+        "Octopode"
+      ]
+    },
+    {
+      "name": "Alchemist",
+      "abbr": "Al",
+      "recommended_species": [
+        "Deep Elf",
+        "Spriggan",
+        "Naga",
+        "Merfolk",
+        "Octopode",
+        "Djinni",
+        "Demonspawn"
+      ]
+    },
+    {
+      "name": "Chaos Knight",
+      "abbr": "CK",
+      "recommended_species": [
+        "Spriggan",
+        "Troll",
+        "Gnoll",
+        "Merfolk",
+        "Minotaur",
+        "Draconian",
+        "Demonspawn"
+      ]
+    },
+    {
+      "name": "Shapeshifter",
+      "abbr": "Sh",
+      "recommended_species": [
+        "Naga",
+        "Merfolk",
+        "Draconian",
+        "Demigod",
+        "Demonspawn",
+        "Troll"
+      ]
+    },
+    {
+      "name": "Monk",
+      "abbr": "Mo",
+      "recommended_species": [
+        "Mountain Dwarf",
+        "Troll",
+        "Armataur",
+        "Merfolk",
+        "Gargoyle",
+        "Demonspawn"
+      ]
+    },
+    {
+      "name": "Warper",
+      "abbr": "Wr",
+      "recommended_species": [
+        "Felid",
+        "Spriggan",
+        "Armataur",
+        "Draconian",
+        "Coglin"
+      ]
+    },
+    {
+      "name": "Wanderer",
+      "abbr": "Wn",
+      "recommended_species": [
+        "Mountain Dwarf",
+        "Gnoll",
+        "Merfolk",
+        "Draconian",
+        "Human",
+        "Demonspawn",
+        "Barachi"
+      ]
+    },
+    {
+      "name": "Artificer",
+      "abbr": "Ar",
+      "recommended_species": [
+        "Kobold",
+        "Spriggan",
+        "Draconian",
+        "Demonspawn",
+        "Coglin"
+      ]
+    },
+    {
+      "name": "Hexslinger",
+      "abbr": "Hs",
+      "recommended_species": [
+        "Formicid",
+        "Deep Elf",
+        "Kobold",
+        "Spriggan",
+        "Gnoll"
+      ]
+    },
+    {
+      "name": "Delver",
+      "abbr": "De",
+      "recommended_species": [
+        "Felid",
+        "Spriggan",
+        "Kobold",
+        "Vampire",
+        "Gnoll"
+      ]
+    },
+    {
+      "name": "Cinder Acolyte",
+      "abbr": "CA",
+      "recommended_species": [
+        "Mountain Dwarf",
+        "Draconian",
+        "Oni",
+        "Djinni",
+        "Gnoll"
+      ]
+    },
+    {
+      "name": "Reaver",
+      "abbr": "Re",
+      "recommended_species": [
+        "Gnoll",
+        "Tengu",
+        "Barachi",
+        "Demonspawn",
+        "Draconian",
+        "Mountain Dwarf"
+      ]
+    }
+  ],
+  "combos": [
+    "HuFi",
+    "HuHW",
+    "HuGl",
+    "HuNe",
+    "HuBr",
+    "HuBe",
+    "HuHu",
+    "HuCj",
+    "HuEn",
+    "HuFE",
+    "HuIE",
+    "HuSu",
+    "HuAE",
+    "HuEE",
+    "HuAl",
+    "HuCK",
+    "HuSh",
+    "HuMo",
+    "HuWr",
+    "HuWn",
+    "HuAr",
+    "HuHs",
+    "HuDe",
+    "HuCA",
+    "HuRe",
+    "DEFi",
+    "DEHW",
+    "DEGl",
+    "DENe",
+    "DEBr",
+    "DEBe",
+    "DEHu",
+    "DECj",
+    "DEEn",
+    "DEFE",
+    "DEIE",
+    "DESu",
+    "DEAE",
+    "DEEE",
+    "DEAl",
+    "DECK",
+    "DESh",
+    "DEMo",
+    "DEWr",
+    "DEWn",
+    "DEAr",
+    "DEHs",
+    "DEDe",
+    "DECA",
+    "DERe",
+    "KoFi",
+    "KoHW",
+    "KoGl",
+    "KoNe",
+    "KoBr",
+    "KoBe",
+    "KoHu",
+    "KoCj",
+    "KoEn",
+    "KoFE",
+    "KoIE",
+    "KoSu",
+    "KoAE",
+    "KoEE",
+    "KoAl",
+    "KoCK",
+    "KoSh",
+    "KoMo",
+    "KoWr",
+    "KoWn",
+    "KoAr",
+    "KoHs",
+    "KoDe",
+    "KoCA",
+    "KoRe",
+    "MuFi",
+    "MuHW",
+    "MuGl",
+    "MuNe",
+    "MuBr",
+    "MuBe",
+    "MuHu",
+    "MuCj",
+    "MuEn",
+    "MuFE",
+    "MuIE",
+    "MuSu",
+    "MuAE",
+    "MuEE",
+    "MuAl",
+    "MuCK",
+    "MuMo",
+    "MuWr",
+    "MuWn",
+    "MuAr",
+    "MuHs",
+    "MuDe",
+    "MuCA",
+    "MuRe",
+    "NaFi",
+    "NaHW",
+    "NaGl",
+    "NaNe",
+    "NaBr",
+    "NaBe",
+    "NaHu",
+    "NaCj",
+    "NaEn",
+    "NaFE",
+    "NaIE",
+    "NaSu",
+    "NaAE",
+    "NaEE",
+    "NaAl",
+    "NaCK",
+    "NaSh",
+    "NaMo",
+    "NaWr",
+    "NaWn",
+    "NaAr",
+    "NaHs",
+    "NaDe",
+    "NaCA",
+    "NaRe",
+    "OnFi",
+    "OnHW",
+    "OnGl",
+    "OnNe",
+    "OnBr",
+    "OnBe",
+    "OnHu",
+    "OnCj",
+    "OnEn",
+    "OnFE",
+    "OnIE",
+    "OnSu",
+    "OnAE",
+    "OnEE",
+    "OnAl",
+    "OnCK",
+    "OnSh",
+    "OnMo",
+    "OnWr",
+    "OnWn",
+    "OnAr",
+    "OnHs",
+    "OnDe",
+    "OnCA",
+    "OnRe",
+    "TrFi",
+    "TrHW",
+    "TrGl",
+    "TrNe",
+    "TrBr",
+    "TrBe",
+    "TrHu",
+    "TrCj",
+    "TrEn",
+    "TrFE",
+    "TrIE",
+    "TrSu",
+    "TrAE",
+    "TrEE",
+    "TrAl",
+    "TrCK",
+    "TrSh",
+    "TrMo",
+    "TrWr",
+    "TrWn",
+    "TrAr",
+    "TrHs",
+    "TrDe",
+    "TrCA",
+    "TrRe",
+    "DrFi",
+    "DrHW",
+    "DrGl",
+    "DrNe",
+    "DrBr",
+    "DrBe",
+    "DrHu",
+    "DrCj",
+    "DrEn",
+    "DrFE",
+    "DrIE",
+    "DrSu",
+    "DrAE",
+    "DrEE",
+    "DrAl",
+    "DrCK",
+    "DrSh",
+    "DrMo",
+    "DrWr",
+    "DrWn",
+    "DrAr",
+    "DrHs",
+    "DrDe",
+    "DrCA",
+    "DrRe",
+    "DgFi",
+    "DgHW",
+    "DgGl",
+    "DgNe",
+    "DgBr",
+    "DgHu",
+    "DgCj",
+    "DgEn",
+    "DgFE",
+    "DgIE",
+    "DgSu",
+    "DgAE",
+    "DgEE",
+    "DgAl",
+    "DgSh",
+    "DgWr",
+    "DgWn",
+    "DgAr",
+    "DgHs",
+    "DgDe",
+    "DgRe",
+    "SpFi",
+    "SpHW",
+    "SpGl",
+    "SpNe",
+    "SpBr",
+    "SpBe",
+    "SpHu",
+    "SpCj",
+    "SpEn",
+    "SpFE",
+    "SpIE",
+    "SpSu",
+    "SpAE",
+    "SpEE",
+    "SpAl",
+    "SpCK",
+    "SpSh",
+    "SpMo",
+    "SpWr",
+    "SpWn",
+    "SpAr",
+    "SpHs",
+    "SpDe",
+    "SpCA",
+    "SpRe",
+    "MiFi",
+    "MiHW",
+    "MiGl",
+    "MiNe",
+    "MiBr",
+    "MiBe",
+    "MiHu",
+    "MiCj",
+    "MiEn",
+    "MiFE",
+    "MiIE",
+    "MiSu",
+    "MiAE",
+    "MiEE",
+    "MiAl",
+    "MiCK",
+    "MiSh",
+    "MiMo",
+    "MiWr",
+    "MiWn",
+    "MiAr",
+    "MiHs",
+    "MiDe",
+    "MiCA",
+    "MiRe",
+    "DsFi",
+    "DsHW",
+    "DsGl",
+    "DsNe",
+    "DsBr",
+    "DsBe",
+    "DsHu",
+    "DsCj",
+    "DsEn",
+    "DsFE",
+    "DsIE",
+    "DsSu",
+    "DsAE",
+    "DsEE",
+    "DsAl",
+    "DsCK",
+    "DsSh",
+    "DsMo",
+    "DsWr",
+    "DsWn",
+    "DsAr",
+    "DsHs",
+    "DsDe",
+    "DsCA",
+    "DsRe",
+    "GhFi",
+    "GhHW",
+    "GhGl",
+    "GhNe",
+    "GhBr",
+    "GhBe",
+    "GhHu",
+    "GhCj",
+    "GhEn",
+    "GhFE",
+    "GhIE",
+    "GhSu",
+    "GhAE",
+    "GhEE",
+    "GhAl",
+    "GhCK",
+    "GhMo",
+    "GhWr",
+    "GhWn",
+    "GhAr",
+    "GhHs",
+    "GhDe",
+    "GhCA",
+    "GhRe",
+    "TeFi",
+    "TeHW",
+    "TeGl",
+    "TeNe",
+    "TeBr",
+    "TeBe",
+    "TeHu",
+    "TeCj",
+    "TeEn",
+    "TeFE",
+    "TeIE",
+    "TeSu",
+    "TeAE",
+    "TeEE",
+    "TeAl",
+    "TeCK",
+    "TeSh",
+    "TeMo",
+    "TeWr",
+    "TeWn",
+    "TeAr",
+    "TeHs",
+    "TeDe",
+    "TeCA",
+    "TeRe",
+    "MfFi",
+    "MfHW",
+    "MfGl",
+    "MfNe",
+    "MfBr",
+    "MfBe",
+    "MfHu",
+    "MfCj",
+    "MfEn",
+    "MfFE",
+    "MfIE",
+    "MfSu",
+    "MfAE",
+    "MfEE",
+    "MfAl",
+    "MfCK",
+    "MfSh",
+    "MfMo",
+    "MfWr",
+    "MfWn",
+    "MfAr",
+    "MfHs",
+    "MfDe",
+    "MfCA",
+    "MfRe",
+    "VpFi",
+    "VpHW",
+    "VpGl",
+    "VpNe",
+    "VpBr",
+    "VpBe",
+    "VpHu",
+    "VpCj",
+    "VpEn",
+    "VpFE",
+    "VpIE",
+    "VpSu",
+    "VpAE",
+    "VpEE",
+    "VpAl",
+    "VpCK",
+    "VpSh",
+    "VpMo",
+    "VpWr",
+    "VpWn",
+    "VpAr",
+    "VpHs",
+    "VpDe",
+    "VpCA",
+    "VpRe",
+    "FeFi",
+    "FeHW",
+    "FeNe",
+    "FeBe",
+    "FeCj",
+    "FeEn",
+    "FeFE",
+    "FeIE",
+    "FeSu",
+    "FeAE",
+    "FeEE",
+    "FeAl",
+    "FeCK",
+    "FeSh",
+    "FeMo",
+    "FeWr",
+    "FeWn",
+    "FeAr",
+    "FeDe",
+    "FeCA",
+    "FeRe",
+    "OpFi",
+    "OpHW",
+    "OpGl",
+    "OpNe",
+    "OpBr",
+    "OpBe",
+    "OpHu",
+    "OpCj",
+    "OpEn",
+    "OpFE",
+    "OpIE",
+    "OpSu",
+    "OpAE",
+    "OpEE",
+    "OpAl",
+    "OpCK",
+    "OpSh",
+    "OpMo",
+    "OpWr",
+    "OpWn",
+    "OpAr",
+    "OpHs",
+    "OpDe",
+    "OpCA",
+    "OpRe",
+    "DjFi",
+    "DjHW",
+    "DjGl",
+    "DjNe",
+    "DjBr",
+    "DjBe",
+    "DjHu",
+    "DjCj",
+    "DjEn",
+    "DjFE",
+    "DjIE",
+    "DjSu",
+    "DjAE",
+    "DjEE",
+    "DjAl",
+    "DjCK",
+    "DjSh",
+    "DjMo",
+    "DjWr",
+    "DjWn",
+    "DjAr",
+    "DjHs",
+    "DjDe",
+    "DjCA",
+    "DjRe",
+    "GrFi",
+    "GrHW",
+    "GrGl",
+    "GrNe",
+    "GrBr",
+    "GrBe",
+    "GrHu",
+    "GrCj",
+    "GrEn",
+    "GrFE",
+    "GrIE",
+    "GrSu",
+    "GrAE",
+    "GrEE",
+    "GrAl",
+    "GrCK",
+    "GrSh",
+    "GrMo",
+    "GrWr",
+    "GrWn",
+    "GrAr",
+    "GrHs",
+    "GrDe",
+    "GrCA",
+    "GrRe",
+    "FoFi",
+    "FoHW",
+    "FoGl",
+    "FoNe",
+    "FoBr",
+    "FoBe",
+    "FoHu",
+    "FoCj",
+    "FoEn",
+    "FoFE",
+    "FoIE",
+    "FoSu",
+    "FoAE",
+    "FoEE",
+    "FoAl",
+    "FoCK",
+    "FoSh",
+    "FoMo",
+    "FoWr",
+    "FoWn",
+    "FoAr",
+    "FoHs",
+    "FoDe",
+    "FoCA",
+    "FoRe",
+    "VSFi",
+    "VSHW",
+    "VSGl",
+    "VSNe",
+    "VSBr",
+    "VSBe",
+    "VSHu",
+    "VSCj",
+    "VSEn",
+    "VSFE",
+    "VSIE",
+    "VSSu",
+    "VSAE",
+    "VSEE",
+    "VSAl",
+    "VSCK",
+    "VSSh",
+    "VSMo",
+    "VSWr",
+    "VSWn",
+    "VSAr",
+    "VSHs",
+    "VSDe",
+    "VSCA",
+    "VSRe",
+    "BaFi",
+    "BaHW",
+    "BaGl",
+    "BaNe",
+    "BaBr",
+    "BaBe",
+    "BaHu",
+    "BaCj",
+    "BaEn",
+    "BaFE",
+    "BaIE",
+    "BaSu",
+    "BaAE",
+    "BaEE",
+    "BaAl",
+    "BaCK",
+    "BaSh",
+    "BaMo",
+    "BaWr",
+    "BaWn",
+    "BaAr",
+    "BaHs",
+    "BaDe",
+    "BaCA",
+    "BaRe",
+    "GnFi",
+    "GnHW",
+    "GnGl",
+    "GnNe",
+    "GnBr",
+    "GnBe",
+    "GnHu",
+    "GnCj",
+    "GnEn",
+    "GnFE",
+    "GnIE",
+    "GnSu",
+    "GnAE",
+    "GnEE",
+    "GnAl",
+    "GnCK",
+    "GnSh",
+    "GnMo",
+    "GnWr",
+    "GnWn",
+    "GnAr",
+    "GnHs",
+    "GnDe",
+    "GnCA",
+    "GnRe",
+    "AtFi",
+    "AtHW",
+    "AtGl",
+    "AtNe",
+    "AtBr",
+    "AtBe",
+    "AtHu",
+    "AtCj",
+    "AtEn",
+    "AtFE",
+    "AtIE",
+    "AtSu",
+    "AtAE",
+    "AtEE",
+    "AtAl",
+    "AtCK",
+    "AtSh",
+    "AtMo",
+    "AtWr",
+    "AtWn",
+    "AtAr",
+    "AtHs",
+    "AtDe",
+    "AtCA",
+    "AtRe",
+    "MDFi",
+    "MDHW",
+    "MDGl",
+    "MDNe",
+    "MDBr",
+    "MDBe",
+    "MDHu",
+    "MDCj",
+    "MDEn",
+    "MDFE",
+    "MDIE",
+    "MDSu",
+    "MDAE",
+    "MDEE",
+    "MDAl",
+    "MDCK",
+    "MDSh",
+    "MDMo",
+    "MDWr",
+    "MDWn",
+    "MDAr",
+    "MDHs",
+    "MDDe",
+    "MDCA",
+    "MDRe",
+    "CoFi",
+    "CoHW",
+    "CoGl",
+    "CoNe",
+    "CoBr",
+    "CoBe",
+    "CoHu",
+    "CoCj",
+    "CoEn",
+    "CoFE",
+    "CoIE",
+    "CoSu",
+    "CoAE",
+    "CoEE",
+    "CoAl",
+    "CoCK",
+    "CoSh",
+    "CoMo",
+    "CoWr",
+    "CoWn",
+    "CoAr",
+    "CoHs",
+    "CoDe",
+    "CoCA",
+    "CoRe"
+  ],
+  "weapon_choices": [
+    {
+      "combo": "HuFi",
+      "species": "Human",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "HuGl",
+      "species": "Human",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "HuBe",
+      "species": "Human",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "HuCK",
+      "species": "Human",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "HuMo",
+      "species": "Human",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "HuWr",
+      "species": "Human",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "HuDe",
+      "species": "Human",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "HuCA",
+      "species": "Human",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "HuRe",
+      "species": "Human",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DEFi",
+      "species": "Deep Elf",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DEGl",
+      "species": "Deep Elf",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DEBe",
+      "species": "Deep Elf",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DECK",
+      "species": "Deep Elf",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DEMo",
+      "species": "Deep Elf",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DEWr",
+      "species": "Deep Elf",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DEDe",
+      "species": "Deep Elf",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DECA",
+      "species": "Deep Elf",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DERe",
+      "species": "Deep Elf",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoFi",
+      "species": "Kobold",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "spear",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoGl",
+      "species": "Kobold",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoBe",
+      "species": "Kobold",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoCK",
+      "species": "Kobold",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoMo",
+      "species": "Kobold",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoWr",
+      "species": "Kobold",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoDe",
+      "species": "Kobold",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoCA",
+      "species": "Kobold",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "KoRe",
+      "species": "Kobold",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuFi",
+      "species": "Mummy",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuGl",
+      "species": "Mummy",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuBe",
+      "species": "Mummy",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuCK",
+      "species": "Mummy",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuMo",
+      "species": "Mummy",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuWr",
+      "species": "Mummy",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuDe",
+      "species": "Mummy",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuCA",
+      "species": "Mummy",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MuRe",
+      "species": "Mummy",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaFi",
+      "species": "Naga",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaGl",
+      "species": "Naga",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaBe",
+      "species": "Naga",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaCK",
+      "species": "Naga",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaMo",
+      "species": "Naga",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaWr",
+      "species": "Naga",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaDe",
+      "species": "Naga",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaCA",
+      "species": "Naga",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "NaRe",
+      "species": "Naga",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnFi",
+      "species": "Oni",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnGl",
+      "species": "Oni",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnBe",
+      "species": "Oni",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnCK",
+      "species": "Oni",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnMo",
+      "species": "Oni",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnWr",
+      "species": "Oni",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnDe",
+      "species": "Oni",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnCA",
+      "species": "Oni",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OnRe",
+      "species": "Oni",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrFi",
+      "species": "Troll",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrGl",
+      "species": "Troll",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrBe",
+      "species": "Troll",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrCK",
+      "species": "Troll",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrMo",
+      "species": "Troll",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrWr",
+      "species": "Troll",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrDe",
+      "species": "Troll",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrCA",
+      "species": "Troll",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TrRe",
+      "species": "Troll",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrFi",
+      "species": "Draconian",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrGl",
+      "species": "Draconian",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrBe",
+      "species": "Draconian",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrCK",
+      "species": "Draconian",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrMo",
+      "species": "Draconian",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrWr",
+      "species": "Draconian",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrDe",
+      "species": "Draconian",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrCA",
+      "species": "Draconian",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DrRe",
+      "species": "Draconian",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DgFi",
+      "species": "Demigod",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DgGl",
+      "species": "Demigod",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DgWr",
+      "species": "Demigod",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DgDe",
+      "species": "Demigod",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DgRe",
+      "species": "Demigod",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpFi",
+      "species": "Spriggan",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "spear",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpGl",
+      "species": "Spriggan",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpBe",
+      "species": "Spriggan",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpCK",
+      "species": "Spriggan",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpMo",
+      "species": "Spriggan",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpWr",
+      "species": "Spriggan",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpDe",
+      "species": "Spriggan",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpCA",
+      "species": "Spriggan",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "SpRe",
+      "species": "Spriggan",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiFi",
+      "species": "Minotaur",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiGl",
+      "species": "Minotaur",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiBe",
+      "species": "Minotaur",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiCK",
+      "species": "Minotaur",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiMo",
+      "species": "Minotaur",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiWr",
+      "species": "Minotaur",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiDe",
+      "species": "Minotaur",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiCA",
+      "species": "Minotaur",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MiRe",
+      "species": "Minotaur",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsFi",
+      "species": "Demonspawn",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsGl",
+      "species": "Demonspawn",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsBe",
+      "species": "Demonspawn",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsCK",
+      "species": "Demonspawn",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsMo",
+      "species": "Demonspawn",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsWr",
+      "species": "Demonspawn",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsDe",
+      "species": "Demonspawn",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsCA",
+      "species": "Demonspawn",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DsRe",
+      "species": "Demonspawn",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhFi",
+      "species": "Ghoul",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhGl",
+      "species": "Ghoul",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhBe",
+      "species": "Ghoul",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhCK",
+      "species": "Ghoul",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhMo",
+      "species": "Ghoul",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhWr",
+      "species": "Ghoul",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhDe",
+      "species": "Ghoul",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhCA",
+      "species": "Ghoul",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GhRe",
+      "species": "Ghoul",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeFi",
+      "species": "Tengu",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeGl",
+      "species": "Tengu",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeBe",
+      "species": "Tengu",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeCK",
+      "species": "Tengu",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeMo",
+      "species": "Tengu",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeWr",
+      "species": "Tengu",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeDe",
+      "species": "Tengu",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeCA",
+      "species": "Tengu",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "TeRe",
+      "species": "Tengu",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfFi",
+      "species": "Merfolk",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfGl",
+      "species": "Merfolk",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfBe",
+      "species": "Merfolk",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfCK",
+      "species": "Merfolk",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfMo",
+      "species": "Merfolk",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfWr",
+      "species": "Merfolk",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfDe",
+      "species": "Merfolk",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfCA",
+      "species": "Merfolk",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MfRe",
+      "species": "Merfolk",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpFi",
+      "species": "Vampire",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpGl",
+      "species": "Vampire",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpBe",
+      "species": "Vampire",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpCK",
+      "species": "Vampire",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpMo",
+      "species": "Vampire",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpWr",
+      "species": "Vampire",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpDe",
+      "species": "Vampire",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpCA",
+      "species": "Vampire",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VpRe",
+      "species": "Vampire",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FeFi",
+      "species": "Felid",
+      "job": "Fighter",
+      "weapons": [
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FeBe",
+      "species": "Felid",
+      "job": "Berserker",
+      "weapons": [
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FeCK",
+      "species": "Felid",
+      "job": "Chaos Knight",
+      "weapons": [
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FeMo",
+      "species": "Felid",
+      "job": "Monk",
+      "weapons": [
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FeWr",
+      "species": "Felid",
+      "job": "Warper",
+      "weapons": [
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FeDe",
+      "species": "Felid",
+      "job": "Delver",
+      "weapons": [
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FeCA",
+      "species": "Felid",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FeRe",
+      "species": "Felid",
+      "job": "Reaver",
+      "weapons": [
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpFi",
+      "species": "Octopode",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpGl",
+      "species": "Octopode",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpBe",
+      "species": "Octopode",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpCK",
+      "species": "Octopode",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpMo",
+      "species": "Octopode",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpWr",
+      "species": "Octopode",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpDe",
+      "species": "Octopode",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpCA",
+      "species": "Octopode",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "OpRe",
+      "species": "Octopode",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjFi",
+      "species": "Djinni",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjGl",
+      "species": "Djinni",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjBe",
+      "species": "Djinni",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjCK",
+      "species": "Djinni",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjMo",
+      "species": "Djinni",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjWr",
+      "species": "Djinni",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjDe",
+      "species": "Djinni",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjCA",
+      "species": "Djinni",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "DjRe",
+      "species": "Djinni",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrFi",
+      "species": "Gargoyle",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrGl",
+      "species": "Gargoyle",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrBe",
+      "species": "Gargoyle",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrCK",
+      "species": "Gargoyle",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrMo",
+      "species": "Gargoyle",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrWr",
+      "species": "Gargoyle",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrDe",
+      "species": "Gargoyle",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrCA",
+      "species": "Gargoyle",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GrRe",
+      "species": "Gargoyle",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoFi",
+      "species": "Formicid",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoGl",
+      "species": "Formicid",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoBe",
+      "species": "Formicid",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoCK",
+      "species": "Formicid",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoMo",
+      "species": "Formicid",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoWr",
+      "species": "Formicid",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoDe",
+      "species": "Formicid",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoCA",
+      "species": "Formicid",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "FoRe",
+      "species": "Formicid",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSFi",
+      "species": "Vine Stalker",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSGl",
+      "species": "Vine Stalker",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSBe",
+      "species": "Vine Stalker",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSCK",
+      "species": "Vine Stalker",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSMo",
+      "species": "Vine Stalker",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSWr",
+      "species": "Vine Stalker",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSDe",
+      "species": "Vine Stalker",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSCA",
+      "species": "Vine Stalker",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "VSRe",
+      "species": "Vine Stalker",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaFi",
+      "species": "Barachi",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaGl",
+      "species": "Barachi",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaBe",
+      "species": "Barachi",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaCK",
+      "species": "Barachi",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaMo",
+      "species": "Barachi",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaWr",
+      "species": "Barachi",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaDe",
+      "species": "Barachi",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaCA",
+      "species": "Barachi",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "BaRe",
+      "species": "Barachi",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnFi",
+      "species": "Gnoll",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnGl",
+      "species": "Gnoll",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnBe",
+      "species": "Gnoll",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnCK",
+      "species": "Gnoll",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnMo",
+      "species": "Gnoll",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnWr",
+      "species": "Gnoll",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnDe",
+      "species": "Gnoll",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnCA",
+      "species": "Gnoll",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "GnRe",
+      "species": "Gnoll",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtFi",
+      "species": "Armataur",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtGl",
+      "species": "Armataur",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtBe",
+      "species": "Armataur",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtCK",
+      "species": "Armataur",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtMo",
+      "species": "Armataur",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtWr",
+      "species": "Armataur",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtDe",
+      "species": "Armataur",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtCA",
+      "species": "Armataur",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "AtRe",
+      "species": "Armataur",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDFi",
+      "species": "Mountain Dwarf",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDGl",
+      "species": "Mountain Dwarf",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDBe",
+      "species": "Mountain Dwarf",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDCK",
+      "species": "Mountain Dwarf",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDMo",
+      "species": "Mountain Dwarf",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDWr",
+      "species": "Mountain Dwarf",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDDe",
+      "species": "Mountain Dwarf",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDCA",
+      "species": "Mountain Dwarf",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "MDRe",
+      "species": "Mountain Dwarf",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoFi",
+      "species": "Coglin",
+      "job": "Fighter",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoGl",
+      "species": "Coglin",
+      "job": "Gladiator",
+      "weapons": [
+        "rapier",
+        "flail",
+        "war axe",
+        "trident",
+        "long sword",
+        "quarterstaff",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoBe",
+      "species": "Coglin",
+      "job": "Berserker",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoCK",
+      "species": "Coglin",
+      "job": "Chaos Knight",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoMo",
+      "species": "Coglin",
+      "job": "Monk",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoWr",
+      "species": "Coglin",
+      "job": "Warper",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoDe",
+      "species": "Coglin",
+      "job": "Delver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoCA",
+      "species": "Coglin",
+      "job": "Cinder Acolyte",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    },
+    {
+      "combo": "CoRe",
+      "species": "Coglin",
+      "job": "Reaver",
+      "weapons": [
+        "short sword",
+        "mace",
+        "hand axe",
+        "spear",
+        "falchion",
+        "unarmed"
+      ]
+    }
+  ]
+}

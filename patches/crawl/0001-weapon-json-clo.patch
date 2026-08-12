@@ -1,0 +1,163 @@
+diff --git a/crawl-ref/source/initfile.cc b/crawl-ref/source/initfile.cc
+index 019214c..d492ba0 100644
+--- a/crawl-ref/source/initfile.cc
++++ b/crawl-ref/source/initfile.cc
+@@ -4587,6 +4587,7 @@ enum commandline_option_type
+     CLO_NO_THROTTLE,
+     CLO_CLUA_MAX_MEMORY,
+     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
++    CLO_WEAPON_JSON, // JSON metadata for starting weapon choices per combo.
+     CLO_BRANCHES_JSON, // JSON metadata for branches.
+     CLO_SAVE_JSON,
+     CLO_GAMETYPES_JSON,
+@@ -4614,6 +4615,7 @@ static set<commandline_option_type> clo_headless_ok = {
+     CLO_HELP,
+     CLO_VERSION,
+     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
++    CLO_WEAPON_JSON, // JSON metadata for starting weapon choices per combo.
+     CLO_BRANCHES_JSON, // JSON metadata for branches.
+     CLO_EDIT_BONES,
+     CLO_MAPSTAT,
+@@ -4644,7 +4646,7 @@ static const char *cmd_ops[] =
+     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
+     "print-charset", "tutorial", "wizard", "explore", "no-save",
+     "no-player-bones", "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
+-    "lua-max-memory", "playable-json", "branches-json", "save-json",
++    "lua-max-memory", "playable-json", "weapon-json", "branches-json", "save-json",
+     "gametypes-json", "bones", "descent",
+ #if defined(UNIX) || defined(USE_TILE_LOCAL)
+     "headless",
+@@ -5670,6 +5672,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
+             fprintf(stdout, "%s", playable_metadata_json().c_str());
+             end(0);
+ 
++        case CLO_WEAPON_JSON:
++            fprintf(stdout, "%s", weapon_metadata_json().c_str());
++            end(0);
++
+         case CLO_BRANCHES_JSON:
+             fprintf(stdout, "%s", branch_data_json().c_str());
+             end(0);
+diff --git a/crawl-ref/source/main.cc b/crawl-ref/source/main.cc
+index e73237f..d08cc63 100644
+--- a/crawl-ref/source/main.cc
++++ b/crawl-ref/source/main.cc
+@@ -590,6 +590,7 @@ static void _show_commandline_options_help()
+     puts("  -gdb/-no-gdb     produce gdb backtrace when a crash happens (default:on)");
+ #endif
+     puts("  -playable-json   list playable species, jobs, and character combos.");
++    puts("  -weapon-json     list starting weapon choices per combo.");
+     puts("  -branches-json   list branch data.");
+     puts("  -no-player-bones do not write player's info to bones files.");
+ 
+diff --git a/crawl-ref/source/playable.cc b/crawl-ref/source/playable.cc
+index a5bed0d..5890e0c 100644
+--- a/crawl-ref/source/playable.cc
++++ b/crawl-ref/source/playable.cc
+@@ -12,6 +12,9 @@
+ #include "json-wrapper.h"
+ 
+ #include "filter-enum.h"
++#include "item-prop.h"
++#include "newgame.h"
++#include "newgame-def.h"
+ #include "playable.h"
+ #include "jobs.h"
+ #include "ng-restr.h"
+@@ -212,3 +215,87 @@ string playable_metadata_json()
+     json_append_member(json.node, "combos", _combo_array());
+     return json.to_string();
+ }
++
++// Starting weapon options considered for jobs with a weapon choice. Mirrors
++// the array in newgame.cc's _get_weapons() (kept private to that file's
++// interactive chargen UI code) so -weapon-json reports exactly what the
++// in-game weapon-choice menu would offer, without duplicating chargen UI.
++static const weapon_type _weapon_choice_candidates[] =
++{
++    WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION,
++    WPN_QUARTERSTAFF, WPN_UNARMED,
++};
++
++static JsonNode *_weapon_choices_for_combo(species_type sp, job_type job)
++{
++    JsonNode *weapons(json_mkarray());
++
++    newgame_def ng;
++    ng.species = sp;
++    ng.job = job;
++
++    for (weapon_type base : _weapon_choice_candidates)
++    {
++        weapon_type wp = base;
++        if (job_gets_good_weapons(job))
++            wp = starting_weapon_upgrade(wp, job, sp);
++        if (weapon_restriction(wp, ng) != CC_BANNED)
++        {
++            // WPN_UNARMED isn't a real Weapon_prop entry (it's not a
++            // physical weapon), so weapon_base_name() would silently
++            // return whatever sits at table index 0. newgame.cc's
++            // interactive weapon-choice menu special-cases this the same
++            // way (_construct_weapon_menu).
++            const char *name = wp == WPN_UNARMED ? "unarmed"
++                                                  : weapon_base_name(wp);
++            json_append_element(weapons, json_mkstring(name));
++        }
++    }
++    return weapons;
++}
++
++static JsonNode *_weapon_combo_array()
++{
++    JsonNode *array(json_mkarray());
++    for (const auto c : playable_combos())
++    {
++        if (!job_has_weapon_choice(c.job))
++            continue;
++        JsonNode *entry(json_mkobject());
++        json_append_member(entry, "combo", json_mkstring(c.abbr().c_str()));
++        json_append_member(entry, "species", json_mkstring(species::name(c.species)));
++        json_append_member(entry, "job", json_mkstring(get_job_name(c.job)));
++        json_append_member(entry, "weapons",
++                           _weapon_choices_for_combo(c.species, c.job));
++        json_append_element(array, entry);
++    }
++    return array;
++}
++
++/*! @brief Returns a JSON array (encoded as a string), one entry per
++ *         playable combo that has a starting weapon choice, of the form
++ * @code
++ *   { "combo": "GrBe", "species": "Gargoyle", "job": "Berserker",
++ *     "weapons": ["short sword", "mace", ...] }
++ * @endcode
++ * listing exactly the weapons the interactive chargen weapon-choice menu
++ * would offer for that combo. Combos without a weapon choice
++ * (job_has_weapon_choice() false) are omitted entirely rather than emitted
++ * with an empty "weapons" list, so a consumer can distinguish "no weapon
++ * dimension for this combo" from "enumerated and came up empty" (the
++ * latter would indicate a bug — every weapon-choice job has at least one
++ * legal option for every species it's playable on).
++ */
++string weapon_metadata_json()
++{
++    // -weapon-json can be dispatched from parse_args()'s early rc_only pass
++    // (main.cc), before the init_properties() call that normally populates
++    // Weapon_index/Weapon_prop — without this, weapon_base_name() silently
++    // returns whatever name happens to be at index 0 for every weapon.
++    // init_properties() just refills static tables, so a redundant call
++    // here (when the normal startup path already ran it) is harmless.
++    init_properties();
++
++    JsonWrapper json(_weapon_combo_array());
++    return json.to_string();
++}
+diff --git a/crawl-ref/source/playable.h b/crawl-ref/source/playable.h
+index 8ad396c..075dc51 100644
+--- a/crawl-ref/source/playable.h
++++ b/crawl-ref/source/playable.h
+@@ -24,3 +24,4 @@ vector<combo_type> playable_combos();
+ vector<string> playable_combo_names();
+ 
+ string playable_metadata_json();
++string weapon_metadata_json();
