@@ -123,23 +123,37 @@ def run_campaign(n_games, *, workers=8, turn_budget=0,
 
     results = []
     start = time.time()
-    with ProcessPoolExecutor(max_workers=workers) as ex:
-        futs = {
-            ex.submit(_run_one, run_id, char_seed, game_seed, workdir,
-                      turn_budget, wall_cap_secs, hang_secs, bugfix_lua_errors,
-                      bugfix_indefinite_transform): run_id
-            for run_id, char_seed, game_seed, workdir in jobs
-        }
-        for fut in as_completed(futs):
-            run_id = futs[fut]
-            try:
-                r = fut.result()
-            except Exception as e:
-                r = {"run_id": run_id, "status": "harness_failure", "detail": f"worker exception: {e}"}
-            results.append(r)
-            elapsed = time.time() - start
-            print(f"  [{len(results)}/{len(jobs)}] {run_id} status={r.get('status')} "
-                  f"wall={r.get('wall_secs')}s (campaign elapsed {elapsed:.0f}s)")
+    # Job submission is chunked to <= `workers` futures live in the executor
+    # at once, instead of one ProcessPoolExecutor handling the whole `jobs`
+    # list. Empirically necessary, not stylistic: a full-scale (300-job)
+    # ProcessPoolExecutor submission reproducibly wedged every worker at
+    # startup (100% "no Welcome banner within 60s" harness_failure, pty
+    # reads never seeing output the child had, per strace, already written
+    # and was blocked on stdin waiting for) across three separate real
+    # attempts and with both the default "fork" start method and "spawn" --
+    # ruling out a fork-safety race as the cause. The same call path at
+    # <=16-32 queued jobs never once reproduced it in >10 direct trials.
+    # Root cause not pinned down (see docs/decisions/013); chunking to the
+    # empirically-safe size is the mitigation, not a diagnosed fix.
+    for chunk_start in range(0, len(jobs), workers):
+        chunk = jobs[chunk_start:chunk_start + workers]
+        with ProcessPoolExecutor(max_workers=workers) as ex:
+            futs = {
+                ex.submit(_run_one, run_id, char_seed, game_seed, workdir,
+                          turn_budget, wall_cap_secs, hang_secs, bugfix_lua_errors,
+                          bugfix_indefinite_transform): run_id
+                for run_id, char_seed, game_seed, workdir in chunk
+            }
+            for fut in as_completed(futs):
+                run_id = futs[fut]
+                try:
+                    r = fut.result()
+                except Exception as e:
+                    r = {"run_id": run_id, "status": "harness_failure", "detail": f"worker exception: {e}"}
+                results.append(r)
+                elapsed = time.time() - start
+                print(f"  [{len(results)}/{len(jobs)}] {run_id} status={r.get('status')} "
+                      f"wall={r.get('wall_secs')}s (campaign elapsed {elapsed:.0f}s)")
 
     status_counts = {}
     for r in results:
