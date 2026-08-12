@@ -2026,3 +2026,96 @@ After *that* closes: start the Delver investigation — read
 what qw's planner actually does (if anything) with Delver's specific
 starting kit, the same source-first discipline used for every fix so far,
 before writing any patch.
+
+## 2026-08-12 (session 7) — Delver root-cause characterized (decision 015);
+treatment-arm retry wrapper still 100% failing on attempt 2/6, unattended,
+not re-chased
+
+**Did:** Picked up the retry wrapper (`ops/run-indefinite-transform-
+treatment-with-retry.sh`, PID **60732**, `setsid nohup bash ... & disown`,
+log `logs/indefinite-transform-treatment-retry-wrapper-2.log`) — found
+attempt 1/6 had already finished 100% `harness_failure` (288/288, purged)
+and attempt 2/6 was in progress, itself also 100% `harness_failure` so far
+(80/288 checked). Armed a persistent `Monitor` on the wrapper log for
+attempt/purge/`EXPERIMENT_DONE` markers instead of polling, then — per this
+project's established discipline of not spawning additional crawl
+processes while a campaign has the machine — did **read-only** work only.
+
+Did the Delver source read session 6 queued up (`vendor/qw/source/plans-
+*.lua`, project-wide grep, no crawl processes spawned). Confirmed by direct
+grep, not assumed: of Delver's 5 starting kit items
+(`job-data.h:124-132` — leather armour, scroll of fog, scroll of
+revelation, scroll of fear, potion of haste, wand of digging), potion of
+haste is fully covered by qw's generic haste logic, wand of digging is used
+only to dig *toward* enemies (never to escape), scroll of fog is gated
+behind `not in_branch("Zig")` in its only call site (`plans-zig.lua:4-15`)
+so it's dead weight for the ~99% of a Delver's turns that aren't in a
+Ziggurat (deaths sample at median turn 60 / XL 1, nowhere near a Zig
+entry), and scroll of revelation / scroll of fear have **zero** matches
+anywhere in qw's source — completely unreferenced. 3 of 5 signature kit
+items are structurally invisible to the policy; this matches the data
+(varied organic death causes, 0% crash/error status — Delvers aren't
+hitting a bug, their escape/utility tools just never fire). Wrote up the
+full grep evidence and a candidate fix shape (generalize `plan_zig_fog`
+minus the Zig gate; add a `plan_fear`-style cascade entry reusing
+`want_to_haste`'s `scary_enemy` threat-classification shape) in
+`docs/decisions/015-delver-kit-unused-by-policy.md`. Deliberately **did
+not implement the fix this session** — writing an untested behavioral Lua
+change with no ability to drill-test it while the retry campaign occupies
+all 16 workers would violate this project's "test alongside the fix, not
+after" convention (011/012/014 precedent). Committed the decision doc
+alone.
+
+**Treatment-arm retry wrapper status at time of writing:** attempt 2/6,
+100% `harness_failure` through the first 80/288 checked — same signature
+as attempt 1 and as every session back to session 3 (`docs/decisions/013`).
+Not re-investigated (already exhaustively bisected across three prior
+sessions per 013; re-deriving would add no new fact). If this attempt also
+ends 100% failed, that's 2/2 fully-failed attempts within this single
+wrapper invocation — worth watching for whether it reaches
+`== retry budget exhausted ==` again, which would be this experiment's
+*second* full 6-attempt exhaustion across sessions and would warrant
+following decision 013's own escalation ladder (try the whole wrapper
+fresh again before loosening attempt count or going to `strace -f`).
+
+**Result:** One new committed artifact (decision 015, Delver
+characterization — real, source-cited, no code change). Indefinite-
+transform-bugfix treatment arm still not collected; control arm data
+untouched and good. No other Phase 2 work blocked by this.
+
+**Next step:** Check the `Monitor` task's notifications (or directly:
+`pgrep -fa run-indefinite-transform-treatment-with-retry`, `tail
+logs/indefinite-transform-treatment-retry-wrapper-2.log`) for further
+`== attempt N/6 ==` / `no welcome-timeout failures left` /
+`retry budget exhausted` markers. Same non-negotiable discipline as the
+last five entries: don't silently use partial data if the retry budget
+exhausts. If it reaches `== no welcome-timeout failures left, done ==`
+with an organic-looking final status mix: `ops/collector.py --runs-dir
+data/runs --db data/experiments/indefinite-transform-bugfix/results.db
+--strict`, compute each arm's `quit_stuck` count/n, run
+`experiment.evaluate_predeclaration`, commit
+`{results.db,result.json,control-summary.json,treatment-summary.json}`
+plus decision 012's Follow-up section. If it exhausts the 6-attempt budget
+again (second full exhaustion): don't retry a third blind full run without
+first checking whether anything about the machine/session state has
+changed since decision 013 was written (e.g. `ulimit -a`, `sysctl
+kernel.pty.*`, ptys currently open, `data/runs/` entry count — this
+project has accumulated a very large `data/runs/` tree across many
+sessions now, which none of decision 013's investigation sessions checked
+as a variable) before escalating straight to `strace -f`-from-`fork()`.
+
+Once the indefinite-transform-bugfix experiment closes (success or
+documented-exhausted): launch `ops/run-caster-spell-mana-experiment.sh`
+detached (`setsid nohup bash ... & disown`, PID/log recorded here first),
+collect the same way (`ops/collector.py --db data/experiments/caster-
+spell-mana-fix/results.db --strict`, `xl>=3` count/n per arm,
+`experiment.evaluate_predeclaration`, commit + decision 014 Follow-up).
+
+**Only after that closes** (machine free, one-campaign-at-a-time
+convention): pick up decision 015's Delver fix — implement `plan_fog_
+escape`/`plan_fear`-style cascade entries per the candidate shape already
+written there, drill-test against the live binary
+(`ops/bugfix-*-test.py` pattern), predeclare an experiment on
+population-wide `xl_at_least_3_rate` (seed pool `6000000..6009999`, next
+free block), and launch it as its own standalone `setsid` process per
+decision 013's launch-pattern lesson.
