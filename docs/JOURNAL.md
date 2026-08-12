@@ -842,3 +842,78 @@ isolation is already correct by construction in `rc-gen.py`/`runner.py` but
 unverified under real concurrent load) as part of launching the real
 ≥500-game campaign, started **detached** per `CLAUDE.md` since it will run
 for hours, with the PID/log path recorded here *before* starting it.
+
+## ORCHESTRATOR REVIEW — 2026-08-12
+
+**Assessment.** Phase 0 is genuinely closed — every exit criterion is backed
+by a real acceptance test (exact-field telemetry assertions, 8/8 canaries,
+live support-set diff, throughput report), not existence checks. Phase 1 has
+all five building blocks built and individually tested (sampler, rc-gen,
+runner state machine + drills, collector/report, campaign driver + isolation
+test); its remaining exit criterion is the real ≥500-game campaign, blocked
+until now on the turn-budget pilot. Decisions 003–009 are sound and
+source-cited; no architectural drift from PLAN.md found; no BLOCKED.md
+needed; fairness contract intact (probe test live-verifies the LOS boundary;
+nothing leaks seed/save/map state into a policy path). Statistical integrity
+(§8) not yet at risk — no Phase 2 tuning has begun.
+
+**Critical finding — the pilot contamination was NOT host contention; the
+prior entry's diagnosis was wrong.** The relaunched pilot (PID 30813)
+reproduced the identical signature with an idle machine: every completed run
+`timeout_wall` at ~247s with ~2KB of output. Root cause, proven by A/B
+repro: `rc-gen.py`'s `write_run_dir()` returned `clo_args` whose
+`-rc/-dir/-morgue` paths were *relative* whenever the caller's `workdir` was
+relative (the pilots used `--runs-dir data/runs`), while
+`runner.monitor_game()` spawns crawl with `cwd=workdir` — so crawl resolved
+`-rc data/runs/<id>/run.rc` against `.../data/runs/<id>/`, never found the
+rc, never loaded qw, and sat silently at the welcome screen until hang
+detection killed it (the nested `data/runs/<id>/data/runs/<id>/morgue` debris
+in each run dir was the tell). Same char/seed: relative workdir → 247s hang
+with 2,179 bytes; absolute → normal death in 3.6s with 415KB. Every "clean
+re-test" that passed had used an absolute (`mkdtemp`/`/tmp`) runs dir —
+including `campaign-test.py` itself — which is exactly why the wrong
+contention theory survived: the discriminator was path shape, not load, and
+foreground games run *during* pilot #1 all worked (more disproof of
+contention nobody noticed).
+
+**Corrections applied directly (small, unambiguous):**
+1. `ops/rc-gen.py` — `write_run_dir()` now resolves `workdir` to absolute
+   before building paths/`clo_args`; docstring records the bug.
+2. `ops/runner.py` — `run_game()` resolves `workdir` the same way
+   (manifest/result/cwd stay consistent for any caller).
+3. `ops/campaign-test.py` — first campaign pass now deliberately drives a
+   *relative* runs_dir (`os.path.relpath` of the mkdtemp dir) so this
+   regression stays covered; resume pass keeps the absolute shape. Re-ran:
+   **PASS** (12/12 real games, zero cross-contamination, resume clean).
+   Single-run repro via relative workdir also re-verified: dies normally.
+4. Killed the garbage pilot (PID 30813) and deleted all contaminated
+   `data/runs/pilot-turns-*` dirs (both batches were 100% invalid — the
+   first batch's data was equally garbage; contention was never the cause).
+
+**Corrections for the next worker iterations:**
+1. Relaunch the turn-budget pilot with the fixed code — same command as the
+   last entry (`nohup python3 ops/campaign.py --n-games 40 --workers 10
+   --turn-budget 0 --wall-cap-secs 900 --run-prefix pilot-turns --runs-dir
+   data/runs --out data/pilot-turns-summary.json > logs/pilot-turns-campaign.log
+   2>&1 &`), record the PID before starting. Sanity-check early results:
+   statuses should be mixed (mostly `died`), wall_secs varied, output_bytes
+   in the hundreds-of-KB range — NOT uniform ~247s/~2KB.
+2. The prior entry's "do not run other crawl-spawning processes while the
+   pilot is up" rule was derived from the wrong diagnosis. Moderate
+   concurrent work is fine (it always was); keep total load within
+   CLAUDE.md's headroom guidance, nothing stricter.
+3. Do not add `-no-throttle` to `clo_args` if you notice PLAN §5 lists it:
+   verified this session that non-DGAMELAUNCH builds default
+   `throttle(false)` (`state.cc:48-53`) — the flag is moot for our build.
+   Recorded here so it isn't cargo-culted in later.
+4. Nit, no action needed on existing files: two decision files share number
+   003 (a concurrent-session collision). Take the next free number (010 is
+   reserved by the prior entry for turn-budget) and keep numbers unique.
+
+**Next step:** unchanged in substance from the prior entry, now unblocked:
+relaunch the pilot (correction 1 above), extract `turns_survived`
+percentiles from natural-end runs via a scratch collector DB, record the
+chosen turn budget in `docs/decisions/010-turn-budget.md`, delete the pilot
+run dirs, then launch the real ≥500-game campaign detached with the chosen
+`--turn-budget` and a distinct `--run-prefix`, PID/log journaled before
+launch.

@@ -24,6 +24,7 @@ Exit 0 and prints "PASS" on success; exit 1 with the failure(s) on failure.
 """
 import importlib.util
 import json
+import os
 import pathlib
 import shutil
 import sys
@@ -60,10 +61,16 @@ def main():
     failures = []
     tmp = tempfile.mkdtemp(prefix="dcss-campaign-test-")
     runs_dir = pathlib.Path(tmp)
+    # Deliberately drive the campaign through a *relative* runs_dir: an
+    # absolute mkdtemp path masked the 2026-08-12 pilot-contamination bug
+    # (relative -rc/-dir/-morgue resolved against crawl's cwd => rc never
+    # found => every game hung at the welcome screen). rc-gen now resolves
+    # workdir to absolute; this keeps the relative-caller path exercised.
+    runs_dir_arg = pathlib.Path(os.path.relpath(runs_dir, os.getcwd()))
     try:
         summary1 = campaign.run_campaign(
             N_GAMES, workers=WORKERS, turn_budget=TURN_BUDGET,
-            run_prefix=RUN_PREFIX, runs_dir=runs_dir,
+            run_prefix=RUN_PREFIX, runs_dir=runs_dir_arg,
         )
         if summary1["n_launched"] != N_GAMES:
             failures.append(f"first pass launched {summary1['n_launched']}, expected {N_GAMES}")

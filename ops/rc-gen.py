@@ -52,8 +52,16 @@ def write_run_dir(row, workdir, turn_budget=0):
     crawl CLO args a caller appends to its binary/-rcdir invocation.
     turn_budget=0 disables the harness turn-budget quit (see
     campaign.rc.tmpl) — the default, so existing callers that don't pass it
-    (rc-gen-test.py) keep testing the sampler->rc->crawl handoff only."""
-    workdir = pathlib.Path(workdir)
+    (rc-gen-test.py) keep testing the sampler->rc->crawl handoff only.
+
+    workdir is resolved to an absolute path because the returned clo_args
+    are stringified into crawl's command line while runner.monitor_game
+    spawns crawl with cwd=workdir: a relative workdir made crawl resolve
+    -rc/-dir/-morgue against *its own* cwd, so the rc was never found, qw
+    never loaded, and every game hung silently at the welcome screen (the
+    2026-08-12 pilot contamination — both batches, wrongly blamed on host
+    contention the first time)."""
+    workdir = pathlib.Path(workdir).resolve()
     rc_text = (RC_TMPL_PATH.read_text()
                .replace("__COMBO__", row["character"]["rc_combo"])
                .replace("__TURN_BUDGET__", str(turn_budget)))

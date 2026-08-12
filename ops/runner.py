@@ -326,7 +326,11 @@ def run_game(row, workdir, *, turn_budget=0, wall_cap_secs=DEFAULT_WALL_CAP_SECS
     """Write-ahead manifest -> materialize rc -> spawn -> supervise ->
     classify -> result.json. This is the entry point a campaign driver
     uses; monitor_game() is the lower-level piece drills use directly."""
-    workdir = pathlib.Path(workdir)
+    # Resolve before use: rc_gen.write_run_dir also resolves, but the
+    # manifest/result paths and crawl's cwd must agree with it no matter
+    # what shape of path the caller handed us (see write_run_dir's docstring
+    # for the pilot-contamination bug a relative workdir caused).
+    workdir = pathlib.Path(workdir).resolve()
     workdir.mkdir(parents=True, exist_ok=True)
 
     manifest_row = {
