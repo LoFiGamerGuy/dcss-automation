@@ -1756,3 +1756,162 @@ closes (success or documented-exhausted), start the caster-spellcasting
 Phase 2 item: read `plans-spells.lua` first, characterize the actual gap
 against a scripted repro before writing any fix, per this project's
 established source-first discipline.
+
+## 2026-08-12 (session 5) — Third Phase 2 item: found and fixed a real qw
+bug (inverted spell-mana check), the caster archetype's actual root cause;
+self-inflicted (then repaired) a rebuild collision with the still-running
+indefinite-transform retry campaign
+
+**Did:** Picked up the prior session's retry wrapper (`ops/run-indefinite-
+transform-treatment-with-retry.sh`, PID 55313 — still the same process,
+now on attempt 1/6 per a fresh check: `grep -n "^== attempt" logs/...` only
+showed `== attempt 1/6 ==` at session start, confirming the wrapper hadn't
+progressed past its first attempt overnight). Armed a persistent `Monitor`
+on the wrapper's log (attempt/purge/done markers) instead of polling, then
+worked on the queued caster-spellcasting item in parallel — read-only
+source work first (no new crawl processes spawned while the treatment
+retry had the machine), per the prior two sessions' caution.
+
+**Root cause, source-confirmed:** `vendor/qw/source/plans-spells.lua` (87
+lines, the *only* file in qw's source mentioning spells/memorisation/
+spellbooks — qw has zero book-reading/spell-learning logic anywhere, only
+one fixed starting-spell cast) has `spell_castable(sp)`:
+
+```lua
+if you.silenced() or you.confused() or you.berserk() or in_bad_form()
+        or can_use_mp(spells.mana_cost(sp)) then
+    return false
+end
+```
+
+`can_use_mp(mp)` (`player.lua:411`) is `you.mp() >= mp` — **true means
+affordable** — and every other call site in the codebase (`religion.lua`'s
+eight ability gates) uses it that way, `and can_use_mp(cost)`, to permit an
+action only when affordable. This one site is backwards: it declares the
+spell **not castable exactly when affordable**, and falls through to
+"castable" exactly when it *isn't* affordable. `spell_castable` has exactly
+one caller (`plan_starting_spell`, the first entry in the attack cascade,
+`plans-attack.lua:511`) — grepped project-wide to confirm this isn't one
+correct and one buggy use of a shared helper, it's simply backwards at its
+only call site. Net effect: a caster's one attack spell is blocked whenever
+they can afford it (most of early game, MP topped up between fights), and
+the attack cascade falls through to melee/throwing/wands — weak for a
+caster job by design. This exactly matches the data that flagged casters as
+the next candidate (prior session): 42.8% of the sampled population, dead
+last on every outcome axis (median score 8 vs 44-109 for other archetypes,
+median XL 2 vs 3-4).
+
+Fixed with the same minimal-call-site-guard shape as decisions 011/012:
+`qw_spell_uncastable_for_mana(sp, affordable)` (optional explicit
+`affordable` override, same testability reasoning as decision 012's
+`qw_transform_is_indefinite(transform_name)`), gated by a new rc-settable
+`QW_BUGFIX_SPELL_MANA_CHECK` (default true), threaded through
+`campaign.rc.tmpl` → `rc-gen.py` → `runner.py` → `campaign.py`
+(`--disable-bugfix-spell-mana-check`) → `collector.py` (new
+`bugfix_spell_mana_check` DB column, 34th column — placeholder count
+updated alongside it). Full writeup with source citations and alternatives
+in `docs/decisions/014-spell-mana-check-inverted.md`. New patch
+`patches/qw/0003-fix-spell-mana-check.patch`.
+
+**Self-inflicted mistake, caught and repaired:** ran `ops/fetch-vendor.sh`
+(to pick up the new qw patch) and rebuilt crawl (`make
+EXTERNAL_DEFINES="-DDGL_MILESTONES" -j18`, ~95s) **without first checking
+that this wipes the live crawl binary out from under the still-running
+treatment retry campaign** — `fetch-vendor.sh`'s own re-fetch removes and
+re-clones `vendor/crawl` (documented behavior from an earlier session, but
+not front-of-mind this time). The retry wrapper's attempt 2 fired
+mid-rebuild, hit `campaign.py: .../crawl not found; build it first`
+(`SystemExit`), and — because the wrapper script runs under `set -euo
+pipefail` — the whole wrapper process died silently, no `EXPERIMENT_DONE`,
+no further attempts. Caught this immediately by re-checking `pgrep`/the
+log after the rebuild finished (not assumed-fine) rather than moving on.
+No data was lost: `campaign.py`'s resumability meant the 12 runs that had
+completed before the crash (of the 300, after attempt 1's purge of 288)
+were untouched (`result.json` present, confirmed by direct count) —
+relaunched the identical wrapper command cleanly (new log
+`logs/indefinite-transform-treatment-retry-wrapper-2.log`, PID **60732**,
+`setsid nohup ... & disown`), which correctly skipped the 12 and resumed
+the remaining 288. **Lesson for future sessions: never run
+`ops/fetch-vendor.sh` or a crawl rebuild while any campaign/experiment
+process is live** — check `pgrep -fa campaign.py`/`runner.py` first, every
+time, not just when a rebuild is *expected* to be needed.
+
+Verified the fix live against the rebuilt pinned+patched binary:
+`ops/bugfix-spell-mana-test.py` (new, same wizard-mode dlua-console
+choreography as decisions 011/012's drills) — flag on: affordable→not
+blocked, unaffordable→blocked; flag off: reproduces both inverted cases
+exactly. **4/4 drills pass.** Re-ran the full existing test suite after the
+five-file plumbing change (sampler, rc-gen, runner-drills, collector,
+campaign-isolation, telemetry, both existing bugfix drill suites, fairness
+probe): **all still pass unchanged.**
+
+Predeclared the third experiment,
+`data/experiments/caster-spell-mana-fix/predeclaration.json`: hypothesis
+(the fix increases the *population-wide* `xl_at_least_3_rate`, not a
+caster-only metric — matching decisions 011/012's methodology of measuring
+the population-wide symptom rate rather than filtering to the affected
+subpopulation), direction increase, minimum effect 3 points, alpha 0.05,
+300 games/arm, seed_split validation, arms `control`
+(`bugfix_spell_mana_check=false`) / `treatment`
+(`bugfix_spell_mana_check=true`), baseline_ref `data/phase1-500.db`.
+Baseline numbers pulled directly from the DB before declaring: overall
+`xl_at_least_3_rate` 232/500 = 46.4%; caster archetype alone 61/214 = 28.5%.
+300 validation-split char_seeds from a fresh pool (`5000000..5009999`,
+disjoint from phase1-500's `0..499`, lua-error-bugfix's `3000000..3002999`,
+and indefinite-transform-bugfix's `4000000..4002999`) via
+`experiment.seeds_for_split`, written to
+`data/experiments/caster-spell-mana-fix/seeds.json`. Wrote
+`ops/run-caster-spell-mana-experiment.sh` (control then treatment
+sequentially, mirroring `run-indefinite-transform-experiment.sh`) but have
+**not launched it yet** — the indefinite-transform-bugfix treatment retry
+is still occupying 16 of 24 workers; launching a second 16-worker campaign
+concurrently would oversaturate the machine and repeats this project's own
+established practice of running experiments one at a time, not overlapped.
+
+Committed and pushed the fix/tests/plumbing/predeclaration (`ae5eb87`)
+before relaunching the retry wrapper's second attempt — the git guardrail
+("commit before any long-running operation") was honored for the new work,
+though the retry-wrapper relaunch itself happened first out of urgency to
+stop the bleeding on the mistake above; recording that ordering honestly
+rather than smoothing it over.
+
+**Result:** Phase 2's third item (spell-mana-check root cause + fix +
+config flag + regression test + predeclared experiment) is code-complete,
+tested, and committed. Indefinite-transform-bugfix's treatment arm is
+running again (cleanly, resumed from 12/300), not yet collected — delayed
+by, but not lost to, the rebuild collision above. Caster-spell-mana-fix
+experiment is ready to launch but intentionally not yet started, pending
+the machine freeing up.
+
+**Next step:** Check the relaunched retry wrapper (`pgrep -fa
+run-indefinite-transform-treatment-with-retry`, PID 60732 or its
+successor; `tail logs/indefinite-transform-treatment-retry-wrapper-2.log`)
+for `EXPERIMENT_DONE`. Apply the same sanity-check / non-negotiable
+"don't silently use partial data if retry budget exhausted" discipline the
+last three entries already established — don't re-derive it here. Once
+genuinely clean: `ops/collector.py --runs-dir data/runs --db
+data/experiments/indefinite-transform-bugfix/results.db --strict`, compute
+each arm's `quit_stuck` count/n, `experiment.evaluate_predeclaration`,
+commit `{results.db,result.json,control-summary.json,treatment-summary.json}`.
+
+**Only after that experiment closes** (to avoid a second concurrent
+16-worker campaign): launch `ops/run-caster-spell-mana-experiment.sh`
+detached (`setsid nohup bash ops/run-caster-spell-mana-experiment.sh >
+logs/caster-spell-mana-experiment.log 2>&1 < /dev/null &`, `disown`, PID
+recorded in the journal before/immediately after launch per `CLAUDE.md`).
+Once both of *that* experiment's summaries exist: `ops/collector.py
+--runs-dir data/runs --db data/experiments/caster-spell-mana-fix/results.db
+--strict`, compute each arm's `xl>=3` count/n directly from the DB (`SELECT
+COUNT(*), SUM(xl>=3) ... WHERE run_id LIKE 'exp-spellmana-control-%'` /
+`'exp-spellmana-treatment-%'`), `experiment.evaluate_predeclaration`,
+write+commit `result.json` alongside `docs/decisions/014`'s Follow-up
+section (mirroring 011/012's). If it clears the predeclared 3pt minimum
+effect with the CI excluding zero, consider `QW_BUGFIX_SPELL_MANA_CHECK`
+proven (no code change needed, flag already defaults to fixed-on). After
+that closes, PLAN §352-359's remaining smaller-population Phase 2
+candidates (Felid no-weapon plans, Mummy no-potion planning, Gnoll training
+skip, Djinn HP-casting, Formicid escapes, Demigod goals, god-policy
+extensions) are still open, but re-mining `data/phase1-500-report.json`'s
+stratified tables by measured failure rate (the method that found decision
+012's Shapeshifter bug and this session's caster item) remains the better
+way to pick among them than working PLAN's list in order.
