@@ -1,0 +1,21 @@
+{
+  "n_requested": 300,
+  "n_launched": 300,
+  "n_skipped_already_complete": 0,
+  "workers": 16,
+  "turn_budget": 20000,
+  "wall_cap_secs": 900,
+  "hang_secs": 120,
+  "bugfix_lua_errors": true,
+  "bugfix_indefinite_transform": false,
+  "run_prefix": "exp-transform-control",
+  "index_range": null,
+  "wall_secs_total": 366.6631090641022,
+  "status_counts": {
+    "died": 285,
+    "quit_stuck": 8,
+    "timeout_wall": 3,
+    "timeout_turns": 1,
+    "lua_error": 3
+  }
+}

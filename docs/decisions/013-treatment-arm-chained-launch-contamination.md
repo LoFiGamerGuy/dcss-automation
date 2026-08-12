@@ -1,5 +1,15 @@
 # 013 — indefinite-transform-bugfix treatment arm: 100% harness_failure, not root-caused, mitigated by chunking job submission
 
+> **SUPERSEDED by [016-run-name-length-limit.md](016-run-name-length-limit.md)
+> (2026-08-12 orchestrator review, third pass).** The freeze was never an
+> intermittent race: `exp-transform-treatment-NNNNNNN` run_ids are 31 chars,
+> crawl silently rejects `-name` values over `MAX_NAME_LENGTH = 30`
+> (`externs.h:81`), and chargen parks forever at the startup menu. Every
+> "success" below used a shorter scratch prefix; every failure used the real
+> one. The retry wrapper this file prescribes could never have worked. Kept
+> unedited below as the historical record of what was ruled out and why the
+> misdiagnosis survived.
+
 **Update after further investigation (same day):** the "decouple arm
 launches" mitigation below was tried and **did not work** — a fully
 independent standalone `setsid` relaunch of the treatment arm reproduced

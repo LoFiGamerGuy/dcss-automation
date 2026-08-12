@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# SUPERSEDED (do not use): docs/decisions/016 found the real root cause --
+# the run prefix below yields 31-char run_ids, crawl silently rejects -name
+# over 30 chars, so every run of every attempt deterministically hung at
+# chargen; purge-and-retry could never converge. The arm is collected by a
+# plain campaign.py launch with --run-prefix exp-transform-treat instead.
+#
 # Treatment arm of the indefinite-transform-bugfix experiment, with retry.
 #
 # docs/decisions/013: a real, intermittent "no 'Welcome,' banner within 60s"

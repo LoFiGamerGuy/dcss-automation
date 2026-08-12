@@ -33,6 +33,19 @@ RC_TMPL_PATH = ROOT / "ops/campaign.rc.tmpl"
 def build_manifest_row(run_id, char_seed, game_seed, manifest=None, digest=None):
     """The write-ahead manifest row §6 requires committed before launch: run
     ID, character, seeds, all version/config hashes."""
+    # run_id becomes crawl's -name, and crawl hard-caps player names at
+    # MAX_NAME_LENGTH = 30 (externs.h:81, enforced by is_good_name() in
+    # ng-input.cc:84). An overlong name is silently invalid: crawl parks at
+    # its native startup menu ignoring Enter, and every run dies as a 60s
+    # "no 'Welcome,' banner" harness_failure. This was the entire root cause
+    # of the indefinite-transform treatment arm's 100% failures
+    # ("exp-transform-treatment-NNNNNNN" = 31 chars vs the control arm's 29)
+    # -- see docs/decisions/016. Fail fast and loudly instead.
+    if len(run_id) > 30:
+        raise ValueError(
+            f"run_id {run_id!r} is {len(run_id)} chars; crawl -name is capped at "
+            "MAX_NAME_LENGTH=30 and an overlong name hangs chargen at the startup "
+            "menu (docs/decisions/016). Use a shorter --run-prefix.")
     if manifest is None:
         manifest, digest = combos.load_manifest()
     character = combos.sample_character(manifest, digest, char_seed)

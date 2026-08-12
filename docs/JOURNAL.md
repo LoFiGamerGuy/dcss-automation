@@ -2119,3 +2119,88 @@ written there, drill-test against the live binary
 population-wide `xl_at_least_3_rate` (seed pool `6000000..6009999`, next
 free block), and launch it as its own standalone `setsid` process per
 decision 013's launch-pattern lesson.
+
+## ORCHESTRATOR REVIEW — 2026-08-12 (third pass) — the "intermittent chargen
+freeze" was never a race: crawl's 30-char -name cap; root-caused, fixed,
+treatment arm relaunched clean
+
+**Assessment.** Phase 2 discipline is genuinely good — decisions 011/012/014
+are source-cited, drill-tested, properly predeclared, and the lua-error
+experiment closed with a real CI-excluding-zero result. But the project has
+spent five sessions (3–7) supervising a retry loop that could never have
+succeeded, and the misdiagnosis in decision 013 ("intermittent startup race,
+retry is legitimate") survived three sessions of disciplined-looking
+non-re-investigation because the journal kept telling sessions *not* to
+re-derive it. This is the exact failure mode ORCHESTRATOR.md exists for:
+each worker session correctly obeyed the standing guidance; the standing
+guidance was wrong.
+
+**Root cause, found and proven this pass (decision 016).** `run_id` is
+crawl's `-name`; crawl caps names at `MAX_NAME_LENGTH = 30` (`externs.h:81`,
+`ng-input.cc:84`) and an overlong name silently parks crawl at its startup
+menu, eating Enter keystrokes while producing no output — precisely decision
+013's captured symptom. `exp-transform-treatment-NNNNNNN` is 31 chars;
+`exp-transform-control-NNNNNNN` is 29. Hence: control arm 300/300 clean,
+treatment arm 100% harness_failure on every full launch, while every
+scratch-prefixed diagnostic (n=8/16/48/128, campaign-test, manual replays)
+passed — the "job-list size" and "relative-path" correlates in 013 were
+artifacts of which prefix each test used. Proven with a deterministic
+minimal pair on the same seed/flavor/dir: 31-char name → harness_failure at
+60.16s (twice); 30-char name → normal death in 8.9s. The queued
+caster-spell-mana experiment's treatment prefix (`exp-spellmana-treatment`,
+also 31) would have reproduced the identical flag-correlated illusion.
+
+**Data-integrity bug found independently of the root cause:** 12 treatment
+runs carried `spawn failed` harness_failure results from the session-5
+rebuild collision. Session 5's journal recorded them as "12 completed
+runs"; they were garbage, invisible to the welcome-timeout purge, silently
+skipped by resume on every attempt, and would have shipped inside the
+final arm (4% of it) if the wrapper had ever converged. Purged.
+
+**Corrections applied directly this pass:**
+1. Killed the retry wrapper (PID 60732) mid-attempt-2 — 0-for-4+ attempts,
+   each burning ~18 min of machine time deterministically.
+2. `ops/rc-gen.py` now raises on `len(run_id) > 30` (fail fast at
+   write-ahead time, never a silent chargen hang).
+3. `ops/run-caster-spell-mana-experiment.sh` treatment prefix →
+   `exp-spellmana-treat` (27-char names). Collector queries for that arm
+   must use `LIKE 'exp-spellmana-treat-%'`.
+4. Decision 013 and the retry wrapper marked SUPERSEDED (kept for history);
+   decision 016 written with the full evidence chain.
+5. All poisoned treatment data purged (240 + 16 welcome-timeouts, 12
+   spawn-fails, 16 manifest-only dirs, all diagnostic debris).
+6. Re-ran `rc-gen-test.py` + `campaign-test.py` after the guard change:
+   both pass; guard verified to raise on a 31-char run_id.
+
+**Treatment arm relaunched** under prefix `exp-transform-treat` (27-char
+names), same `seeds.json` (paired design intact), plain standalone launch —
+no retry wrapper needed since the failure was deterministic and is fixed:
+
+    setsid nohup python3 ops/campaign.py \
+      --seeds-file data/experiments/indefinite-transform-bugfix/seeds.json \
+      --run-prefix exp-transform-treat \
+      --turn-budget 20000 --wall-cap-secs 900 --workers 16 \
+      --runs-dir data/runs \
+      --out data/experiments/indefinite-transform-bugfix/treatment-summary.json \
+      > logs/transform-treatment-arm-final.log 2>&1 < /dev/null &
+
+PID recorded in the addendum line below after launch. Expected ~8-15 min
+for 300 games at 16 workers (control arm shape).
+
+**Next step (overwrites session 7's):** Check
+`logs/transform-treatment-arm-final.log` /
+`data/experiments/indefinite-transform-bugfix/treatment-summary.json`.
+Sanity-check the status mix is organic (contrast: the poisoned attempts
+were uniform ~60.15s harness_failure). Then collect: `ops/collector.py
+--runs-dir data/runs --db data/experiments/indefinite-transform-bugfix/results.db
+--strict`, compute each arm's `quit_stuck` count/n (**treatment arm is
+`run_id LIKE 'exp-transform-treat-%'`**, control unchanged
+`'exp-transform-control-%'`), run `experiment.evaluate_predeclaration`,
+write `result.json`, commit
+`{results.db,result.json,control-summary.json,treatment-summary.json}` plus
+decision 012's Follow-up section. Then launch the caster-spell-mana
+experiment (script already corrected) per session 6's standing
+instructions, and after it closes, decision 015's Delver fix. When
+predeclaring future experiments, pick arm prefixes of equal length
+(decision 016's lesson) — e.g. `exp-delver-control` / `exp-delver-treatmt`
+or similar ≤22-char pairs.
