@@ -2204,3 +2204,11 @@ instructions, and after it closes, decision 015's Delver fix. When
 predeclaring future experiments, pick arm prefixes of equal length
 (decision 016's lesson) — e.g. `exp-delver-control` / `exp-delver-treatmt`
 or similar ≤22-char pairs.
+
+**Addendum (same pass): treatment arm launched and confirmed healthy.**
+Driver PID **67510** (`setsid nohup ... & disown`), log
+`logs/transform-treatment-arm-final.log`. First 32 completions arrived
+within ~40s of launch, all organic (`died` at varied 5-6s+ wall times, no
+uniform-signature failures) — the first healthy treatment-arm data this
+experiment has ever produced. Left running detached; collection per the
+Next step above.
