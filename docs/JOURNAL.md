@@ -195,3 +195,93 @@ budget/game that's ~40 min serial — parallelize across a handful of workers
 (leave CPU headroom per CLAUDE.md) rather than running serially, and do not
 idle-wait on it; go do the telemetry test work while it runs if sequencing
 allows, or leave it running across session boundary and say so explicitly.
+
+## 2026-08-12 — Telemetry acceptance test built; found & documented a real PLAN.md correction; throughput campaign running
+
+**Did:** Wizard-mode is a dead end for scripting milestone events —
+`mark_milestone()` suppresses everything except `type="crash"` whenever
+`you.wizard`/`you.explore` is set (`hiscores.cc` ~line 3146), so any
+approach using `&`/debug commands to force a branch/rune/death would test
+nothing. Instead drove real (non-wizard) qw games via the same pexpect
+approach as `run-canary.py` and searched for a seed+combo that naturally
+hits interesting events fast. `GrBe` seed 1 reliably dies around D:7
+(reproduced identically twice, including once waiting for natural process
+EOF instead of force-killing, to rule out a race); `MiBe` seed 2 reliably
+picks up a Sewer portal within ~120s (`br.enter`/`br.exit`).
+
+**Real finding, not a harness bug:** that `GrBe` death (confirmed via the
+final logfile row: `killer=Maurice`, `hp=-1`) never produces a milestone
+record. Read `ouch.cc`: `mark_milestone("death", ...)` is gated on
+`you.lives != 0`, which is an extra-lives game-mode mechanic, not standard
+permadeath — so for a normal game, death is structurally never a milestone
+event, only a final-logfile-row event. This directly refines `PLAN.md` §6's
+death-telemetry assumption; full writeup in
+`docs/decisions/005-telemetry-verification-and-death-milestone-correction.md`.
+Rune pickup wasn't reached in any 120s-budget scripted attempt (needs real
+depth — a Lair-branch end or deeper) so it's unverified as of this entry;
+see the running campaign below.
+
+Built `ops/telemetry-test.py`: runs the fixed `MiBe`/seed-2/120s repro,
+parses the milestones xlog with a correct `::`-escape-aware field parser
+(matched against `hiscores.cc`'s actual `_xlog_split_fields`/`_xlog_unescape`
+algorithm, not a naive `:`.split()), and asserts exact fields on `begin`
+(1 record, exact text), `uniq` (≥1, `place`/`br` present), and `br.enter`
+(1, `oplace` present and distinct from `br`). Ran it twice back-to-back —
+byte-for-byte identical milestone sequence both times, confirming this pin
+is fully deterministic. **Passes.**
+
+Also built `ops/throughput-probe.py` for the PLAN §9 exit criterion
+("measure per-game wall-clock/CPU/memory over ~50 mixed games... throughput
+report exists and feeds Phase 1 sizing") — samples combos from the
+committed manifest, runs each under `/usr/bin/time -v` (via `script -qefc`
+for a pty; note `time -v`'s report only reliably lands in the `script`
+typescript file, *not* in the subprocess's own captured stderr — that took
+a smoke-test round to discover) with a 900s safety cap (not a turn budget —
+Phase 1's real runner does turn budgets; this is deliberately just measuring
+wall-clock, so wall-clock is the cap), and writes percentile wall/CPU/RSS to
+a JSON report. Smoke-tested at n=2 before trusting it with the real run.
+This run also doubles as another rune-milestone attempt, now with a 900s cap
+instead of 120s, across 50 varied combos instead of 4.
+
+**Started detached, not yet collected:** `python3 ops/throughput-probe.py
+--n-games 50 --safety-cap-secs 900 --workers 8 --out
+data/throughput-report.json`, PID **21247** (disowned), log at
+`logs/throughput-probe-1.log`, started 2026-08-12 08:20 EDT. 8 parallel
+workers on 24 CPUs (leaves headroom per CLAUDE.md). Worst case ~50/8 × 900s
+≈ 94 min if every game hits the safety cap; expect much less in practice
+since qw deaths are usually faster than that. Report lands at
+`data/throughput-report.json` when done.
+
+Committed telemetry test + decision 005 + throughput probe script in this
+entry's commit (the throughput *report* itself isn't committed yet — it
+doesn't exist until the detached run finishes).
+
+Also noted: a separate/parallel invocation pushed unrelated "local-model
+overnight profile" commits (`e7a720f`..`587f7b3`) to `origin/main` while this
+session was in progress — no file overlap, rebased cleanly. Worth knowing
+concurrent pushes to `main` are actually happening, not just a hypothetical
+the guardrails were written for.
+
+**Result:** Phase 0 exit criteria status update — reproducible build ✓,
+canary suite ✓ (8/8), sampler-support-set-diff-empty ✓, telemetry test ✓
+for `begin`/`uniq`/`br.enter` (exact fields asserted, deterministic re-run
+confirmed) with `death` correctly *not* asserted (§6 assumption corrected,
+see decision 005). **Still open:** rune milestone unverified (campaign
+above may catch it as a side effect, un-guaranteed); throughput report not
+yet collected (campaign in flight).
+
+**Next step:** Check `ps -p 21247` and `tail logs/throughput-probe-1.log` —
+if the process exited, read `data/throughput-report.json`: report
+`wall_secs`/`max_rss_mb` median+p95 (this is the number Phase 1 fleet sizing
+needs), check `rune_milestone_count` (if >0, grab one full milestones file
+from that run's log/output before it's lost and fold an exact-field rune
+assertion into `ops/telemetry-test.py`/decision 005 — if still 0 after 50
+games at 900s, that itself is worth recording as "rune verification deferred
+to Phase 1 campaign data, not a Phase 0 blocker" rather than chased further
+synchronously). Commit `data/throughput-report.json` once collected. If the
+process is still running, leave it (detached) and say so in the next entry
+rather than waiting on it. Once throughput + (best-effort) rune status are
+recorded, Phase 0's only remaining open item is rune-exact-field
+verification if never caught — decide then whether to accept the fallback
+(logfile-only) framing for rune too, or spend one more longer probe on it,
+and move on to Phase 1 (sampler + rc generation + runner state machine).
