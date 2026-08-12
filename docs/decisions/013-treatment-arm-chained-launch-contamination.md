@@ -212,4 +212,72 @@ isolated them independently.
 `runs_dir` is ever used to build a single `workdir`. Every `--runs-dir`
 argument, relative or absolute, now behaves identically. Re-ran
 `ops/campaign-test.py` and `ops/rc-gen-test.py` after this change: both
-still pass.
+still pass. Kept as a real, independently-justified fix (matches this
+codebase's own established convention) even though, see below, it turned
+out not to be the actual explanation for the treatment arm's failures.
+
+## The absolute-path fix did not actually hold up; final characterization and mitigation
+
+A relaunch of the real treatment arm *with the `runs_dir.resolve()` fix
+applied* failed 100% again, identically (`strace` on a live stuck process
+confirmed it was blocked in `read(0, ...)` with absolute, correctly
+resolved `-rc`/`-dir` paths — the fix from part 2 above was genuinely in
+effect, and it didn't matter). The earlier 128/128-clean confirmation run
+was real but was not actually caused by the absolute-path change — it was
+one lucky trial among several, not a deterministic fix. This is the
+clearest evidence yet that **the underlying failure is a genuine
+intermittent race**, not deterministically tied to any single code-level
+variable tested today (job-list size, chunking, `fork` vs `spawn`,
+relative vs. absolute paths, `setsid`, real vs. synthetic seeds) — full
+300-scale real attempts have both succeeded and failed 100% with *no
+code difference between some pairs of them*.
+
+**What the freeze actually looks like, pinned down via a `pexpect`
+`logfile_read` capture on a live stuck worker:** the crawl process is not
+stuck computing and not stuck at the "Welcome," chargen banner — it's
+frozen at crawl's own native pre-chargen "choose game type" menu
+("Dungeon Crawl" / "Choose Game Seed" / "Tutorial" / "Hints Mode" / ...,
+with "Dungeon Crawl" pre-highlighted), a screen `AUTO_START`/`combo=`
+normally causes crawl to skip past without ever displaying. Tried the
+obvious fix — have `monitor_game()` send `"\r"` periodically while
+waiting for "Welcome," instead of only after matching it, to dismiss this
+menu if it appears — and confirmed via `/proc/<pid>/io` that the
+keystroke *was* delivered (`rchar`/`syscr` advanced by exactly one read)
+but produced **zero** new output (`wchar` stayed frozen): the process
+received the input and did nothing observable with it. This rules out
+"missing dismiss keystroke" as the actual mechanism too, and was reverted
+(no behavior change, just noise) rather than kept as a non-fix.
+
+**Decision: stop chasing root cause, mitigate with retry.** This
+project's guidance is explicit about not spending unbounded time once
+returns diminish (`CLAUDE.md`: "adapt with the smallest working
+alternative... do not stop to renegotiate"), and today's investigation —
+extensive, systematic, each hypothesis directly tested rather than
+guessed — has not converged on one. Since the failure is confirmed
+intermittent and not tied to any specific character/seed (both arms
+share seeds; the control arm, with `bugfix_indefinite_transform=False`,
+has never once shown this signature; several full treatment-flavor
+runs succeeded cleanly), **retrying a purged failure is a legitimate
+mitigation**, not a data-integrity risk: a character that hit a
+startup-time race once has no special reason to hit it again, and the
+purge is narrowly scoped to the exact `"no 'Welcome,' banner within Ns"`
+detail string — a real crash-with-no-row `harness_failure` is left
+alone and still counts.
+
+Built `ops/purge-welcome-timeout-failures.py` (deletes only run
+directories whose `result.json` is that specific detail string,
+verified against synthetic fixtures: a real `died` and a different
+`harness_failure` detail are both left untouched) and
+`ops/run-indefinite-transform-treatment-with-retry.sh` (loops
+`campaign.py` + the purge script up to 6 attempts, relying entirely on
+`campaign.py`'s existing resume-by-`run_id` logic to retry exactly the
+purged runs and nothing else). This is the launch mechanism used to
+finally collect this experiment's treatment arm.
+
+**If a future campaign hits this same signature:** don't re-derive the
+above from scratch — use the same purge-and-retry mechanism directly.
+If retries start being needed pervasively (not just for this one
+experiment) it would be worth generalizing
+`run-indefinite-transform-treatment-with-retry.sh`'s loop into
+`campaign.py` itself (a `--retry-welcome-timeouts N` flag) rather than
+copy-pasting the wrapper shape per experiment.
