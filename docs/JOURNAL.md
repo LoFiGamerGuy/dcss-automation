@@ -285,3 +285,76 @@ recorded, Phase 0's only remaining open item is rune-exact-field
 verification if never caught — decide then whether to accept the fallback
 (logfile-only) framing for rune too, or spend one more longer probe on it,
 and move on to Phase 1 (sampler + rc generation + runner state machine).
+
+## 2026-08-12 — Phase 1 sampler built and tested while throughput campaign ran
+
+**Did:** Picked up with the throughput probe (PID 21247) still running from the
+prior entry — checked it first (`ps -p 21247`, `logs/throughput-probe-1.log`):
+still alive, all 8 worker slots occupied by in-flight games (checked via
+`/tmp/dcss-throughput-*` dirs, which are only removed on a game's completion —
+zero had completed yet at the ~6.5 min mark). Games here run to natural
+completion under a 900s cap rather than a canary's ~45s budget, so a multi-
+minute wait before the first result is expected, not a stall; log output is
+also just sitting in Python's block-buffered stdout (redirected to a file,
+not a tty) until the process exits, so an empty-looking log tail is
+consistent with normal progress, not evidence of one. Left it running
+(untouched, still detached) and did not wait on it — moved on to Phase 1 work
+that doesn't depend on its output.
+
+Built `ops/combos.py`: the §2 `uniform-pairs` sampler. Given the archived
+manifest and a *dedicated character-RNG seed* (deliberately never the game
+seed, per §2 step 2), it samples one (species,background) pair uniformly,
+then — if that combo has a starting-weapon choice — a weapon uniformly over
+its legal options, and emits the exact rc `combo=` string (confirmed the
+`SpJo.weapon name` dot-syntax by reading `newgame.cc`'s `_choose_char`, which
+`split_string(".", combo)` — not documented anywhere, had to read the parser).
+
+Built `ops/sampler-test.py`, the Phase 1 exit-criterion test, with three
+checks: (1) support-set diff — re-queries the *live* pinned binary's
+`-playable-json`/`-weapon-json` right now and diffs against the committed
+manifest, so this doesn't just trust the manifest was correct at generation
+time; (2) determinism — same (manifest, char_seed) always samples the same
+character; (3) goodness-of-fit — stdlib-only chi-square tests (no
+scipy/numpy in this environment, so implemented Acklam's normal-quantile
+approximation + Wilson-Hilferty chi-square-quantile approximation from
+scratch) for both pair-selection uniformity (single test, df=664) and, per
+weapon-choice combo with enough samples, weapon-selection uniformity
+(Bonferroni-corrected across the ~230 testable combos so many independent
+per-combo tests don't inflate the false-positive rate). Hit and fixed one
+real bug while building this: 8 combos (all Felid) have exactly one "choice"
+(`unarmed` only) in the weapon manifest — not a real distribution, chi-square
+df=0 crashed; excluded len==1 combos from the testable set. Sanity-checked
+the test's actual detection power by deliberately biasing pair selection
+5:1 favoring one combo and confirming the chi2 stat blew past critical
+(531726 vs. crit 782) — not just that it passes on good input, which alone
+wouldn't distinguish a real test from a no-op. `PASS`es at n=200k in ~6s.
+
+Committed both files (`cc0e436`) and pushed.
+
+**Result:** Phase 1's sampler sub-deliverable (§9 Phase 1 "sampler...") is
+done and self-tested — goodness-of-fit exit criterion for the sampler
+specifically now passes as an automated, re-runnable test, ahead of the rest
+of Phase 1 (rc generation, runner state machine, collector) which is not
+started. Phase 0 is still not closed: throughput report not yet collected
+(campaign still running, see below), rune milestone still unverified.
+
+Checked the probe again before ending this entry: still running
+(`ps -p 21247` alive, ~elapsed continuing to climb), still no completions in
+`/tmp` teardown yet. **Leaving it running across this session boundary.**
+
+**Next step:** Same as the unresolved half of the prior entry — check
+`ps -p 21247` / `logs/throughput-probe-1.log` / `data/throughput-report.json`
+first thing next session. If done: pull `wall_secs`/`max_rss_mb`
+median+p95 for Phase 1 fleet sizing, check `rune_milestone_count`, commit the
+report. If still running (plausible — worst case ~94 min from its 08:20
+start, and this session ended before that), leave it and keep checking at
+the start of future sessions rather than blocking on it. Either way, Phase 1
+work can continue in parallel: next concrete piece is `ops/rc-gen.py` (or
+extend `combos.py`) to produce a full per-run rc file (generalizing
+`ops/canary/canary.rc.tmpl`'s pattern — this file forces `AUTO_START`/
+`DELAYED` for canaries; the real per-run template needs qw's `QUIT_TURNS`
+and `c_persist`-clearing per §7 baked in, not just a forced combo), then the
+runner state machine (§6: write-ahead manifest, the 10 terminal statuses,
+progress-based hang detection) — note turn-budget *sizing* specifically
+should wait for the throughput numbers, but the state machine's structure
+does not depend on them.
