@@ -95,6 +95,7 @@ CREATE TABLE runs (
     wall_cap_secs INTEGER,
     hang_secs INTEGER,
     bugfix_lua_errors INTEGER,
+    bugfix_indefinite_transform INTEGER,
     started_at REAL,
     reconciled INTEGER,
     status TEXT,
@@ -236,8 +237,9 @@ def build_db(runs_dir, db_path, strict=False, now=None):
         logfile_row = (result or {}).get("logfile_row") or {}
 
         bugfix_lua_errors = manifest_row.get("bugfix_lua_errors")
+        bugfix_indefinite_transform = manifest_row.get("bugfix_indefinite_transform")
         conn.execute(
-            "INSERT INTO runs VALUES (" + ",".join(["?"] * 32) + ")",
+            "INSERT INTO runs VALUES (" + ",".join(["?"] * 33) + ")",
             (
                 run_id,
                 manifest_row.get("char_seed"),
@@ -247,6 +249,8 @@ def build_db(runs_dir, db_path, strict=False, now=None):
                 manifest_row.get("turn_budget"), manifest_row.get("wall_cap_secs"),
                 manifest_row.get("hang_secs"),
                 None if bugfix_lua_errors is None else int(bool(bugfix_lua_errors)),
+                None if bugfix_indefinite_transform is None
+                    else int(bool(bugfix_indefinite_transform)),
                 manifest_row.get("started_at"),
                 reconciled, status, detail,
                 (result or {}).get("wall_secs"), (result or {}).get("output_bytes"),

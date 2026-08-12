@@ -23,6 +23,14 @@ combo = __COMBO__
 # crashes, for the experiment's control arm.
 : QW_BUGFIX_LUA_ERRORS = __BUGFIX_LUA_ERRORS__
 
+# Phase 2 A/B flag (docs/decisions/012): guards plans-rest.lua's
+# should_rest()/reason_to_rest() indefinite-talisman-transform stall (every
+# Shapeshifter -- and any character permanently transformed via a talisman
+# -- picked plans.rest every tick forever instead of ever exploring).
+# Default/unset behaves as true (fix applied); __BUGFIX_INDEFINITE_TRANSFORM__
+# of "false" reproduces the original stall, for the experiment's control arm.
+: QW_BUGFIX_INDEFINITE_TRANSFORM = __BUGFIX_INDEFINITE_TRANSFORM__
+
 # Harness-enforced turn budget (PLAN.md §6 timeout_turns) — distinct from
 # qw's own QUIT_TURNS "stuck" detection (line ~103 of qw.rc, that's
 # quit_stuck). clua has no io/os library (clua.cc: LUA_IOLIBNAME/OSLIBNAME

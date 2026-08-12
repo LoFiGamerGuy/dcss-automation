@@ -63,12 +63,13 @@ def _ensure_fresh_workdir(workdir):
 
 
 def _run_one(run_id, char_seed, game_seed, workdir, turn_budget, wall_cap_secs, hang_secs,
-             bugfix_lua_errors=True):
+             bugfix_lua_errors=True, bugfix_indefinite_transform=True):
     manifest, digest = runner.combos.load_manifest()
     row = runner.rc_gen.build_manifest_row(run_id, char_seed, game_seed, manifest, digest)
     return runner.run_game(row, workdir, turn_budget=turn_budget,
                             wall_cap_secs=wall_cap_secs, hang_secs=hang_secs,
-                            bugfix_lua_errors=bugfix_lua_errors)
+                            bugfix_lua_errors=bugfix_lua_errors,
+                            bugfix_indefinite_transform=bugfix_indefinite_transform)
 
 
 def run_campaign(n_games, *, workers=8, turn_budget=0,
@@ -78,7 +79,7 @@ def run_campaign(n_games, *, workers=8, turn_budget=0,
                   char_seed_base=DEFAULT_CHAR_SEED_BASE,
                   game_seed_base=DEFAULT_GAME_SEED_BASE,
                   runs_dir=DEFAULT_RUNS_DIR,
-                  bugfix_lua_errors=True, char_seeds=None):
+                  bugfix_lua_errors=True, bugfix_indefinite_transform=True, char_seeds=None):
     """char_seeds, if given, overrides the default contiguous
     char_seed_base+i / game_seed_base+i allocation with an explicit list of
     char_seed ints (game_seed = game_seed_base + char_seed for each) --
@@ -117,14 +118,16 @@ def run_campaign(n_games, *, workers=8, turn_budget=0,
     print(f"campaign.py: {len(jobs)} run(s) to launch, {n_skipped} already complete "
           f"(prefix={run_prefix!r}, {range_desc}), "
           f"workers={workers}, turn_budget={turn_budget}, wall_cap_secs={wall_cap_secs}, "
-          f"bugfix_lua_errors={bugfix_lua_errors}")
+          f"bugfix_lua_errors={bugfix_lua_errors}, "
+          f"bugfix_indefinite_transform={bugfix_indefinite_transform}")
 
     results = []
     start = time.time()
     with ProcessPoolExecutor(max_workers=workers) as ex:
         futs = {
             ex.submit(_run_one, run_id, char_seed, game_seed, workdir,
-                      turn_budget, wall_cap_secs, hang_secs, bugfix_lua_errors): run_id
+                      turn_budget, wall_cap_secs, hang_secs, bugfix_lua_errors,
+                      bugfix_indefinite_transform): run_id
             for run_id, char_seed, game_seed, workdir in jobs
         }
         for fut in as_completed(futs):
@@ -151,6 +154,7 @@ def run_campaign(n_games, *, workers=8, turn_budget=0,
         "wall_cap_secs": wall_cap_secs,
         "hang_secs": hang_secs,
         "bugfix_lua_errors": bugfix_lua_errors,
+        "bugfix_indefinite_transform": bugfix_indefinite_transform,
         "run_prefix": run_prefix,
         "index_range": None if char_seeds is not None else [index_start, index_start + n_games - 1],
         "wall_secs_total": time.time() - start,
@@ -180,6 +184,9 @@ def main():
     ap.add_argument("--disable-bugfix-lua-errors", action="store_true",
                      help="reproduce the original qw crashes (docs/decisions/011); "
                           "for the Phase 2 A/B experiment's control arm")
+    ap.add_argument("--disable-bugfix-indefinite-transform", action="store_true",
+                     help="reproduce the original qw indefinite-transform rest stall "
+                          "(docs/decisions/012); for the Phase 2 A/B experiment's control arm")
     args = ap.parse_args()
 
     char_seeds = None
@@ -194,6 +201,7 @@ def main():
         run_prefix=args.run_prefix, index_start=args.index_start,
         char_seed_base=args.char_seed_base, game_seed_base=args.game_seed_base,
         runs_dir=args.runs_dir, bugfix_lua_errors=not args.disable_bugfix_lua_errors,
+        bugfix_indefinite_transform=not args.disable_bugfix_indefinite_transform,
         char_seeds=char_seeds,
     )
     text = json.dumps(summary, indent=2, default=str)

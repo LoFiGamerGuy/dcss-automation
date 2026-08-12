@@ -1,0 +1,70 @@
+diff --git a/source/plans-rest.lua b/source/plans-rest.lua
+index def7b3f..f283d35 100644
+--- a/source/plans-rest.lua
++++ b/source/plans-rest.lua
+@@ -41,6 +41,47 @@ function qw_hostile_servants_timer()
+     return hostile_servants_timer or 0
+ end
+ 
++-- you.transform() names the 9 talisman-driven forms (blade, statue, snake,
++-- dragon, death, storm, beast, maw, flux -- vendor/crawl/crawl-ref/source/
++-- form-data.h, the entries with a talisman_type other than NUM_TALISMANS)
++-- as indefinite: unlike spell forms (spider, bat, dragon-via-spell, etc,
++-- which expire on their own and so eventually make transformed() false
++-- again), these only end via the player's own "Begin Untransformation"
++-- ability. reason_to_rest()/should_rest()'s bare `or transformed()` assumed
++-- every transformation is worth waiting out -- true for a spell form about
++-- to expire, permanently true for a talisman form. Every Shapeshifter
++-- (talisman-locked into beast-form from character creation) hit this: qw
++-- picked plans.rest every tick, ahead of plans.explore/explore2 in the
++-- cascade (plans.lua's initialize_plan_cascades), forever, while D:0.32's
++-- camping-punishment "power of Zot" mechanic drained max HP to death or the
++-- harness's hang detector force-quit it -- 28/28 Shapeshifter games in the
++-- phase1-500 baseline (data/phase1-500.db), 0 ever took a real action.
++-- Confirmed live via the phase1-500 campaign and direct reading of qw's/
++-- crawl's source; see docs/decisions/012. QW_BUGFIX_INDEFINITE_TRANSFORM
++-- (rc-settable, default true/unset) can be set to false to disable this
++-- guard and reproduce the original stall, for the Phase 2 A/B experiment's
++-- control arm.
++-- transform_name optional and defaulting to you.transform() (rather than
++-- always reading it internally) so a test can drive this directly by name
++-- without having to actually be transformed in-game -- same reasoning as
++-- qw_equip_slot_or_empty(cur_equip, slot) taking cur_equip explicitly
++-- (docs/decisions/011).
++function qw_transform_is_indefinite(transform_name)
++    transform_name = transform_name or you.transform()
++    local indefinite_forms = {
++        blade = true, statue = true, snake = true, dragon = true,
++        death = true, storm = true, beast = true, maw = true, flux = true,
++    }
++    return indefinite_forms[transform_name] or false
++end
++
++function qw_transformed_worth_resting_for()
++    if QW_BUGFIX_INDEFINITE_TRANSFORM == false then
++        return transformed()
++    end
++    return transformed() and not qw_transform_is_indefinite()
++end
++
+ function should_rest()
+     if qw.danger_in_los and not qw.all_enemies_safe or qw.position_is_cloudy then
+         return false
+@@ -48,7 +89,7 @@ function should_rest()
+ 
+     if qw.have_orb then
+         return you.confused()
+-            or transformed()
++            or qw_transformed_worth_resting_for()
+             or you.slowed() and not qw.slow_aura
+             or you.berserk()
+             or you.teleporting()
+@@ -87,7 +128,7 @@ function reason_to_rest(percentage)
+     end
+ 
+     return you.confused()
+-        or transformed()
++        or qw_transformed_worth_resting_for()
+         or you.slowed() and not qw.slow_aura
+         or you.exhausted()
+         or you.teleporting()

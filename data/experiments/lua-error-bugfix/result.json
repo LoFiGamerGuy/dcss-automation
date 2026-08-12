@@ -1,0 +1,22 @@
+{
+  "control_arm": "control",
+  "treatment_arm": "treatment",
+  "control_rate": 0.056666666666666664,
+  "control_ci": [
+    0.035677476450103135,
+    0.08886595805350786
+  ],
+  "treatment_rate": 0.0033333333333333335,
+  "treatment_ci": [
+    0.0005886577211866445,
+    0.018636693715189587
+  ],
+  "diff_treatment_minus_control": -0.05333333333333333,
+  "diff_ci": [
+    -0.08564939141643838,
+    -0.027357595712929676
+  ],
+  "clears_minimum_effect": true,
+  "ci_excludes_zero_in_declared_direction": true,
+  "declared_improvement": true
+}

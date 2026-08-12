@@ -1,0 +1,19 @@
+{
+  "n_requested": 300,
+  "n_launched": 300,
+  "n_skipped_already_complete": 0,
+  "workers": 16,
+  "turn_budget": 20000,
+  "wall_cap_secs": 900,
+  "hang_secs": 120,
+  "bugfix_lua_errors": false,
+  "run_prefix": "exp-luafix-control",
+  "index_range": null,
+  "wall_secs_total": 712.1689486503601,
+  "status_counts": {
+    "died": 264,
+    "quit_stuck": 13,
+    "lua_error": 17,
+    "timeout_wall": 6
+  }
+}

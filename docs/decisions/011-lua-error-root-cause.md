@@ -184,3 +184,18 @@ A pre-declared Phase 2 experiment (`ops/experiment.py` scaffolding,
 `data/experiments/lua-error-bugfix/`) measures the fix's actual effect on
 the `lua_error` rate on held-out validation seeds against the frozen
 phase1-500 baseline, per PLAN.md §8.
+
+**Result:** 300 validation-split seeds/arm (`data/experiments/lua-error-bugfix/seeds.json`,
+disjoint from phase1-500's `0..499`), `--turn-budget 20000 --wall-cap-secs
+900`. Control (`bugfix_lua_errors=false`) sanity-checks against the frozen
+baseline as expected: 17/300 = 5.67% `lua_error`, matching phase1-500's
+5.2% within noise (predeclaration's hypothesized baseline). Treatment
+(`bugfix_lua_errors=true`): 1/300 = 0.33%.
+
+`ops/experiment.py`'s `evaluate_predeclaration`: rate difference −5.33 points
+(95% CI −8.56 to −2.74), clears the predeclared 2-point minimum effect with
+the CI excluding zero in the declared "decrease" direction —
+`declared_improvement: true`. Full numbers in
+`data/experiments/lua-error-bugfix/result.json`. **`QW_BUGFIX_LUA_ERRORS` is
+confirmed effective; no code change needed since it already defaults to
+fixed-on.**

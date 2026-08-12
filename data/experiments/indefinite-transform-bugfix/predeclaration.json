@@ -1,0 +1,21 @@
+{
+  "alpha": 0.05,
+  "arms": {
+    "control": {
+      "bugfix_indefinite_transform": false,
+      "description": "QW_BUGFIX_INDEFINITE_TRANSFORM=false, reproduces original stall"
+    },
+    "treatment": {
+      "bugfix_indefinite_transform": true,
+      "description": "QW_BUGFIX_INDEFINITE_TRANSFORM=true (default), guard active"
+    }
+  },
+  "baseline_ref": "data/phase1-500.db",
+  "direction": "decrease",
+  "hypothesis": "docs/decisions/012: patching qw.lua plans-rest.lua so should_rest()/reason_to_rest() no longer treat an indefinite-duration talisman transformation (beast, flux, blade, statue, snake, dragon, death, storm, maw) as worth resting for reduces the quit_stuck terminal-status rate versus the phase1-500 baseline (28/500 = 5.6%, all 28 from the Shapeshifter background stalling in beast-form forever), gated by QW_BUGFIX_INDEFINITE_TRANSFORM.",
+  "minimum_effect": 0.02,
+  "name": "indefinite-transform-bugfix",
+  "primary_outcome": "quit_stuck_rate",
+  "sample_size_per_arm": 300,
+  "seed_split": "validation"
+}
