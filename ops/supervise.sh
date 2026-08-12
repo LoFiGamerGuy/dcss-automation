@@ -45,11 +45,20 @@ trap 'log "supervisor received SIGINT/SIGTERM; exiting"; exit 130' INT TERM
 command -v claude >/dev/null 2>&1 || { echo "claude not on PATH" >&2; exit 1; }
 
 log "supervisor start — worker=$WORKER_MODEL orch=$ORCH_MODEL every=$ORCH_EVERY pid=$$"
+[ -n "${WORKER_BASE_URL:-}" ] && log "worker routed to gateway $WORKER_BASE_URL (orchestrator stays on the Claude API)"
+[ "${MAX_RUNTIME_HOURS:-0}" != "0" ] && log "will halt after ${MAX_RUNTIME_HOURS}h"
 
+START_EPOCH=$(date +%s)
 backoff=$SLEEP_BASE
 
 while :; do
   [ -f "$REPO_ROOT/ops/STOP" ] && halt "ops/STOP present (kill switch)"
+
+  if [ "${MAX_RUNTIME_HOURS:-0}" != "0" ]; then
+    elapsed=$(( ($(date +%s) - START_EPOCH) / 60 ))
+    limit=$(awk "BEGIN{printf \"%d\", $MAX_RUNTIME_HOURS * 60}")
+    [ "$elapsed" -ge "$limit" ] && halt "reached MAX_RUNTIME_HOURS=${MAX_RUNTIME_HOURS} (${elapsed}m elapsed)"
+  fi
 
   iter=$(( $(cat "$ITER_FILE") + 1 ))
   echo "$iter" > "$ITER_FILE"
@@ -80,8 +89,24 @@ while :; do
 
   prompt="Read docs/JOURNAL.md, then continue the work per ${promptfile}. Follow CLAUDE.md. You are running unattended: do not ask for approval or preferences — decide, record the decision, and proceed."
 
+  # Per-role routing. ANTHROPIC_BASE_URL is process-global, so it is applied
+  # per invocation: the worker may sit on a local gateway while the
+  # orchestrator must always reach the real Claude API to be worth running.
+  runner=( env )
+  if [ "$role" = "orchestrator" ]; then
+    runner+=( -u ANTHROPIC_BASE_URL -u ANTHROPIC_AUTH_TOKEN \
+              -u ANTHROPIC_DEFAULT_HAIKU_MODEL -u ANTHROPIC_SMALL_FAST_MODEL )
+  elif [ -n "${WORKER_BASE_URL:-}" ]; then
+    runner+=( "ANTHROPIC_BASE_URL=$WORKER_BASE_URL" )
+    [ -n "${WORKER_AUTH_TOKEN:-}" ] && runner+=( "ANTHROPIC_AUTH_TOKEN=$WORKER_AUTH_TOKEN" )
+    if [ -n "${WORKER_SMALL_MODEL:-}" ]; then
+      runner+=( "ANTHROPIC_DEFAULT_HAIKU_MODEL=$WORKER_SMALL_MODEL" \
+                "ANTHROPIC_SMALL_FAST_MODEL=$WORKER_SMALL_MODEL" )
+    fi
+  fi
+
   timeout --signal=INT --kill-after=60 "$ITER_TIMEOUT" \
-    claude -p "$prompt" \
+    "${runner[@]}" claude -p "$prompt" \
       --model "$model" \
       --permission-mode bypassPermissions \
       --output-format text \
