@@ -1529,3 +1529,114 @@ Phase 2 candidate (Troll/Felid lua_error clusters are likely already
 explained by decision 011's two generic fixes rather than new bugs — worth
 a quick check against decision 011's fix shape before assuming they need a
 new investigation).
+
+## 2026-08-12 (session 3, cont.) — treatment arm: five more full-scale attempts, no deterministic root cause found; landed on purge-and-retry as the practical mitigation
+
+**Did:** The "decouple arm launches" mitigation from the entry above did
+**not** hold — the standalone relaunch reproduced 100% `harness_failure`
+again. Spent the bulk of this session bisecting systematically rather than
+guessing, each step tested directly against the real binary:
+
+1. `strace -p` (via passwordless `sudo`; unprivileged `ptrace` isn't
+   permitted here) on a live stuck worker showed it blocked in
+   `read(0, ...)` — i.e. genuinely waiting for input, not hung computing.
+2. Bisected job-list size as a candidate: n≤48 succeeded repeatedly
+   (>10 trials, both a hand-written script and `campaign.py`'s real CLI,
+   both `fork` and `spawn` start methods); n=100 failed 100% every time.
+   Chunked `campaign.py`'s `ProcessPoolExecutor` submission to
+   `<=workers` jobs per pool lifecycle as the fix (`ops/campaign.py`,
+   commit `00bc60f`) — confirmed 48/48 clean immediately after.
+3. The **real** full 300-job run, chunked, still failed 100% on its
+   first chunk. Bisected further: a relative `--runs-dir data/runs` (the
+   form every launch command in this project has used all along)
+   reproducibly failed; the identical call with an absolute `runs_dir`
+   succeeded 128/128 across 8 chunks in a dedicated confirmation run.
+   Fixed `run_campaign()` to resolve `runs_dir` to absolute immediately
+   (commit `8186a6b`), matching the convention `rc_gen.write_run_dir()`/
+   `runner.run_game()` already use internally (which turned out to be
+   insufficient on its own — see next point).
+4. **That fix did not actually hold up.** A relaunch of the real
+   treatment arm with the `resolve()` fix in place failed 100% again,
+   identically — `strace` confirmed the stuck process had fully correct
+   absolute `-rc`/`-dir` paths and was still blocked in `read()`. The
+   earlier 128/128 success was real but not caused by the path change —
+   it was one lucky trial, not a deterministic fix. This is the clearest
+   signal that the failure is a genuine intermittent race, not
+   deterministically tied to any single variable tested (job count,
+   chunking, `fork`/`spawn`, relative/absolute paths, `setsid`, real vs.
+   synthetic seeds — full-scale real attempts both succeeded and failed
+   100% with literally no code difference between some pairs of them).
+5. Pinned down *what* the freeze actually looks like via a `pexpect`
+   `logfile_read` capture on a live stuck worker: frozen at crawl's own
+   native pre-chargen "choose game type" menu (not the "Welcome," chargen
+   banner) — a screen `AUTO_START`/`combo=` normally causes crawl to skip
+   without ever displaying. Tried having `monitor_game()` send `"\r"`
+   periodically while waiting, to dismiss it if it appears — confirmed via
+   `/proc/<pid>/io` that the keystroke *was* delivered (`rchar`/`syscr`
+   advanced by exactly one) but produced zero new output. Reverted (no
+   behavior change, just noise) rather than keep a non-fix.
+
+**Decision:** stopped chasing root cause — per `CLAUDE.md`'s explicit
+"do not stop to renegotiate" / diminishing-returns guidance, and because
+the investigation had exhausted every code-level variable directly
+testable without kernel-level tooling this session didn't have budget
+for. Since the failure is confirmed intermittent and not tied to any
+specific character (the control arm, `bugfix_indefinite_transform=False`,
+has never once shown this signature across ~1200 games today; several
+full treatment-flavor runs succeeded cleanly with no code difference),
+retrying a purged failure is a legitimate mitigation, not a data-integrity
+risk. Built `ops/purge-welcome-timeout-failures.py` (deletes only run
+directories whose `result.json` is exactly the
+`"no 'Welcome,' banner within Ns"` detail string — verified against
+synthetic fixtures that a real `died` and a *different* `harness_failure`
+detail are both left untouched, so this can't silently retry away a real
+crash) and `ops/run-indefinite-transform-treatment-with-retry.sh` (loops
+`campaign.py` + the purge script up to 6 attempts, relying entirely on
+`campaign.py`'s existing resume-by-`run_id` logic). Full trajectory,
+every dead end, and the final characterization written up in
+`docs/decisions/013-treatment-arm-chained-launch-contamination.md`
+(grown substantially across this session — read it in full before
+touching this experiment again, the short version above elides a lot of
+directly-tested detail worth not re-deriving).
+
+**Started the retry-wrapper, detached:**
+
+    setsid nohup bash ops/run-indefinite-transform-treatment-with-retry.sh \
+      > logs/indefinite-transform-treatment-retry-wrapper.log 2>&1 < /dev/null &
+    disown
+
+Driver **PID 55313** (`bash`, wrapping sequential `campaign.py`
+invocations), confirmed alive with 16 crawl children. Log:
+`logs/indefinite-transform-treatment-retry-wrapper.log`. Prints
+`EXPERIMENT_DONE` on completion (either all welcome-timeout failures
+purged clean, or the 6-attempt retry budget exhausted with some still
+outstanding — the log will say which).
+
+**Result:** `ops/campaign.py` genuinely improved by this session
+regardless of the unresolved root cause (chunked submission, resolved
+`runs_dir` — both real, defensible fixes, kept even though neither alone
+explained the failures). Control arm data from two entries ago is
+untouched and still good. Treatment arm collection now running via the
+retry wrapper, not yet collected.
+
+**Next step:** Check `pgrep -fa
+run-indefinite-transform-treatment-with-retry` /
+`tail logs/indefinite-transform-treatment-retry-wrapper.log` — look for
+`EXPERIMENT_DONE` and read which attempt number it finished on (attempt 1
+would mean the bug didn't recur at all this time; a higher attempt number
+with the log's own "no welcome-timeout failures left" line means the
+retry mechanism did its job; "retry budget exhausted" would mean escalate
+rather than accept partial data — don't silently use a summary with
+missing runs). Once genuinely clean (every `exp-transform-treatment-*`
+run dir has a non-purged `result.json`): sanity-check status mix same as
+the prior entry's instructions (organic-looking, not uniform), then
+`ops/collector.py --runs-dir data/runs --db
+data/experiments/indefinite-transform-bugfix/results.db --strict`,
+compute each arm's `quit_stuck` count/n, `experiment.evaluate_predeclaration`,
+commit `{results.db,result.json,*-summary.json}` plus this entry's decision
+013 updates. If it clears the predeclared effect, write the result into
+decision 012's Follow-up section (mirroring decision 011's). After that
+closes, resume mining `data/phase1-500-report.json`'s stratified tables
+for the next Phase 2 candidate (Troll/Felid lua_error clusters are likely
+already covered by decision 011's two fixes, not a new bug — check before
+assuming otherwise).
