@@ -75,3 +75,17 @@ crawl/qw commits and fixed seed). Confirms:
   `br=Sewer` (destination branch) correctly distinct — confirms the escaped
   `place=D::6` — the `PLAN.md`-style event linking a branch entry back to
   where it was entered from — decodes correctly through the `::`-unescape.
+
+## Addendum (2026-08-12, orchestrator review after the phase1-500 campaign)
+
+The 500-game campaign produced 22 `death` milestone records — all 22 from
+**Felid** runs (verified via `data/phase1-500.db`:
+`select r.species, count(*) from milestones m join runs r on
+r.run_id=m.run_id where m.type='death' group by 1` → `[('Felid', 22)]`).
+This *confirms* rather than contradicts the finding above: the
+`you.lives != 0` gate in `ouch.cc` is the Felid extra-lives mechanic, so a
+Felid losing a non-final life emits a `death` milestone, while the *final*
+death of any character (Felid included) still never does. The original
+phrasing here ("extra-lives game-mode mechanic") was imprecise — it is a
+species mechanic, live in standard games. No code change needed; the
+collector already stores these rows generically by `type`.

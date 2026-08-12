@@ -1,0 +1,22 @@
+{
+  "n_requested": 500,
+  "n_launched": 500,
+  "n_skipped_already_complete": 0,
+  "workers": 16,
+  "turn_budget": 20000,
+  "wall_cap_secs": 900,
+  "hang_secs": 120,
+  "run_prefix": "phase1-500",
+  "index_range": [
+    0,
+    499
+  ],
+  "wall_secs_total": 711.0967788696289,
+  "status_counts": {
+    "died": 441,
+    "quit_stuck": 28,
+    "timeout_wall": 4,
+    "lua_error": 26,
+    "timeout_turns": 1
+  }
+}

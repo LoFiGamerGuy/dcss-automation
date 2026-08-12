@@ -1076,3 +1076,83 @@ still running: leave it, do not idle-wait — there is no other open Phase 0/1
 item, so use idle time for doc cleanup / re-verifying the existing test
 suite still passes (`ops/*-test.py`) rather than sitting idle, per
 `CLAUDE.md`'s "no invocation with zero trace" rule.
+
+## ORCHESTRATOR REVIEW — 2026-08-12 (second pass) — Phase 1 exit verified on the real campaign; Phase 1 CLOSED
+
+**Assessment.** The phase1-500 campaign (PID 34524, launched last entry with
+the setsid-hardened form) completed cleanly: 500/500 runs in ~711s wall at 16
+workers, driver exited on its own, summary written. I verified the Phase 1
+exit bar directly against the data rather than taking the driver's summary on
+faith:
+
+- **Data integrity:** 500 run dirs, 500 unique `char_seed`, 500 unique
+  `game_seed`, zero manifest/dir `run_id` mismatches, zero missing
+  `result.json`, wall_secs p5/50/95 = 3.8/7.2/130s and output_bytes p5/50/95
+  = 27KB/462KB/2.6MB — healthy organic variance, no trace of the 642e3ec
+  contamination signature (uniform ~247s/~2KB).
+- **Reconciliation invariant (strict):** `ops/collector.py --strict` →
+  `n_manifests=500, n_reconciled=500, n_pending=0,
+  n_harness_failure_missing_result=0, invariant_holds=true`. DB committed as
+  `data/phase1-500.db` (~1MB).
+- **Invalid-run rate:** `invalid_telemetry` + `harness_failure` = 0/500 =
+  **0%**, target <2%. ✓
+- **Report reproducibility:** `ops/report.py` run twice against the DB —
+  byte-identical (`cmp` clean). Committed as `data/phase1-500-report.json`.
+- **Sampler goodness-of-fit + collector tests re-run at review time:** both
+  still PASS.
+- Drills and parallel-isolation were already green (`runner-drills-test.py`,
+  `campaign-test.py` — the latter re-verified after the 642e3ec fix with a
+  deliberately-relative runs dir); the campaign itself is the at-scale
+  evidence on top.
+
+**All five §9 Phase 1 exit criteria are satisfied. Phase 1 is closed.** This
+campaign is the frozen baseline all Phase 2 claims measure against (PLAN §9).
+
+Baseline outcome vector (n=500): died 441 (88.2%), quit_stuck 28 (5.6%),
+lua_error 26 (5.2%), timeout_wall 4 (0.8%), timeout_turns 1 (0.2%); wins 0,
+runes 0 (rune_count_distribution {0: 500}). turns_survived (natural ends,
+n=469): median 1077, p95 9000, max 10723. XL median 2, max 11. Milestones
+flowed for **every** run (500/500 have `begin`; 945 rows total across 12
+types incl. `br.enter` 43, `br.end` 4, `god.worship` 48) — the telemetry
+pipeline works at scale, so invalid_telemetry=0 is meaningful, not vacuous.
+
+**Findings (recorded, no action needed now):**
+1. **Decision 005 refined, not contradicted:** 22 `death` milestones appeared
+   — all from Felid runs (non-final life losses; `you.lives` is the Felid
+   mechanic). Final deaths still never emit a milestone. Addendum appended to
+   `docs/decisions/005`.
+2. **Turn budget 20000 validated:** exactly 1/500 hit it (a VSAE at 607s
+   wall); natural max was 10723 with no pile-up near the cap. Decision 010's
+   revisit clause is not triggered.
+3. **lua_error at 5.2%** (26/500, spread across species, Felid 6 highest) —
+   consistent with the pilot's rate. This is qw-vs-pinned-crawl breakage in
+   legitimately-classified runs, exactly the "failures become Phase 2 items"
+   row of PLAN §10. A Phase 2 candidate: sample the `detail` fields from
+   these 26 runs to find the dominant qw error(s) before picking other §352
+   items — reducing lua_error grows the effective sample for every later
+   experiment.
+4. **Rune verification stays accepted-fallback:** 0 runes in 500 games, so no
+   opportunity to fold in the exact-field rune assertion. Unchanged framing.
+
+**Drift / loops / fairness / stats (§7, §8):** No architectural drift; all
+adaptations documented in decisions 002–010. No repeated dead ends — the
+three pilot attempts were distinct failures (relative-path bug, session-
+boundary kill, then success), each root-caused and journaled. Fairness
+contract intact (campaign was pure data collection; probe test unchanged).
+§8 not yet at risk, but it becomes live the moment Phase 2 starts: **the
+phase1-500 baseline is now frozen — Phase 2 work must not retune or re-run
+it, and every claimed improvement needs pre-declared minimum effects and
+held-out seeds per §8.** No BLOCKED.md needed.
+
+**Corrections:** none required — the worker's trajectory is sound.
+
+**Next step:** Begin Phase 2 (PLAN §9 "Raise the floor"). First concrete
+task: query the 26 lua_error runs' `detail`/output artifacts (dirs still in
+`data/runs/phase1-500-*`, gitignored but on disk) to identify the dominant
+qw Lua failure mode(s), and write it up as the first Phase 2 hypothesis item
+(config-flagged fix + §8 experiment protocol: pre-declared effect, held-out
+seeds, baseline = `data/phase1-500.db`). Before any fix work, write the §8
+experiment-protocol scaffolding if it doesn't exist yet (seed splits,
+pre-declaration file format) — the protocol must exist before the first
+experiment, not be retrofitted. Do not delete `data/runs/phase1-500-*` yet;
+the lua_error diagnostics need the raw artifacts.

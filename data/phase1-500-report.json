@@ -1,0 +1,4016 @@
+{
+  "by_archetype": {
+    "caster": {
+      "branches": {
+        "D": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.004672897196261682,
+          "entered_n": 0,
+          "entered_rate": 0.0
+        },
+        "Gauntlet": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.004672897196261682
+        },
+        "Lair": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.004672897196261682,
+          "entered_n": 1,
+          "entered_rate": 0.004672897196261682
+        },
+        "Orc": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.004672897196261682,
+          "entered_n": 1,
+          "entered_rate": 0.004672897196261682
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 3,
+          "entered_rate": 0.014018691588785047
+        },
+        "Shoals": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.004672897196261682,
+          "entered_n": 1,
+          "entered_rate": 0.004672897196261682
+        },
+        "Spider": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.004672897196261682
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 4,
+          "entered_rate": 0.018691588785046728
+        }
+      },
+      "death_causes": {
+        "Edmund": 1,
+        "Grinder": 2,
+        "Jessica": 4,
+        "Pikel": 1,
+        "Sigmund": 7,
+        "Terence": 3,
+        "a ball python": 13,
+        "a bat": 1,
+        "a brain worm": 1,
+        "a dart slug": 5,
+        "a frilled lizard": 2,
+        "a giant cockroach": 2,
+        "a gnoll": 26,
+        "a gnoll sergeant": 1,
+        "a goblin": 11,
+        "a hobgoblin": 29,
+        "a jackal": 11,
+        "a jelly": 1,
+        "a kobold": 20,
+        "a lemure": 1,
+        "a phantom": 1,
+        "a quokka": 24,
+        "a rat": 3,
+        "a ribbon worm": 4,
+        "a scorpion": 1,
+        "a wight": 1,
+        "a wolf": 1,
+        "an adder": 9,
+        "an endoplasm": 11,
+        "an ice beast": 1,
+        "an iguana": 2,
+        "an ogre": 2,
+        "an orc": 1,
+        "an orc priest": 2,
+        "an orc wizard": 2
+      },
+      "n": 214,
+      "rune_count_distribution": {
+        "0": 214
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2394,
+        "median": 8.0,
+        "min": 0,
+        "n": 207,
+        "p95": 195.09999999999997
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 207,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 4,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 1,
+        "timeout_wall": 2,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 5138,
+        "median": 330.0,
+        "min": 16,
+        "n": 207,
+        "p95": 2801.7
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 2.0,
+        "min": 1,
+        "n": 207,
+        "p95": 5.0
+      }
+    },
+    "hybrid": {
+      "branches": {
+        "Lair": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.014084507042253521
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.028169014084507043
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 5,
+          "entered_rate": 0.07042253521126761
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "Edmund": 1,
+        "Grinder": 1,
+        "Jeremiah": 1,
+        "Natasha": 1,
+        "Pikel": 1,
+        "Robin": 1,
+        "Sigmund": 2,
+        "a ball python": 1,
+        "a black mamba": 1,
+        "a fire elemental": 1,
+        "a gnoll": 7,
+        "a gnoll bouda": 1,
+        "a gnoll sergeant": 1,
+        "a goblin": 2,
+        "a hobgoblin": 3,
+        "a howler monkey": 1,
+        "a jackal": 2,
+        "a jelly": 1,
+        "a killer bee": 1,
+        "a kobold": 1,
+        "a marrowcuda": 1,
+        "a quokka": 1,
+        "a red devil": 1,
+        "a ribbon worm": 1,
+        "a wight": 2,
+        "an adder": 7,
+        "an electric eel": 1,
+        "an endoplasm": 3,
+        "an ogre": 4,
+        "an orc": 4,
+        "an orc priest": 2,
+        "an orc warrior": 1,
+        "an orc wizard": 1
+      },
+      "n": 71,
+      "rune_count_distribution": {
+        "0": 71
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 11902,
+        "median": 109.0,
+        "min": 0,
+        "n": 61,
+        "p95": 6328.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 61,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 9,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 1,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10723,
+        "median": 1771.0,
+        "min": 20,
+        "n": 61,
+        "p95": 8698.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 4.0,
+        "min": 1,
+        "n": 61,
+        "p95": 10.0
+      }
+    },
+    "melee": {
+      "branches": {
+        "Ossuary": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.009009009009009009
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 5,
+          "entered_rate": 0.04504504504504504
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 8,
+          "entered_rate": 0.07207207207207207
+        }
+      },
+      "death_causes": {
+        "Duvessa": 2,
+        "Grinder": 1,
+        "Ijyb": 1,
+        "Maggie": 1,
+        "Natasha": 1,
+        "Pikel": 1,
+        "Prince Ribbit": 1,
+        "Robin": 1,
+        "Sigmund": 3,
+        "Terence": 4,
+        "a ball python": 3,
+        "a black bear": 1,
+        "a cerulean imp": 1,
+        "a chaos spawn": 2,
+        "a crocodile": 1,
+        "a gnoll": 9,
+        "a goblin": 2,
+        "a hellwing": 1,
+        "a hobgoblin": 1,
+        "a hound": 2,
+        "a jackal": 1,
+        "a jelly": 6,
+        "a killer bee": 1,
+        "a kobold": 3,
+        "a kobold brigand": 1,
+        "a phantom": 1,
+        "a quokka": 1,
+        "a rat": 1,
+        "a ribbon worm": 2,
+        "a scorpion": 1,
+        "a shadow imp": 2,
+        "a smoke demon": 1,
+        "a swamp drake": 2,
+        "a water moccasin": 1,
+        "a wight": 1,
+        "a wyvern (shapeshifter)": 1,
+        "a yak": 1,
+        "an acid dragon": 1,
+        "an adder": 4,
+        "an endoplasm": 2,
+        "an ice devil": 1,
+        "an iguana": 4,
+        "an iron imp": 1,
+        "an ogre": 3,
+        "an orc": 7,
+        "an orc priest": 2,
+        "an orc warrior": 1,
+        "an orc wizard": 7,
+        "an ufetubus": 3,
+        "an unseen horror simulacrum": 1
+      },
+      "n": 111,
+      "rune_count_distribution": {
+        "0": 111
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 6624,
+        "median": 44.0,
+        "min": 0,
+        "n": 103,
+        "p95": 1178.1999999999975
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 103,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 8,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10033,
+        "median": 1299.0,
+        "min": 11,
+        "n": 103,
+        "p95": 4636.399999999997
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 3.0,
+        "min": 1,
+        "n": 103,
+        "p95": 7.8999999999999915
+      }
+    },
+    "utility": {
+      "branches": {
+        "Lair": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.009615384615384616
+        },
+        "Ossuary": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.009615384615384616
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.009615384615384616
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 6,
+          "entered_rate": 0.057692307692307696
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "Grinder": 1,
+        "Jessica": 1,
+        "Natasha": 1,
+        "Sigmund": 4,
+        "Terence": 5,
+        "a ball python": 2,
+        "a bombardier beetle": 1,
+        "a boulder beetle": 1,
+        "a cyclops": 1,
+        "a dart slug": 1,
+        "a gnoll": 4,
+        "a gnoll sergeant": 2,
+        "a goblin": 5,
+        "a hornet": 1,
+        "a hound": 1,
+        "a jackal": 2,
+        "a kobold": 2,
+        "a kobold brigand": 2,
+        "a phantom": 1,
+        "a quokka": 2,
+        "a rat": 1,
+        "a ribbon worm": 3,
+        "a scorpion": 1,
+        "a sleepcap": 1,
+        "a small abomination": 1,
+        "a water moccasin": 1,
+        "a wyvern": 1,
+        "a yak": 1,
+        "an adder": 4,
+        "an endoplasm": 6,
+        "an ogre": 3,
+        "an orc": 1,
+        "an orc priest": 3,
+        "an orc wizard": 2
+      },
+      "n": 104,
+      "rune_count_distribution": {
+        "0": 104
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 12816,
+        "median": 27.0,
+        "min": 0,
+        "n": 98,
+        "p95": 1856.499999999992
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 70,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 5,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 28,
+        "timeout_turns": 0,
+        "timeout_wall": 1,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10000,
+        "median": 2589.0,
+        "min": 43,
+        "n": 98,
+        "p95": 9000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 3.0,
+        "min": 1,
+        "n": 98,
+        "p95": 9.0
+      }
+    }
+  },
+  "by_background": {
+    "Air Elementalist": {
+      "branches": {},
+      "death_causes": {
+        "a ball python": 2,
+        "a frilled lizard": 1,
+        "a goblin": 2,
+        "a hobgoblin": 4,
+        "a jackal": 4,
+        "a kobold": 1,
+        "a quokka": 2,
+        "an adder": 1,
+        "an endoplasm": 1
+      },
+      "n": 19,
+      "rune_count_distribution": {
+        "0": 19
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 27,
+        "median": 2.0,
+        "min": 0,
+        "n": 18,
+        "p95": 21.04999999999999
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 18,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 1,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 1208,
+        "median": 118.0,
+        "min": 56,
+        "n": 18,
+        "p95": 728.5999999999992
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 2,
+        "median": 1.0,
+        "min": 1,
+        "n": 18,
+        "p95": 2.0
+      }
+    },
+    "Alchemist": {
+      "branches": {},
+      "death_causes": {
+        "Jessica": 1,
+        "Terence": 1,
+        "a ball python": 3,
+        "a dart slug": 1,
+        "a gnoll": 1,
+        "a goblin": 2,
+        "a hobgoblin": 1,
+        "a jackal": 2,
+        "a kobold": 5,
+        "a quokka": 2,
+        "an adder": 3,
+        "an endoplasm": 1,
+        "an orc": 1
+      },
+      "n": 24,
+      "rune_count_distribution": {
+        "0": 24
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 68,
+        "median": 1.5,
+        "min": 0,
+        "n": 24,
+        "p95": 43.849999999999994
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 24,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 2294,
+        "median": 151.0,
+        "min": 36,
+        "n": 24,
+        "p95": 1214.6999999999998
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 4,
+        "median": 1.0,
+        "min": 1,
+        "n": 24,
+        "p95": 3.0
+      }
+    },
+    "Artificer": {
+      "branches": {},
+      "death_causes": {
+        "Sigmund": 2,
+        "Terence": 1,
+        "a ball python": 1,
+        "a gnoll": 1,
+        "a hound": 1,
+        "a phantom": 1,
+        "a ribbon worm": 3,
+        "a sleepcap": 1,
+        "an adder": 1,
+        "an endoplasm": 1,
+        "an orc": 1,
+        "an orc wizard": 1
+      },
+      "n": 15,
+      "rune_count_distribution": {
+        "0": 15
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 343,
+        "median": 46.0,
+        "min": 9,
+        "n": 15,
+        "p95": 307.99999999999994
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 15,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 3336,
+        "median": 1343.0,
+        "min": 189,
+        "n": 15,
+        "p95": 2906.1999999999994
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 6,
+        "median": 3.0,
+        "min": 2,
+        "n": 15,
+        "p95": 6.0
+      }
+    },
+    "Berserker": {
+      "branches": {
+        "Ossuary": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05555555555555555
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 3,
+          "entered_rate": 0.16666666666666666
+        }
+      },
+      "death_causes": {
+        "Grinder": 1,
+        "Terence": 1,
+        "a ball python": 2,
+        "a crocodile": 1,
+        "a gnoll": 4,
+        "a jackal": 1,
+        "a kobold": 2,
+        "a quokka": 1,
+        "a ribbon worm": 1,
+        "a water moccasin": 1,
+        "an ogre": 1,
+        "an orc": 1
+      },
+      "n": 18,
+      "rune_count_distribution": {
+        "0": 18
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2221,
+        "median": 47.0,
+        "min": 0,
+        "n": 17,
+        "p95": 746.5999999999988
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 17,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 5955,
+        "median": 1034.0,
+        "min": 11,
+        "n": 17,
+        "p95": 3799.7999999999984
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 3.0,
+        "min": 1,
+        "n": 17,
+        "p95": 6.599999999999998
+      }
+    },
+    "Brigand": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 3,
+          "entered_rate": 0.125
+        }
+      },
+      "death_causes": {
+        "Grinder": 1,
+        "Sigmund": 1,
+        "Terence": 2,
+        "a boulder beetle": 1,
+        "a cyclops": 1,
+        "a gnoll": 2,
+        "a goblin": 1,
+        "a jackal": 1,
+        "a kobold": 1,
+        "a scorpion": 1,
+        "a water moccasin": 1,
+        "an adder": 2,
+        "an endoplasm": 3,
+        "an ogre": 1,
+        "an orc priest": 3,
+        "an orc wizard": 1
+      },
+      "n": 24,
+      "rune_count_distribution": {
+        "0": 24
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 5614,
+        "median": 85.0,
+        "min": 0,
+        "n": 23,
+        "p95": 2412.7999999999965
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 23,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 8812,
+        "median": 2092.0,
+        "min": 55,
+        "n": 23,
+        "p95": 6651.299999999996
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 10,
+        "median": 4.0,
+        "min": 1,
+        "n": 23,
+        "p95": 8.699999999999996
+      }
+    },
+    "Chaos Knight": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.09090909090909091
+        }
+      },
+      "death_causes": {
+        "Maggie": 1,
+        "Terence": 1,
+        "a chaos spawn": 2,
+        "a gnoll": 1,
+        "a hellwing": 1,
+        "a killer bee": 1,
+        "a kobold": 1,
+        "a shadow imp": 2,
+        "a smoke demon": 1,
+        "a swamp drake": 2,
+        "a wyvern (shapeshifter)": 1,
+        "an adder": 2,
+        "an endoplasm": 1,
+        "an ice devil": 1,
+        "an iron imp": 1,
+        "an orc": 1,
+        "an orc wizard": 1
+      },
+      "n": 22,
+      "rune_count_distribution": {
+        "0": 22
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2889,
+        "median": 49.0,
+        "min": 3,
+        "n": 21,
+        "p95": 466.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 21,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 5899,
+        "median": 1581.0,
+        "min": 42,
+        "n": 21,
+        "p95": 4129.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 3.0,
+        "min": 1,
+        "n": 21,
+        "p95": 7.0
+      }
+    },
+    "Cinder Acolyte": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.09090909090909091
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 3,
+          "entered_rate": 0.13636363636363635
+        }
+      },
+      "death_causes": {
+        "Jeremiah": 1,
+        "Natasha": 1,
+        "a fire elemental": 1,
+        "a gnoll": 2,
+        "a gnoll sergeant": 1,
+        "a marrowcuda": 1,
+        "a red devil": 1,
+        "a wight": 1,
+        "an electric eel": 1,
+        "an ogre": 3,
+        "an orc": 1,
+        "an orc priest": 1,
+        "an orc warrior": 1
+      },
+      "n": 22,
+      "rune_count_distribution": {
+        "0": 22
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 6547,
+        "median": 1753.0,
+        "min": 28,
+        "n": 16,
+        "p95": 6382.75
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 16,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 5,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 1,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10723,
+        "median": 5000.5,
+        "min": 1104,
+        "n": 16,
+        "p95": 10706.5
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 8.5,
+        "min": 2,
+        "n": 16,
+        "p95": 10.25
+      }
+    },
+    "Conjurer": {
+      "branches": {},
+      "death_causes": {
+        "Jessica": 1,
+        "a dart slug": 1,
+        "a gnoll": 2,
+        "a goblin": 2,
+        "a hobgoblin": 1,
+        "a kobold": 1,
+        "a quokka": 3,
+        "an endoplasm": 3
+      },
+      "n": 14,
+      "rune_count_distribution": {
+        "0": 14
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 88,
+        "median": 2.0,
+        "min": 0,
+        "n": 14,
+        "p95": 45.09999999999998
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 14,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 2396,
+        "median": 115.5,
+        "min": 35,
+        "n": 14,
+        "p95": 1704.3999999999996
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 4,
+        "median": 1.0,
+        "min": 1,
+        "n": 14,
+        "p95": 2.6999999999999993
+      }
+    },
+    "Delver": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.043478260869565216
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "Ijyb": 1,
+        "Sigmund": 1,
+        "a black bear": 1,
+        "a hound": 2,
+        "a jelly": 4,
+        "a phantom": 1,
+        "an acid dragon": 1,
+        "an adder": 1,
+        "an iguana": 2,
+        "an ogre": 1,
+        "an orc": 1,
+        "an orc priest": 1,
+        "an orc warrior": 1,
+        "an orc wizard": 2,
+        "an ufetubus": 2
+      },
+      "n": 23,
+      "rune_count_distribution": {
+        "0": 23
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 67,
+        "median": 0.0,
+        "min": 0,
+        "n": 23,
+        "p95": 37.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 23,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 430,
+        "median": 60.0,
+        "min": 18,
+        "n": 23,
+        "p95": 382.3999999999997
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 4,
+        "median": 1.0,
+        "min": 1,
+        "n": 23,
+        "p95": 3.0
+      }
+    },
+    "Earth Elementalist": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        }
+      },
+      "death_causes": {
+        "Edmund": 1,
+        "Sigmund": 2,
+        "a bat": 1,
+        "a dart slug": 1,
+        "a hobgoblin": 4,
+        "a kobold": 1,
+        "a quokka": 5,
+        "a rat": 1,
+        "a ribbon worm": 1,
+        "an endoplasm": 2
+      },
+      "n": 20,
+      "rune_count_distribution": {
+        "0": 20
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 334,
+        "median": 6.0,
+        "min": 0,
+        "n": 19,
+        "p95": 100.89999999999945
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 19,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 2331,
+        "median": 260.0,
+        "min": 27,
+        "n": 19,
+        "p95": 2041.1999999999994
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 6,
+        "median": 1.0,
+        "min": 1,
+        "n": 19,
+        "p95": 4.199999999999996
+      }
+    },
+    "Enchanter": {
+      "branches": {},
+      "death_causes": {
+        "a ball python": 1,
+        "a dart slug": 1,
+        "a giant cockroach": 1,
+        "a gnoll": 4,
+        "a hobgoblin": 1,
+        "a jackal": 2,
+        "a jelly": 1,
+        "a quokka": 1,
+        "a ribbon worm": 1,
+        "an adder": 2,
+        "an iguana": 1,
+        "an orc priest": 1
+      },
+      "n": 17,
+      "rune_count_distribution": {
+        "0": 17
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 292,
+        "median": 24.0,
+        "min": 2,
+        "n": 17,
+        "p95": 260.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 17,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 3830,
+        "median": 902.0,
+        "min": 110,
+        "n": 17,
+        "p95": 3006.7999999999993
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 6,
+        "median": 2.0,
+        "min": 1,
+        "n": 17,
+        "p95": 5.199999999999999
+      }
+    },
+    "Fighter": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05263157894736842
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05263157894736842
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "Pikel": 1,
+        "Terence": 1,
+        "a cerulean imp": 1,
+        "a gnoll": 1,
+        "a goblin": 1,
+        "a hobgoblin": 1,
+        "a kobold brigand": 1,
+        "a rat": 1,
+        "a wight": 1,
+        "an iguana": 1,
+        "an orc": 1,
+        "an orc priest": 1,
+        "an orc wizard": 3
+      },
+      "n": 19,
+      "rune_count_distribution": {
+        "0": 19
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 1234,
+        "median": 118.0,
+        "min": 7,
+        "n": 16,
+        "p95": 858.25
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 16,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 3,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 5041,
+        "median": 1844.0,
+        "min": 178,
+        "n": 16,
+        "p95": 4463.5
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 8,
+        "median": 4.5,
+        "min": 1,
+        "n": 16,
+        "p95": 7.25
+      }
+    },
+    "Fire Elementalist": {
+      "branches": {
+        "D": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.058823529411764705,
+          "entered_n": 0,
+          "entered_rate": 0.0
+        },
+        "Gauntlet": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Lair": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.058823529411764705,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Orc": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.058823529411764705,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Shoals": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.058823529411764705,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Spider": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        }
+      },
+      "death_causes": {
+        "Terence": 1,
+        "a gnoll": 2,
+        "a goblin": 1,
+        "a hobgoblin": 3,
+        "a jackal": 1,
+        "a kobold": 3,
+        "a quokka": 2,
+        "an endoplasm": 1,
+        "an orc priest": 1
+      },
+      "n": 17,
+      "rune_count_distribution": {
+        "0": 17
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 69,
+        "median": 10.0,
+        "min": 0,
+        "n": 15,
+        "p95": 59.899999999999984
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 15,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 1,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 2802,
+        "median": 452.0,
+        "min": 30,
+        "n": 15,
+        "p95": 2447.0999999999995
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 4,
+        "median": 2.0,
+        "min": 1,
+        "n": 15,
+        "p95": 3.299999999999999
+      }
+    },
+    "Gladiator": {
+      "branches": {},
+      "death_causes": {
+        "Natasha": 1,
+        "Prince Ribbit": 1,
+        "Robin": 1,
+        "Sigmund": 1,
+        "Terence": 1,
+        "a ball python": 1,
+        "a goblin": 1,
+        "a jelly": 1,
+        "an ogre": 1,
+        "an orc wizard": 1
+      },
+      "n": 11,
+      "rune_count_distribution": {
+        "0": 11
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 1207,
+        "median": 81.0,
+        "min": 17,
+        "n": 10,
+        "p95": 1077.3999999999996
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 10,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 4677,
+        "median": 1711.0,
+        "min": 527,
+        "n": 10,
+        "p95": 4263.449999999999
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 8,
+        "median": 3.5,
+        "min": 2,
+        "n": 10,
+        "p95": 7.549999999999999
+      }
+    },
+    "Hedge Wizard": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.047619047619047616
+        }
+      },
+      "death_causes": {
+        "Jessica": 2,
+        "a ball python": 2,
+        "a gnoll": 5,
+        "a goblin": 1,
+        "a hobgoblin": 4,
+        "a jackal": 1,
+        "a kobold": 2,
+        "a quokka": 1,
+        "a wolf": 1,
+        "an adder": 1
+      },
+      "n": 21,
+      "rune_count_distribution": {
+        "0": 21
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 1239,
+        "median": 17.0,
+        "min": 1,
+        "n": 20,
+        "p95": 333.65000000000066
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 20,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 1,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 5064,
+        "median": 711.5,
+        "min": 49,
+        "n": 20,
+        "p95": 4306.85
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 8,
+        "median": 2.0,
+        "min": 1,
+        "n": 20,
+        "p95": 6.100000000000001
+      }
+    },
+    "Hexslinger": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.08333333333333333
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.08333333333333333
+        }
+      },
+      "death_causes": {
+        "Grinder": 1,
+        "Sigmund": 2,
+        "a ball python": 1,
+        "a brain worm": 1,
+        "a gnoll": 2,
+        "a gnoll sergeant": 1,
+        "a goblin": 2,
+        "a hobgoblin": 1,
+        "a kobold": 3,
+        "a lemure": 1,
+        "a phantom": 1,
+        "an adder": 2,
+        "an endoplasm": 1,
+        "an ice beast": 1,
+        "an orc wizard": 2
+      },
+      "n": 24,
+      "rune_count_distribution": {
+        "0": 24
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2394,
+        "median": 51.0,
+        "min": 3,
+        "n": 22,
+        "p95": 600.1499999999999
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 22,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 2,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 5138,
+        "median": 1357.5,
+        "min": 52,
+        "n": 22,
+        "p95": 3618.25
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 3.0,
+        "min": 1,
+        "n": 22,
+        "p95": 6.949999999999999
+      }
+    },
+    "Hunter": {
+      "branches": {
+        "Lair": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Ossuary": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 3,
+          "entered_rate": 0.17647058823529413
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "Jessica": 1,
+        "Sigmund": 1,
+        "a bombardier beetle": 1,
+        "a gnoll sergeant": 2,
+        "a goblin": 1,
+        "a hornet": 1,
+        "a kobold brigand": 1,
+        "a quokka": 1,
+        "a wyvern": 1,
+        "a yak": 1,
+        "an adder": 1,
+        "an ogre": 1
+      },
+      "n": 17,
+      "rune_count_distribution": {
+        "0": 17
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 12816,
+        "median": 389.5,
+        "min": 2,
+        "n": 14,
+        "p95": 6256.199999999997
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 14,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 3,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9752,
+        "median": 3065.0,
+        "min": 43,
+        "n": 14,
+        "p95": 7979.449999999999
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 6.0,
+        "min": 1,
+        "n": 14,
+        "p95": 9.7
+      }
+    },
+    "Ice Elementalist": {
+      "branches": {},
+      "death_causes": {
+        "a ball python": 2,
+        "a giant cockroach": 1,
+        "a gnoll": 3,
+        "a goblin": 1,
+        "a hobgoblin": 5,
+        "a kobold": 3,
+        "a quokka": 4,
+        "a rat": 1,
+        "a ribbon worm": 1,
+        "an endoplasm": 1,
+        "an iguana": 1
+      },
+      "n": 23,
+      "rune_count_distribution": {
+        "0": 23
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 73,
+        "median": 5.0,
+        "min": 0,
+        "n": 23,
+        "p95": 33.599999999999994
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 23,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 2044,
+        "median": 201.0,
+        "min": 16,
+        "n": 23,
+        "p95": 1124.1999999999998
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 4,
+        "median": 1.0,
+        "min": 1,
+        "n": 23,
+        "p95": 3.0
+      }
+    },
+    "Monk": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05555555555555555
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 4,
+          "entered_rate": 0.2222222222222222
+        }
+      },
+      "death_causes": {
+        "Sigmund": 1,
+        "a gnoll": 3,
+        "a jelly": 1,
+        "a ribbon worm": 1,
+        "a scorpion": 1,
+        "a yak": 1,
+        "an adder": 1,
+        "an endoplasm": 1,
+        "an iguana": 1,
+        "an orc": 3,
+        "an ufetubus": 1,
+        "an unseen horror simulacrum": 1
+      },
+      "n": 18,
+      "rune_count_distribution": {
+        "0": 18
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 6624,
+        "median": 139.0,
+        "min": 16,
+        "n": 16,
+        "p95": 5704.5
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 16,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 2,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10033,
+        "median": 2022.5,
+        "min": 222,
+        "n": 16,
+        "p95": 9194.5
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 4.5,
+        "min": 2,
+        "n": 16,
+        "p95": 10.25
+      }
+    },
+    "Necromancer": {
+      "branches": {},
+      "death_causes": {
+        "Grinder": 1,
+        "Pikel": 1,
+        "Sigmund": 3,
+        "a ball python": 2,
+        "a dart slug": 1,
+        "a gnoll": 4,
+        "a hobgoblin": 1,
+        "a kobold": 1,
+        "a quokka": 2,
+        "a ribbon worm": 1,
+        "a scorpion": 1,
+        "a wight": 1,
+        "an ogre": 1
+      },
+      "n": 20,
+      "rune_count_distribution": {
+        "0": 20
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 554,
+        "median": 40.0,
+        "min": 0,
+        "n": 20,
+        "p95": 213.90000000000026
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 20,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 4217,
+        "median": 1265.0,
+        "min": 50,
+        "n": 20,
+        "p95": 3266.0500000000006
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 7,
+        "median": 3.0,
+        "min": 1,
+        "n": 20,
+        "p95": 5.100000000000001
+      }
+    },
+    "Reaver": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.06896551724137931
+        }
+      },
+      "death_causes": {
+        "Pikel": 1,
+        "Robin": 1,
+        "Sigmund": 1,
+        "a ball python": 1,
+        "a gnoll": 4,
+        "a gnoll bouda": 1,
+        "a goblin": 1,
+        "a hobgoblin": 1,
+        "a howler monkey": 1,
+        "a jackal": 1,
+        "a jelly": 1,
+        "a ribbon worm": 1,
+        "an adder": 6,
+        "an ogre": 1,
+        "an orc": 2,
+        "an orc priest": 1,
+        "an orc wizard": 1
+      },
+      "n": 29,
+      "rune_count_distribution": {
+        "0": 29
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 11902,
+        "median": 50.5,
+        "min": 2,
+        "n": 26,
+        "p95": 475.5
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 26,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 3,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9412,
+        "median": 1329.0,
+        "min": 20,
+        "n": 26,
+        "p95": 3665.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 3.0,
+        "min": 1,
+        "n": 26,
+        "p95": 6.75
+      }
+    },
+    "Shapeshifter": {
+      "branches": {},
+      "death_causes": {},
+      "n": 28,
+      "rune_count_distribution": {
+        "0": 28
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 0,
+        "median": 0.0,
+        "min": 0,
+        "n": 28,
+        "p95": 0.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 0,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 28,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10000,
+        "median": 9000.0,
+        "min": 8000,
+        "n": 28,
+        "p95": 9649.999999999998
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 1,
+        "median": 1.0,
+        "min": 1,
+        "n": 28,
+        "p95": 1.0
+      }
+    },
+    "Summoner": {
+      "branches": {},
+      "death_causes": {
+        "Terence": 1,
+        "a frilled lizard": 1,
+        "a gnoll": 3,
+        "a hobgoblin": 4,
+        "a jackal": 1,
+        "a quokka": 2,
+        "a rat": 1,
+        "an endoplasm": 1,
+        "an ogre": 1
+      },
+      "n": 15,
+      "rune_count_distribution": {
+        "0": 15
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 32,
+        "median": 6.0,
+        "min": 0,
+        "n": 15,
+        "p95": 30.599999999999998
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 15,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 1250,
+        "median": 274.0,
+        "min": 56,
+        "n": 15,
+        "p95": 1112.0999999999997
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 3,
+        "median": 1.0,
+        "min": 1,
+        "n": 15,
+        "p95": 3.0
+      }
+    },
+    "Wanderer": {
+      "branches": {},
+      "death_causes": {
+        "Natasha": 1,
+        "Terence": 2,
+        "a ball python": 1,
+        "a dart slug": 1,
+        "a gnoll": 1,
+        "a goblin": 3,
+        "a jackal": 1,
+        "a kobold": 1,
+        "a kobold brigand": 1,
+        "a quokka": 1,
+        "a rat": 1,
+        "a small abomination": 1,
+        "an endoplasm": 2,
+        "an ogre": 1
+      },
+      "n": 20,
+      "rune_count_distribution": {
+        "0": 20
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 392,
+        "median": 44.5,
+        "min": 1,
+        "n": 18,
+        "p95": 197.34999999999968
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 18,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 1,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 2736,
+        "median": 1140.0,
+        "min": 74,
+        "n": 18,
+        "p95": 2645.0499999999997
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 6,
+        "median": 3.0,
+        "min": 1,
+        "n": 18,
+        "p95": 5.149999999999999
+      }
+    },
+    "Warper": {
+      "branches": {
+        "Lair": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "Edmund": 1,
+        "Grinder": 1,
+        "Sigmund": 1,
+        "a black mamba": 1,
+        "a gnoll": 1,
+        "a goblin": 1,
+        "a hobgoblin": 2,
+        "a jackal": 1,
+        "a killer bee": 1,
+        "a kobold": 1,
+        "a quokka": 1,
+        "a wight": 1,
+        "an adder": 1,
+        "an endoplasm": 3,
+        "an orc": 1
+      },
+      "n": 20,
+      "rune_count_distribution": {
+        "0": 20
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 7756,
+        "median": 60.0,
+        "min": 0,
+        "n": 19,
+        "p95": 1680.0999999999856
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 19,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 7951,
+        "median": 1439.0,
+        "min": 42,
+        "n": 19,
+        "p95": 4237.599999999991
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 3.0,
+        "min": 1,
+        "n": 19,
+        "p95": 8.299999999999994
+      }
+    }
+  },
+  "by_species": {
+    "Armataur": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 3,
+          "entered_rate": 0.17647058823529413
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "Grinder": 1,
+        "Jessica": 1,
+        "a ball python": 1,
+        "a black bear": 1,
+        "a gnoll": 3,
+        "a scorpion": 1,
+        "a small abomination": 1,
+        "a smoke demon": 1,
+        "a water moccasin": 1,
+        "a wyvern": 1,
+        "an adder": 2
+      },
+      "n": 17,
+      "rune_count_distribution": {
+        "0": 17
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2724,
+        "median": 68.5,
+        "min": 0,
+        "n": 16,
+        "p95": 1249.5
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 15,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 1,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 1677.5,
+        "min": 41,
+        "n": 16,
+        "p95": 7518.75
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 3.5,
+        "min": 1,
+        "n": 16,
+        "p95": 7.5
+      }
+    },
+    "Barachi": {
+      "branches": {
+        "Ossuary": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.1
+        }
+      },
+      "death_causes": {
+        "a gnoll": 5,
+        "a goblin": 2,
+        "a hobgoblin": 2,
+        "a hornet": 1,
+        "a kobold brigand": 1,
+        "a rat": 1,
+        "a wight": 1,
+        "an adder": 1,
+        "an endoplasm": 1,
+        "an iguana": 1,
+        "an orc wizard": 2
+      },
+      "n": 20,
+      "rune_count_distribution": {
+        "0": 20
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 1824,
+        "median": 49.5,
+        "min": 2,
+        "n": 18,
+        "p95": 1733.05
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 18,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 2,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 6293,
+        "median": 1303.0,
+        "min": 138,
+        "n": 18,
+        "p95": 4640.599999999998
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 3.0,
+        "min": 1,
+        "n": 18,
+        "p95": 9.0
+      }
+    },
+    "Coglin": {
+      "branches": {},
+      "death_causes": {
+        "a dart slug": 2,
+        "a gnoll": 1,
+        "a goblin": 1,
+        "a hobgoblin": 3,
+        "a jackal": 2,
+        "a quokka": 1,
+        "a ribbon worm": 1,
+        "an adder": 1,
+        "an endoplasm": 1
+      },
+      "n": 14,
+      "rune_count_distribution": {
+        "0": 14
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 71,
+        "median": 7.0,
+        "min": 0,
+        "n": 13,
+        "p95": 61.99999999999998
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 13,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 2032,
+        "median": 349.0,
+        "min": 20,
+        "n": 13,
+        "p95": 1554.3999999999987
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 4,
+        "median": 2.0,
+        "min": 1,
+        "n": 13,
+        "p95": 3.3999999999999986
+      }
+    },
+    "Deep Elf": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.037037037037037035
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "Natasha": 1,
+        "Sigmund": 1,
+        "a ball python": 1,
+        "a goblin": 2,
+        "a hobgoblin": 2,
+        "a killer bee": 1,
+        "a kobold": 2,
+        "a kobold brigand": 1,
+        "a quokka": 4,
+        "a shadow imp": 2,
+        "an endoplasm": 3,
+        "an iguana": 1,
+        "an orc": 1,
+        "an orc priest": 1,
+        "an orc wizard": 1
+      },
+      "n": 27,
+      "rune_count_distribution": {
+        "0": 27
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 488,
+        "median": 18.5,
+        "min": 0,
+        "n": 26,
+        "p95": 338.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 25,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 1,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 958.5,
+        "min": 35,
+        "n": 26,
+        "p95": 4073.25
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 6,
+        "median": 2.0,
+        "min": 1,
+        "n": 26,
+        "p95": 6.0
+      }
+    },
+    "Demigod": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        }
+      },
+      "death_causes": {
+        "Sigmund": 3,
+        "Terence": 1,
+        "a ball python": 2,
+        "a gnoll": 1,
+        "a hobgoblin": 2,
+        "a jackal": 1,
+        "a kobold": 1,
+        "a kobold brigand": 1,
+        "a phantom": 1,
+        "a quokka": 3,
+        "an ogre": 1,
+        "an orc priest": 1
+      },
+      "n": 20,
+      "rune_count_distribution": {
+        "0": 20
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 919,
+        "median": 6.5,
+        "min": 0,
+        "n": 20,
+        "p95": 384.1500000000004
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 18,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 2,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 1311.0,
+        "min": 34,
+        "n": 20,
+        "p95": 9000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 7,
+        "median": 1.0,
+        "min": 1,
+        "n": 20,
+        "p95": 6.050000000000001
+      }
+    },
+    "Demonspawn": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.037037037037037035
+        }
+      },
+      "death_causes": {
+        "Natasha": 1,
+        "Pikel": 1,
+        "a cyclops": 1,
+        "a giant cockroach": 1,
+        "a gnoll": 6,
+        "a gnoll sergeant": 1,
+        "a hobgoblin": 3,
+        "a hound": 1,
+        "a jackal": 2,
+        "a kobold": 1,
+        "a sleepcap": 1,
+        "a wight": 1,
+        "an adder": 2,
+        "an endoplasm": 1,
+        "an ice devil": 1,
+        "an ogre": 1
+      },
+      "n": 27,
+      "rune_count_distribution": {
+        "0": 27
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 5614,
+        "median": 53.0,
+        "min": 0,
+        "n": 27,
+        "p95": 2668.5999999999976
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 25,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 2,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 1302.0,
+        "min": 35,
+        "n": 27,
+        "p95": 8943.6
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 10,
+        "median": 3.0,
+        "min": 1,
+        "n": 27,
+        "p95": 8.099999999999998
+      }
+    },
+    "Djinni": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.06666666666666667
+        }
+      },
+      "death_causes": {
+        "Terence": 1,
+        "a chaos spawn": 1,
+        "a gnoll": 2,
+        "a hobgoblin": 1,
+        "a kobold": 1,
+        "a phantom": 1,
+        "a wight": 1,
+        "an endoplasm": 2,
+        "an ice beast": 1,
+        "an iguana": 2
+      },
+      "n": 15,
+      "rune_count_distribution": {
+        "0": 15
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 1234,
+        "median": 8.0,
+        "min": 0,
+        "n": 14,
+        "p95": 830.3499999999998
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 13,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 1,
+        "timeout_turns": 0,
+        "timeout_wall": 1,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10000,
+        "median": 642.0,
+        "min": 66,
+        "n": 14,
+        "p95": 6776.649999999998
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 8,
+        "median": 1.5,
+        "min": 1,
+        "n": 14,
+        "p95": 7.35
+      }
+    },
+    "Draconian": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.047619047619047616
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.047619047619047616
+        }
+      },
+      "death_causes": {
+        "Grinder": 1,
+        "Jessica": 1,
+        "Robin": 1,
+        "Sigmund": 1,
+        "Terence": 1,
+        "a brain worm": 1,
+        "a fire elemental": 1,
+        "a frilled lizard": 2,
+        "a gnoll": 2,
+        "a hobgoblin": 2,
+        "a jackal": 1,
+        "a kobold": 1,
+        "a scorpion": 1,
+        "an endoplasm": 1,
+        "an orc": 1,
+        "an orc priest": 1,
+        "an orc wizard": 1
+      },
+      "n": 21,
+      "rune_count_distribution": {
+        "0": 21
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 6328,
+        "median": 35.5,
+        "min": 0,
+        "n": 20,
+        "p95": 615.6500000000043
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 20,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10723,
+        "median": 890.0,
+        "min": 30,
+        "n": 20,
+        "p95": 4174.650000000005
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 10,
+        "median": 3.0,
+        "min": 1,
+        "n": 20,
+        "p95": 6.200000000000003
+      }
+    },
+    "Felid": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05263157894736842
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.10526315789473684
+        }
+      },
+      "death_causes": {
+        "Sigmund": 1,
+        "Terence": 2,
+        "a goblin": 2,
+        "a hobgoblin": 1,
+        "a kobold": 1,
+        "a rat": 1,
+        "a yak": 1,
+        "an adder": 1,
+        "an ogre": 1,
+        "an orc": 1
+      },
+      "n": 19,
+      "rune_count_distribution": {
+        "0": 19
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 5398,
+        "median": 43.0,
+        "min": 0,
+        "n": 13,
+        "p95": 2385.9999999999927
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 12,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 6,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 1,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10033,
+        "median": 1439.0,
+        "min": 178,
+        "n": 13,
+        "p95": 10013.2
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 10,
+        "median": 3.0,
+        "min": 1,
+        "n": 13,
+        "p95": 7.599999999999994
+      }
+    },
+    "Formicid": {
+      "branches": {},
+      "death_causes": {
+        "Sigmund": 1,
+        "a ball python": 3,
+        "a gnoll": 1,
+        "a goblin": 1,
+        "a jackal": 1,
+        "a kobold": 3,
+        "a quokka": 1,
+        "a rat": 1,
+        "an endoplasm": 1,
+        "an ogre": 1,
+        "an orc": 2,
+        "an orc wizard": 3
+      },
+      "n": 22,
+      "rune_count_distribution": {
+        "0": 22
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 179,
+        "median": 10.0,
+        "min": 0,
+        "n": 21,
+        "p95": 170.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 19,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 2,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 664.0,
+        "min": 11,
+        "n": 21,
+        "p95": 9000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 5,
+        "median": 2.0,
+        "min": 1,
+        "n": 21,
+        "p95": 5.0
+      }
+    },
+    "Gargoyle": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.125
+        }
+      },
+      "death_causes": {
+        "Prince Ribbit": 1,
+        "Sigmund": 1,
+        "a ball python": 2,
+        "a dart slug": 1,
+        "a gnoll": 1,
+        "a goblin": 1,
+        "a phantom": 1,
+        "a ribbon worm": 1,
+        "an endoplasm": 1,
+        "an ogre": 1,
+        "an orc priest": 2,
+        "an orc wizard": 1
+      },
+      "n": 16,
+      "rune_count_distribution": {
+        "0": 16
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 1207,
+        "median": 26.5,
+        "min": 0,
+        "n": 14,
+        "p95": 532.9499999999996
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 14,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 2,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 4677,
+        "median": 678.0,
+        "min": 91,
+        "n": 14,
+        "p95": 2944.749999999999
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 8,
+        "median": 2.5,
+        "min": 1,
+        "n": 14,
+        "p95": 6.049999999999999
+      }
+    },
+    "Ghoul": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.09090909090909091
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.09090909090909091
+        }
+      },
+      "death_causes": {
+        "Jeremiah": 1,
+        "Maggie": 1,
+        "Terence": 2,
+        "a hobgoblin": 1,
+        "a jackal": 1,
+        "a kobold": 1,
+        "a wolf": 1,
+        "an iguana": 1,
+        "an orc": 1,
+        "an orc warrior": 1
+      },
+      "n": 11,
+      "rune_count_distribution": {
+        "0": 11
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2889,
+        "median": 73.0,
+        "min": 0,
+        "n": 11,
+        "p95": 2321.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 11,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 5899,
+        "median": 1761.0,
+        "min": 52,
+        "n": 11,
+        "p95": 5481.5
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 4.0,
+        "min": 1,
+        "n": 11,
+        "p95": 9.0
+      }
+    },
+    "Gnoll": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05263157894736842
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05263157894736842
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "a dart slug": 1,
+        "a gnoll bouda": 1,
+        "a gnoll sergeant": 1,
+        "a hellwing": 1,
+        "a hobgoblin": 3,
+        "a jelly": 1,
+        "a kobold": 2,
+        "a rat": 2,
+        "a ribbon worm": 2,
+        "an endoplasm": 1,
+        "an ogre": 2,
+        "an orc wizard": 1
+      },
+      "n": 19,
+      "rune_count_distribution": {
+        "0": 19
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 11902,
+        "median": 14.0,
+        "min": 0,
+        "n": 19,
+        "p95": 3344.7999999999797
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 19,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9412,
+        "median": 370.0,
+        "min": 55,
+        "n": 19,
+        "p95": 5565.3999999999905
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 2.0,
+        "min": 1,
+        "n": 19,
+        "p95": 9.199999999999996
+      }
+    },
+    "Human": {
+      "branches": {},
+      "death_causes": {
+        "a ball python": 3,
+        "a jackal": 2,
+        "a jelly": 1,
+        "a quokka": 1,
+        "a ribbon worm": 1,
+        "an ogre": 1,
+        "an orc": 1,
+        "an orc wizard": 1
+      },
+      "n": 12,
+      "rune_count_distribution": {
+        "0": 12
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 824,
+        "median": 21.0,
+        "min": 0,
+        "n": 11,
+        "p95": 559.5
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 11,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 3391,
+        "median": 762.0,
+        "min": 58,
+        "n": 11,
+        "p95": 3166.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 7,
+        "median": 2.0,
+        "min": 1,
+        "n": 11,
+        "p95": 6.5
+      }
+    },
+    "Kobold": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.038461538461538464
+        }
+      },
+      "death_causes": {
+        "Grinder": 1,
+        "Sigmund": 1,
+        "a ball python": 2,
+        "a dart slug": 1,
+        "a gnoll": 2,
+        "a goblin": 1,
+        "a hobgoblin": 2,
+        "a hound": 1,
+        "a jackal": 1,
+        "a jelly": 1,
+        "a kobold": 1,
+        "a quokka": 2,
+        "an adder": 2,
+        "an endoplasm": 3,
+        "an ogre": 1,
+        "an orc priest": 1,
+        "an ufetubus": 1
+      },
+      "n": 26,
+      "rune_count_distribution": {
+        "0": 26
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 298,
+        "median": 5.0,
+        "min": 0,
+        "n": 26,
+        "p95": 280.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 24,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 2,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 343.0,
+        "min": 18,
+        "n": 26,
+        "p95": 7686.25
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 6,
+        "median": 1.5,
+        "min": 1,
+        "n": 26,
+        "p95": 6.0
+      }
+    },
+    "Merfolk": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.07692307692307693
+        }
+      },
+      "death_causes": {
+        "a ball python": 1,
+        "a bombardier beetle": 1,
+        "a chaos spawn": 1,
+        "a gnoll": 1,
+        "a hobgoblin": 1,
+        "a jackal": 1,
+        "a quokka": 2,
+        "a ribbon worm": 1,
+        "an adder": 1
+      },
+      "n": 13,
+      "rune_count_distribution": {
+        "0": 13
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 426,
+        "median": 8.0,
+        "min": 0,
+        "n": 12,
+        "p95": 213.14999999999972
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 10,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 2,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 691.5,
+        "min": 77,
+        "n": 12,
+        "p95": 9000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 6,
+        "median": 1.5,
+        "min": 1,
+        "n": 12,
+        "p95": 4.349999999999998
+      }
+    },
+    "Minotaur": {
+      "branches": {
+        "D": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.05,
+          "entered_n": 0,
+          "entered_rate": 0.0
+        },
+        "Gauntlet": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        },
+        "Lair": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.05,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        },
+        "Orc": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.05,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        },
+        "Shoals": {
+          "end_reached_n": 1,
+          "end_reached_rate": 0.05,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        },
+        "Spider": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05
+        }
+      },
+      "death_causes": {
+        "Edmund": 1,
+        "Jessica": 1,
+        "Sigmund": 2,
+        "a gnoll": 3,
+        "a gnoll sergeant": 1,
+        "a goblin": 2,
+        "a hobgoblin": 1,
+        "a kobold": 1,
+        "an adder": 1,
+        "an ogre": 2,
+        "an orc": 2
+      },
+      "n": 20,
+      "rune_count_distribution": {
+        "0": 20
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 1753,
+        "median": 64.0,
+        "min": 0,
+        "n": 19,
+        "p95": 673.8999999999975
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 17,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 2,
+        "timeout_turns": 0,
+        "timeout_wall": 1,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 2092.0,
+        "min": 175,
+        "n": 19,
+        "p95": 9000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 8,
+        "median": 3.0,
+        "min": 1,
+        "n": 19,
+        "p95": 7.099999999999998
+      }
+    },
+    "Mountain Dwarf": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.047619047619047616
+        }
+      },
+      "death_causes": {
+        "Sigmund": 1,
+        "Terence": 1,
+        "a gnoll": 2,
+        "a goblin": 1,
+        "a jackal": 1,
+        "a jelly": 1,
+        "a lemure": 1,
+        "a quokka": 2,
+        "a swamp drake": 1,
+        "an acid dragon": 1,
+        "an adder": 2,
+        "an endoplasm": 2,
+        "an iron imp": 1
+      },
+      "n": 21,
+      "rune_count_distribution": {
+        "0": 21
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 95,
+        "median": 10.5,
+        "min": 0,
+        "n": 20,
+        "p95": 51.30000000000003
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 17,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 3,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 1003.5,
+        "min": 36,
+        "n": 20,
+        "p95": 9000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 4,
+        "median": 2.0,
+        "min": 1,
+        "n": 20,
+        "p95": 3.0500000000000007
+      }
+    },
+    "Mummy": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.0625
+        }
+      },
+      "death_causes": {
+        "a ball python": 1,
+        "a boulder beetle": 1,
+        "a dart slug": 1,
+        "a giant cockroach": 1,
+        "a gnoll": 2,
+        "a goblin": 1,
+        "a hobgoblin": 1,
+        "a jackal": 1,
+        "a jelly": 1,
+        "a quokka": 2,
+        "an iguana": 1,
+        "an orc": 2,
+        "an orc priest": 1
+      },
+      "n": 16,
+      "rune_count_distribution": {
+        "0": 16
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2647,
+        "median": 30.0,
+        "min": 0,
+        "n": 16,
+        "p95": 1228.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 16,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 6969,
+        "median": 834.0,
+        "min": 60,
+        "n": 16,
+        "p95": 5567.25
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 2.5,
+        "min": 1,
+        "n": 16,
+        "p95": 7.5
+      }
+    },
+    "Naga": {
+      "branches": {},
+      "death_causes": {
+        "Edmund": 1,
+        "Ijyb": 1,
+        "Sigmund": 1,
+        "a cerulean imp": 1,
+        "a goblin": 1,
+        "a hobgoblin": 2,
+        "a kobold": 1,
+        "a quokka": 2,
+        "an adder": 4,
+        "an endoplasm": 2
+      },
+      "n": 19,
+      "rune_count_distribution": {
+        "0": 19
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 196,
+        "median": 5.0,
+        "min": 0,
+        "n": 19,
+        "p95": 60.99999999999968
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 16,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 3,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 8000,
+        "median": 600.0,
+        "min": 33,
+        "n": 19,
+        "p95": 8000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 5,
+        "median": 1.0,
+        "min": 1,
+        "n": 19,
+        "p95": 3.1999999999999957
+      }
+    },
+    "Octopode": {
+      "branches": {
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.10526315789473684
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.05263157894736842
+        }
+      },
+      "death_causes": {
+        "Grinder": 1,
+        "Sigmund": 1,
+        "a crocodile": 1,
+        "a gnoll": 1,
+        "a goblin": 1,
+        "a jelly": 1,
+        "a kobold": 2,
+        "a ribbon worm": 1,
+        "a wight": 1,
+        "an adder": 1,
+        "an endoplasm": 1,
+        "an orc priest": 1,
+        "an orc wizard": 1,
+        "an ufetubus": 1,
+        "an unseen horror simulacrum": 1
+      },
+      "n": 19,
+      "rune_count_distribution": {
+        "0": 19
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 6624,
+        "median": 61.5,
+        "min": 0,
+        "n": 18,
+        "p95": 1302.9999999999911
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 16,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 2,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 1844.0,
+        "min": 65,
+        "n": 18,
+        "p95": 9000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 3.5,
+        "min": 1,
+        "n": 18,
+        "p95": 6.749999999999993
+      }
+    },
+    "Oni": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.045454545454545456
+        }
+      },
+      "death_causes": {
+        "Pikel": 1,
+        "Robin": 1,
+        "Terence": 1,
+        "a gnoll": 4,
+        "a goblin": 1,
+        "a howler monkey": 1,
+        "a kobold": 2,
+        "a marrowcuda": 1,
+        "a red devil": 1,
+        "a ribbon worm": 2,
+        "a scorpion": 1,
+        "an adder": 2,
+        "an orc": 1,
+        "an orc priest": 1
+      },
+      "n": 22,
+      "rune_count_distribution": {
+        "0": 22
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 6547,
+        "median": 41.0,
+        "min": 0,
+        "n": 21,
+        "p95": 4835.0
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 20,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 1,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 8698,
+        "median": 1396.0,
+        "min": 96,
+        "n": 21,
+        "p95": 8000.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 3.0,
+        "min": 1,
+        "n": 21,
+        "p95": 10.0
+      }
+    },
+    "Spriggan": {
+      "branches": {},
+      "death_causes": {
+        "Pikel": 1,
+        "Sigmund": 1,
+        "a ball python": 2,
+        "a goblin": 1,
+        "a hound": 1,
+        "a kobold": 3,
+        "a quokka": 2,
+        "a water moccasin": 1,
+        "an adder": 1,
+        "an endoplasm": 1,
+        "an ogre": 1
+      },
+      "n": 16,
+      "rune_count_distribution": {
+        "0": 16
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 419,
+        "median": 12.0,
+        "min": 0,
+        "n": 16,
+        "p95": 191.75
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 15,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 1,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 9000,
+        "median": 370.0,
+        "min": 43,
+        "n": 16,
+        "p95": 4596.0
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 6,
+        "median": 2.0,
+        "min": 1,
+        "n": 16,
+        "p95": 4.5
+      }
+    },
+    "Tengu": {
+      "branches": {
+        "Ossuary": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Sewer": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.058823529411764705
+        }
+      },
+      "death_causes": {
+        "Jessica": 1,
+        "Terence": 3,
+        "a hobgoblin": 3,
+        "a jackal": 1,
+        "a kobold": 1,
+        "a quokka": 2,
+        "a swamp drake": 1,
+        "a wyvern (shapeshifter)": 1,
+        "an endoplasm": 1,
+        "an orc": 1
+      },
+      "n": 17,
+      "rune_count_distribution": {
+        "0": 17
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2221,
+        "median": 16.0,
+        "min": 0,
+        "n": 15,
+        "p95": 711.7999999999977
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 15,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 2,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 5955,
+        "median": 222.0,
+        "min": 49,
+        "n": 15,
+        "p95": 3096.1999999999957
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 2.0,
+        "min": 1,
+        "n": 15,
+        "p95": 5.499999999999995
+      }
+    },
+    "Troll": {
+      "branches": {
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.07692307692307693
+        }
+      },
+      "death_causes": {
+        "Duvessa": 1,
+        "a gnoll": 3,
+        "a gnoll sergeant": 1,
+        "a killer bee": 1,
+        "an orc wizard": 1
+      },
+      "n": 13,
+      "rune_count_distribution": {
+        "0": 13
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 2691,
+        "median": 133.0,
+        "min": 0,
+        "n": 8,
+        "p95": 2100.899999999999
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 7,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 3,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 1,
+        "timeout_turns": 0,
+        "timeout_wall": 2,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 8000,
+        "median": 2588.5,
+        "min": 1673,
+        "n": 8,
+        "p95": 6978.699999999999
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 9,
+        "median": 4.5,
+        "min": 1,
+        "n": 8,
+        "p95": 8.649999999999999
+      }
+    },
+    "Vampire": {
+      "branches": {
+        "Lair": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.043478260869565216
+        },
+        "Temple": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 2,
+          "entered_rate": 0.08695652173913043
+        }
+      },
+      "death_causes": {
+        "Grinder": 1,
+        "Jessica": 1,
+        "Natasha": 1,
+        "a ball python": 1,
+        "a gnoll": 3,
+        "a goblin": 1,
+        "a hobgoblin": 3,
+        "a kobold": 1,
+        "a quokka": 4,
+        "a ribbon worm": 1,
+        "a yak": 1,
+        "an adder": 1,
+        "an orc warrior": 1,
+        "an ufetubus": 1
+      },
+      "n": 23,
+      "rune_count_distribution": {
+        "0": 23
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 12816,
+        "median": 7.5,
+        "min": 0,
+        "n": 22,
+        "p95": 5597.849999999996
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 21,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 1,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 1,
+        "timeout_turns": 0,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 10701,
+        "median": 465.5,
+        "min": 37,
+        "n": 22,
+        "p95": 9714.4
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 1.5,
+        "min": 1,
+        "n": 22,
+        "p95": 9.649999999999995
+      }
+    },
+    "Vine Stalker": {
+      "branches": {
+        "Lair": {
+          "end_reached_n": 0,
+          "end_reached_rate": 0.0,
+          "entered_n": 1,
+          "entered_rate": 0.06666666666666667
+        }
+      },
+      "death_causes": {
+        "Sigmund": 1,
+        "a bat": 1,
+        "a black mamba": 1,
+        "a gnoll": 3,
+        "a goblin": 1,
+        "a jackal": 1,
+        "a jelly": 2,
+        "a kobold": 1,
+        "an adder": 2,
+        "an electric eel": 1
+      },
+      "n": 15,
+      "rune_count_distribution": {
+        "0": 15
+      },
+      "rune_rate": 0.0,
+      "score": {
+        "max": 7756,
+        "median": 43.0,
+        "min": 0,
+        "n": 14,
+        "p95": 4755.5999999999985
+      },
+      "status_counts": {
+        "crashed": 0,
+        "died": 14,
+        "harness_failure": 0,
+        "invalid_telemetry": 0,
+        "lua_error": 0,
+        "pending": 0,
+        "quit_intentional": 0,
+        "quit_stuck": 0,
+        "timeout_turns": 1,
+        "timeout_wall": 0,
+        "won": 0
+      },
+      "turns_survived": {
+        "max": 7951,
+        "median": 1007.0,
+        "min": 23,
+        "n": 14,
+        "p95": 6720.549999999999
+      },
+      "win_rate": 0.0,
+      "xl": {
+        "max": 11,
+        "median": 3.0,
+        "min": 1,
+        "n": 14,
+        "p95": 9.7
+      }
+    }
+  },
+  "overall": {
+    "branches": {
+      "D": {
+        "end_reached_n": 1,
+        "end_reached_rate": 0.002,
+        "entered_n": 0,
+        "entered_rate": 0.0
+      },
+      "Gauntlet": {
+        "end_reached_n": 0,
+        "end_reached_rate": 0.0,
+        "entered_n": 1,
+        "entered_rate": 0.002
+      },
+      "Lair": {
+        "end_reached_n": 1,
+        "end_reached_rate": 0.002,
+        "entered_n": 3,
+        "entered_rate": 0.006
+      },
+      "Orc": {
+        "end_reached_n": 1,
+        "end_reached_rate": 0.002,
+        "entered_n": 1,
+        "entered_rate": 0.002
+      },
+      "Ossuary": {
+        "end_reached_n": 0,
+        "end_reached_rate": 0.0,
+        "entered_n": 2,
+        "entered_rate": 0.004
+      },
+      "Sewer": {
+        "end_reached_n": 0,
+        "end_reached_rate": 0.0,
+        "entered_n": 11,
+        "entered_rate": 0.022
+      },
+      "Shoals": {
+        "end_reached_n": 1,
+        "end_reached_rate": 0.002,
+        "entered_n": 1,
+        "entered_rate": 0.002
+      },
+      "Spider": {
+        "end_reached_n": 0,
+        "end_reached_rate": 0.0,
+        "entered_n": 1,
+        "entered_rate": 0.002
+      },
+      "Temple": {
+        "end_reached_n": 0,
+        "end_reached_rate": 0.0,
+        "entered_n": 23,
+        "entered_rate": 0.046
+      }
+    },
+    "death_causes": {
+      "Duvessa": 4,
+      "Edmund": 2,
+      "Grinder": 5,
+      "Ijyb": 1,
+      "Jeremiah": 1,
+      "Jessica": 5,
+      "Maggie": 1,
+      "Natasha": 3,
+      "Pikel": 3,
+      "Prince Ribbit": 1,
+      "Robin": 2,
+      "Sigmund": 16,
+      "Terence": 12,
+      "a ball python": 19,
+      "a bat": 1,
+      "a black bear": 1,
+      "a black mamba": 1,
+      "a bombardier beetle": 1,
+      "a boulder beetle": 1,
+      "a brain worm": 1,
+      "a cerulean imp": 1,
+      "a chaos spawn": 2,
+      "a crocodile": 1,
+      "a cyclops": 1,
+      "a dart slug": 6,
+      "a fire elemental": 1,
+      "a frilled lizard": 2,
+      "a giant cockroach": 2,
+      "a gnoll": 46,
+      "a gnoll bouda": 1,
+      "a gnoll sergeant": 4,
+      "a goblin": 20,
+      "a hellwing": 1,
+      "a hobgoblin": 33,
+      "a hornet": 1,
+      "a hound": 3,
+      "a howler monkey": 1,
+      "a jackal": 16,
+      "a jelly": 8,
+      "a killer bee": 2,
+      "a kobold": 26,
+      "a kobold brigand": 3,
+      "a lemure": 1,
+      "a marrowcuda": 1,
+      "a phantom": 3,
+      "a quokka": 28,
+      "a rat": 5,
+      "a red devil": 1,
+      "a ribbon worm": 10,
+      "a scorpion": 3,
+      "a shadow imp": 2,
+      "a sleepcap": 1,
+      "a small abomination": 1,
+      "a smoke demon": 1,
+      "a swamp drake": 2,
+      "a water moccasin": 2,
+      "a wight": 4,
+      "a wolf": 1,
+      "a wyvern": 1,
+      "a wyvern (shapeshifter)": 1,
+      "a yak": 2,
+      "an acid dragon": 1,
+      "an adder": 24,
+      "an electric eel": 1,
+      "an endoplasm": 22,
+      "an ice beast": 1,
+      "an ice devil": 1,
+      "an iguana": 6,
+      "an iron imp": 1,
+      "an ogre": 12,
+      "an orc": 13,
+      "an orc priest": 9,
+      "an orc warrior": 2,
+      "an orc wizard": 12,
+      "an ufetubus": 3,
+      "an unseen horror simulacrum": 1
+    },
+    "n": 500,
+    "rune_count_distribution": {
+      "0": 500
+    },
+    "rune_rate": 0.0,
+    "score": {
+      "max": 12816,
+      "median": 24.0,
+      "min": 0,
+      "n": 469,
+      "p95": 1236.9999999999998
+    },
+    "status_counts": {
+      "crashed": 0,
+      "died": 441,
+      "harness_failure": 0,
+      "invalid_telemetry": 0,
+      "lua_error": 26,
+      "pending": 0,
+      "quit_intentional": 0,
+      "quit_stuck": 28,
+      "timeout_turns": 1,
+      "timeout_wall": 4,
+      "won": 0
+    },
+    "turns_survived": {
+      "max": 10723,
+      "median": 1077.0,
+      "min": 11,
+      "n": 469,
+      "p95": 9000.0
+    },
+    "win_rate": 0.0,
+    "xl": {
+      "max": 11,
+      "median": 2.0,
+      "min": 1,
+      "n": 469,
+      "p95": 8.0
+    }
+  }
+}
