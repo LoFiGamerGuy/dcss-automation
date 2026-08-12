@@ -65,3 +65,47 @@ to take more than a couple minutes, start it detached per `CLAUDE.md` (nohup +
 log to `logs/`) rather than blocking the session on it. After a successful
 build, verify `-list-combos` on the binary (Task #3) before going further —
 that flag's existence/format is unverified for this exact commit.
+
+## 2026-08-12 — DGL_MILESTONES is a clean build flag, not a source patch; build started
+
+**Did:** Read `AppHdr.h`: `DGL_MILESTONES` (line ~200) sits inside the
+`#ifdef DGAMELAUNCH` block, but is *independently* `#ifdef`-guarded at every
+use site (`command.cc`, `hiscores.cc` — `mark_milestone()` itself only checks
+`defined(USE_TILE_WEB) || defined(DGL_MILESTONES)`, no other DGAMELAUNCH
+machinery required). Turning on the whole `DGAMELAUNCH` block would be worse
+for unattended local play — it also pulls in `DGL_PAUSE_AFTER_ERROR` (blocks
+on stdin "hit Enter" after any error — fatal for automation) and `WATCHDOG`.
+So: no source patch. crawl's `Makefile` documents
+`EXTERNAL_DEFINES="-DVERSIONED_CACHE_DIR"` as the sanctioned way to inject a
+single define (`Makefile:81-82`, consumed at `DEFINES := $(EXTERNAL_DEFINES)`
+line 157) — exactly PLAN.md §6 option 1's "small build-flag".
+
+Also found: shallow `--depth 1` clones carry no tags, so `git describe`
+(used by crawl's `Makefile` for `SRC_VERSION` and qw's `make-qw.sh` for its
+embedded version string) fails and yields an empty string. Not fatal to the
+Linux console build (the only consumer of `MAJOR_VERSION` is the Windows
+packaging target) but would leave qw's `%VERSION%` substitution blank, which
+is bad for the run manifest's version provenance. Fixed by having
+`ops/fetch-vendor.sh` create a local annotated tag `pinned` on the checked-out
+commit in each vendor repo right after fetch — `git describe` now returns
+`pinned` for both. Re-ran `fetch-vendor.sh`, confirmed.
+
+Started the build detached: `make EXTERNAL_DEFINES="-DDGL_MILESTONES" -j18`
+in `vendor/crawl/crawl-ref/source`, PID 1957 (disowned), log at
+`logs/crawl-build-1.log`. No TILES (console-only, matches PLAN §5 "console
+build"). Chose `-j18` of 24 CPUs to leave headroom per `CLAUDE.md`.
+
+**Result:** Build in progress at time of writing (compiling steadily,
+several hundred `.cc` files expected — crawl is a large C++ codebase, likely
+several-minutes wall time on 18 threads). Not yet confirmed to succeed.
+
+**Next step:** Check `logs/crawl-build-1.log` (`tail`, or `ps -p 1957` to see
+if it's still running / check exit). If it succeeded, the binary should be at
+`vendor/crawl/crawl-ref/source/crawl`; run `./crawl -list-combos` and
+`./crawl -version` to confirm the milestones feature banner ("Milestones" in
+`_get_version_features()`, gated on the same `DGL_MILESTONES` define) and
+combo listing both work (Task #3). If the build failed, read the actual
+error in the log — do not re-guess blindly, the log will show the real
+missing dependency or compile error. If it's still running when this session
+ends, leave it running (it's detached/disowned) and say so explicitly in the
+next journal entry rather than waiting on it silently.

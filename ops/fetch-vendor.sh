@@ -43,6 +43,12 @@ fetch_pin() {
     echo "$name: expected $commit, got $actual" >&2
     exit 1
   fi
+
+  # Shallow --depth 1 fetches carry no tags, so `git describe` (used by both
+  # crawl's Makefile SRC_VERSION and qw's make-qw.sh) fails and yields an
+  # empty version string. A local annotated tag on the pinned commit fixes
+  # that without needing the full tag history.
+  git -C "$dest" tag -a pinned -m "pinned by ops/vendor-lock.json" "$commit"
 }
 
 fetch_pin crawl
