@@ -124,7 +124,19 @@ while :; do
   else
     stall=0
     log "iteration $iter committed $(git rev-list --count "$before".."$after") change(s) rc=$rc"
-    git push --quiet 2>/dev/null || log "warn: push failed — check git credentials"
+    # A push can be rejected because the remote moved during the iteration.
+    # Without recovery that is a deadlock: once the branches diverge, the
+    # start-of-iteration --ff-only pull fails too, and work stops reaching
+    # GitHub forever. Rebase replays only local unpushed commits, so it never
+    # rewrites published history.
+    if ! git push --quiet 2>/dev/null; then
+      log "push rejected — rebasing onto origin and retrying"
+      if git pull --rebase --quiet 2>/dev/null && git push --quiet 2>/dev/null; then
+        log "push succeeded after rebase"
+      else
+        log "warn: push still failing — resolve manually (conflict or credentials)"
+      fi
+    fi
   fi
   echo "$stall" > "$STALL_FILE"
 
