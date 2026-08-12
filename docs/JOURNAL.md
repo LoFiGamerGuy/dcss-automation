@@ -1296,3 +1296,150 @@ to fixed-on. If still running: leave it (detached), do not idle-wait —
 there's no other blocking Phase 2 item, so use the wait for light work
 (re-reading PLAN §8/§352-359 for the next Phase 2 candidate item after this
 one closes) rather than sitting idle.
+
+## 2026-08-12 (session 2) — lua-error-bugfix experiment collected (confirmed); found + fixed a second Phase 2 item (indefinite-transform rest stall); second experiment launched
+
+Picked up from the prior session's Next step: `ops/run_lua_error_experiment.sh`
+had finished overnight (`logs/lua-error-experiment.log` ends with
+`EXPERIMENT_DONE`; PID 41226 gone). Sanity-checked before trusting the
+numbers per the prior Next step's own checklist: control-arm status mix
+(228 died / 10 quit_stuck / 9 lua_error / 3 timeout_wall out of the first
+250 printed) looked like organic variance, not the uniform-signature
+contamination bug from earlier in the project; control-arm lua_error rate
+(17/300 = 5.67%) landed close to the phase1-500 baseline's 5.2%, as
+expected since it's running the literal unfixed bug.
+
+Ran `ops/collector.py --runs-dir data/runs --db
+data/experiments/lua-error-bugfix/results.db --strict`: 1100 manifests
+(500 phase1-500 + 300 control + 300 treatment), reconciliation invariant
+holds, 0 pending, 0 harness_failure. Queried each arm's `lua_error` count/n
+from the DB and ran `experiment.evaluate_predeclaration`: control
+17/300 (5.67%), treatment 1/300 (0.33%), diff -5.33pt (95% CI -8.56 to
+-2.74) — clears the predeclared 2pt minimum effect with the CI excluding
+zero. **`QW_BUGFIX_LUA_ERRORS` confirmed effective**, written up in
+`docs/decisions/011`'s new Follow-up/Result section and
+`data/experiments/lua-error-bugfix/result.json`. No code change needed
+(flag already defaults to fixed-on).
+
+While that ran, used the wait (per the prior Next step's own suggestion —
+don't idle, re-read PLAN §8/§352-359 for the next Phase 2 candidate) to
+mine `data/phase1-500-report.json`'s `by_background` stratification rather
+than starting from PLAN's example list blind: one background,
+**Shapeshifter, was 28/28 (100%) `quit_stuck`** — a complete, dead bucket,
+not a rare failure mode. Dispatched a research subagent to read qw's and
+crawl's source and confirm the mechanism before writing any fix (kept it
+read-only, no code, per the "delegate research, do the writing yourself"
+discipline) — it came back with an exact file:line root cause, independently
+reproducible by hand-reading the same files afterward:
+
+`should_rest()`/`reason_to_rest()` (`plans-rest.lua`) both do a bare
+`or transformed()`, written for genuinely-transient spell forms (expire on
+their own, so eventually make `transformed()` false again). But
+`you.transform()` for a talisman-driven form (`beast`, `flux`, `blade`,
+`statue`, `snake`, `dragon`, `death`, `storm`, `maw` —
+`form-data.h`'s 9 entries with a real `talisman_type`) never expires on its
+own; it only ends via "Begin Untransformation". Shapeshifter starts
+talisman-locked into beast-form at character creation, so `transformed()`
+is permanently true, `should_rest()` is permanently true, and
+`plans.rest` (ahead of `plans.explore`/`explore2` in the master cascade)
+fires every tick forever — confirmed against every sampled Shapeshifter
+run in phase1-500 (`-000015`, `-028`, `-047`, `-053`, `-054`: identical
+signature, turn counter racing to 8-9k while wall-clock stays ~17-30s, 0
+kills, still on D:1, still beast-form, death/quit via the 0.32
+"power of Zot" camping-punishment HP drain). Not Shapeshifter-specific in
+mechanism — any character transforming mid-game via one of the 9 talismans
+would hit the same trap.
+
+Fixed with the same minimal-call-site-guard shape as decision 011's two
+fixes: `qw_transform_is_indefinite(transform_name)` (name-table lookup
+against the 9 talisman `wiz_name`s, optional explicit-name override for
+direct testability) + `qw_transformed_worth_resting_for()`, replacing both
+`or transformed()` call sites (`transformed()` itself untouched — still
+correct at its other, genuinely-transient-form call sites elsewhere in qw).
+Write-up with full source citations and alternatives considered in
+`docs/decisions/012-indefinite-transform-rest-stall.md`. New patch
+`patches/qw/0002-fix-indefinite-transform-rest.patch`, verified it applies
+cleanly in sequence after `0001-fix-lua-errors.patch` against a fresh
+pristine checkout and byte-matches the working tree (scratch-repo test, not
+committed). Regenerated `vendor/qw/qw.lua` via `make-qw.sh` (no crawl
+rebuild needed — pure-Lua change, and `ops/fetch-vendor.sh`'s
+`bash make-qw.sh` step is the only regen crawl actually loads).
+
+New rc-settable flag `QW_BUGFIX_INDEFINITE_TRANSFORM` (default true),
+threaded through the identical chain as `QW_BUGFIX_LUA_ERRORS`:
+`campaign.rc.tmpl` → `rc-gen.py` → `runner.py` → `campaign.py`
+(`--disable-bugfix-indefinite-transform`) → `collector.py` (new
+`bugfix_indefinite_transform` DB column). Deliberately a separate flag, not
+folded into `QW_BUGFIX_LUA_ERRORS`: independent hypotheses, and the
+existing lua-error-bugfix experiment's control arm should keep reproducing
+exactly its own two crashes, nothing else.
+
+New drill test `ops/bugfix-indefinite-transform-test.py`, same wizard-mode
+dlua-console choreography as `ops/bugfix-lua-errors-test.py` (expect()
+each prompt's exact text, not blind timing): calls
+`qw_transform_is_indefinite(name)` directly by name against the real
+pinned+patched binary — `"beast"`/`"flux"` → true, `""`/`"spider"` → false,
+confirmed both with the flag on and off. **5/5 drills pass.** Re-ran the
+full existing test suite after the five-file signature change (rc-gen,
+runner, campaign, collector, plus the new campaign.rc.tmpl placeholder):
+collector, rc-gen, campaign-isolation, runner-drills, telemetry, all still
+pass unchanged.
+
+Declared the second real experiment,
+`data/experiments/indefinite-transform-bugfix/predeclaration.json`:
+hypothesis (the fix reduces `quit_stuck_rate` vs. the frozen phase1-500
+baseline, 5.6%), primary outcome `quit_stuck_rate`, direction decrease,
+minimum effect 2 points, alpha 0.05, 300 games/arm, seed_split validation,
+arms `control` (`bugfix_indefinite_transform=false`) / `treatment`
+(`bugfix_indefinite_transform=true`). 300 validation-split char_seeds from
+a fresh pool (`4000000..4002999`, disjoint from both phase1-500's `0..499`
+and lua-error-bugfix's `3000000..3002999`) via
+`experiment.seeds_for_split`, written to
+`data/experiments/indefinite-transform-bugfix/seeds.json`.
+
+Committed and pushed the collected lua-error-bugfix results + the
+indefinite-transform fix/tests/experiment scaffolding (`a96507d`) before
+launching anything long-running, then separately archived the experiment's
+arm-launch script into `ops/` (`a5f8efc`, same reasoning as the prior
+session's `0c213f9`) before starting it.
+
+**Started detached**: same hardened `setsid nohup ... & disown` form,
+`ops/run-indefinite-transform-experiment.sh` (both arms sequentially,
+300 games each via `--seeds-file`, `--turn-budget 20000 --wall-cap-secs 900
+--workers 16`, run prefixes `exp-transform-control-`/
+`exp-transform-treatment-`). Driver **PID 45766**, confirmed alive with 16
+live `campaign.py` worker children for the control arm. Log:
+`logs/indefinite-transform-experiment.log`. Per-arm summaries land at
+`data/experiments/indefinite-transform-bugfix/{control,treatment}-summary.json`;
+the script prints `EXPERIMENT_DONE` on completion.
+
+**Result:** lua-error-bugfix experiment fully closed (measured, confirmed,
+written up). Phase 2's second item (indefinite-transform stall root cause +
+fix + config flag + regression test + predeclared experiment) is
+code-complete and committed. The experiment measuring its actual effect is
+running, not yet collected.
+
+**Next step:** Check `ps -p 45766` / `tail logs/indefinite-transform-experiment.log`
+/ existence of
+`data/experiments/indefinite-transform-bugfix/treatment-summary.json`. Once
+both summaries exist: `ops/collector.py --runs-dir data/runs --db
+data/experiments/indefinite-transform-bugfix/results.db --strict`, then
+compute each arm's `quit_stuck` count/n (`WHERE run_id LIKE
+'exp-transform-control-%'` / `'exp-transform-treatment-%'`),
+`experiment.evaluate_predeclaration`, write
+`data/experiments/indefinite-transform-bugfix/result.json`. Sanity-check
+first: control-arm `quit_stuck` rate should land near phase1-500's 5.6%
+baseline (it's running the literal original stall); treatment should be
+close to 0% (the fix should eliminate nearly all of it, since the baseline's
+entire quit_stuck bucket was this one bug). Commit
+`data/experiments/indefinite-transform-bugfix/{results.db,result.json,*-summary.json}`
+once collected; if it clears its predeclared minimum effect, write the
+result into `docs/decisions/012`'s Follow-up section (mirroring decision
+011's). After that closes, PLAN §352-359's remaining Phase 2 candidates
+(minimal spellcasting for casters — check pool share first; Felid
+no-weapon plans; Mummy no-potion planning; Gnoll training skip; Djinn
+HP-casting; Formicid escapes; Demigod goals; god-policy extensions) are
+still open — but re-mining `data/phase1-500-report.json`'s stratified
+tables the way this session found the Shapeshifter bug (by measured
+failure rate, not by guessing off PLAN's example list) is probably a better
+way to pick the next one than working PLAN's list in order.
