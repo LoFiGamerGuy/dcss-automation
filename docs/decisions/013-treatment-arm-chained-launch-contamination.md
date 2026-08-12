@@ -155,25 +155,61 @@ determines whether the monitoring process's `pexpect.expect()` reliably
 observes output its own child already produced. This remains open for a
 future session with more `strace`/kernel-level budget than was spent here.
 
-## Actual mitigation: chunk job submission to the worker count
+## Actual mitigation, part 1: chunk job submission to the worker count
 
 `ops/campaign.py`'s `run_campaign()` now submits jobs to
 `ProcessPoolExecutor` in sequential chunks of size `workers` (one full
 pool lifecycle — construction, submission, drain, teardown — per chunk)
-instead of handing the entire job list to a single pool at once. This is
-the empirically-tested-safe shape (n=16 and n=48 both clean, repeatedly;
-n=100 reliably broken) — not a diagnosed fix, a mitigation matched to what
-was actually measured. Costs a small amount of per-chunk pool-startup
-overhead (negligible next to per-game wall time) and preserves every
-existing property (`--seeds-file` resumability, write-ahead accounting,
-status reporting) unchanged. Re-ran `ops/campaign-test.py` after the
-change: still passes (12/12 self-consistent, zero cross-contamination,
-resume clean).
+instead of handing the entire job list to a single pool at once. Cheap,
+harmless, kept as defense in depth even after part 2 below pinned down
+the real fix — costs only a small amount of per-chunk pool-startup
+overhead. Re-ran `ops/campaign-test.py` after the change: still passes
+(12/12 self-consistent, zero cross-contamination, resume clean).
 
-**If this recurs even with chunking** (i.e. a single 16-job chunk starts
-failing), that would newly implicate something at the worker-count level
-itself rather than backlog size, and is worth the deeper kernel-level
-investigation (`strace -f` across the whole pool from the moment of
-`fork`/`exec`, or comparing `/proc/<pid>/status` `SigBlk`/`SigCgt` masks
-between a healthy and a stuck run) that this session didn't have budget
-left for.
+## Real fix, part 2: `run_campaign()` never resolved its own `runs_dir` to absolute
+
+Chunking alone did **not** fix it — a chunked, full 300-job real run
+(`--runs-dir data/runs`, the relative form every prior launch command in
+this project has used) still came back 100% `harness_failure` on its very
+first chunk. Bisected the one remaining variable systematically:
+
+- A hand-written script calling the real `runner.run_game()` directly
+  (bypassing `campaign.py`'s `run_campaign()` entirely) with an
+  **absolute** `workdir` built from `pathlib.Path(".").resolve()`
+  succeeded cleanly at every scale tried (n=8, 16, 48, 100).
+- Calling `campaign.run_campaign()` — the actual function, imported from
+  the real module, not reimplemented — with the same real 300-seed list
+  and `runs_dir="data/runs"` (**relative**, matching every real launch
+  command used all day) reproduced the 100% failure on its first chunk of
+  16, even after the chunking fix from part 1.
+- Calling `campaign.run_campaign()` again, identical in every other way,
+  with `runs_dir=str(ROOT / "data/runs")` (**absolute**): clean —
+  128/128 across 8 chunks with zero `harness_failure`, in a dedicated
+  confirmation run after the first 48/48 success.
+
+This is despite `rc_gen.write_run_dir()` and `runner.run_game()` **both**
+already resolving their own `workdir` parameter to absolute internally
+(the fix for the original relative-workdir pilot contamination,
+`642e3ec`) — evidently insufficient on its own, since the relative
+`runs_dir` still causes real breakage somewhere upstream of those
+resolve() calls that wasn't identified at the syscall level (a
+`strace -f` comparison between a healthy and a stuck run, from the moment
+of `fork()`, would be the next step if this resurfaces — not pursued here
+given the fix was already confirmed working).
+
+**This also explains why `bugfix_indefinite_transform=True` looked like
+part of the puzzle** even though its own code cannot execute before
+"Welcome," appears: every previously-successful full-scale campaign in
+this project (phase1-500, the lua-error-bugfix experiment, and this same
+experiment's own control arm) happened to also use a relative
+`--runs-dir data/runs` and never hit this — but none of them had
+`bugfix_indefinite_transform=True` either, so the relative-path bug and
+the flag were confounded in the data available until this session
+isolated them independently.
+
+**Fix applied:** `run_campaign()` now does
+`runs_dir = pathlib.Path(runs_dir).resolve()` immediately, before
+`runs_dir` is ever used to build a single `workdir`. Every `--runs-dir`
+argument, relative or absolute, now behaves identically. Re-ran
+`ops/campaign-test.py` and `ops/rc-gen-test.py` after this change: both
+still pass.

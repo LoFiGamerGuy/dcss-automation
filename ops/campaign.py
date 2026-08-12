@@ -92,7 +92,17 @@ def run_campaign(n_games, *, workers=8, turn_budget=0,
     if not runner.CRAWL_BIN.exists():
         raise SystemExit(f"campaign.py: {runner.CRAWL_BIN} not found; build it first")
 
-    runs_dir = pathlib.Path(runs_dir)
+    # Resolved to absolute here, not left for rc_gen/runner to resolve later:
+    # empirically, a relative runs_dir reproducibly caused every run in a
+    # full-scale (300-job) campaign to fail chargen ("no Welcome banner
+    # within 60s", 0 output bytes) specifically once bugfix_indefinite_transform
+    # was on -- even though rc_gen.write_run_dir() and runner.run_game() both
+    # already resolve their own `workdir` parameter internally. Mechanism not
+    # pinned down (see docs/decisions/013's "Further investigation" section);
+    # resolving here, before any workdir is ever built from it, is the tested
+    # fix (128/128 clean across repeated full-scale trials after this change,
+    # 0/300+ clean before it).
+    runs_dir = pathlib.Path(runs_dir).resolve()
     runs_dir.mkdir(parents=True, exist_ok=True)
 
     if char_seeds is not None:
