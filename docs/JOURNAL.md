@@ -1915,3 +1915,114 @@ extensions) are still open, but re-mining `data/phase1-500-report.json`'s
 stratified tables by measured failure rate (the method that found decision
 012's Shapeshifter bug and this session's caster item) remains the better
 way to pick among them than working PLAN's list in order.
+
+## 2026-08-12 (session 6) — retry wrapper still fighting the same documented race
+(no new root cause, not re-chased); mined the baseline report for the next
+Phase 2 candidate after caster-spell-mana-fix: Delver background
+
+**Did:** Picked up the retry wrapper from the prior entry (`ops/run-
+indefinite-transform-treatment-with-retry.sh`, PID **60732**, `setsid nohup
+bash ... & disown`, log `logs/indefinite-transform-treatment-retry-
+wrapper-2.log`) — confirmed alive, on attempt 1/6, 12/300 already complete
+from before the session-5 rebuild collision. Before touching anything,
+inspected a live stuck worker directly (`ps -o pid,ppid,pgid,sid,stat`,
+`/proc/<pid>/status`, `/proc/<pid>/wchan`, `sudo /proc/<pid>/stack`,
+`sudo ls -la /proc/<pid>/fd`) rather than re-reading decision 013 and
+assuming it still applies: confirmed the process is genuinely blocked in
+`n_tty_read`/`wait_woken` (i.e. `read(0, ...)` on its pty, matching the
+`strace` finding decision 013 already recorded), its `run.rc` had already
+been fully read and closed (not truncated — 77 lines, matches the expected
+template) and several of crawl's startup db files were already open
+read-only. Chased two hypotheses this session before recognizing they were
+already ruled out: (1) whether `-seed <n>` accidentally sets
+`GAME_TYPE_CUSTOM_SEED` and triggers an interactive seed-choice menu —
+read `initfile.cc:5910-5922`: that only happens when `-seed` has **no**
+following numeric argument, not our case, so ruled out by source inspection
+alone; (2) whether the "Welcome," banner is actually being printed but
+pexpect's literal-string match is failing on some rendering quirk (would
+explain a genuinely-idle, correctly-progressed process). Before spending
+more effort testing (2) live, re-read `docs/decisions/013` in full per its
+own "read it in full before touching this experiment again" instruction —
+session 3 had **already tested exactly this class of question** via a live
+`pexpect logfile_read` capture and found the process frozen at crawl's own
+native pre-chargen menu (not stuck computing, not at "Welcome,"), and had
+already tried sending a periodic dismiss keystroke and confirmed via
+`/proc/<pid>/io` that it was delivered (`rchar`/`syscr` advanced) but
+produced zero new output. My session's own live inspection is consistent
+with, and adds no new fact beyond, that already-recorded finding — so
+per `CLAUDE.md`'s diminishing-returns guidance (already explicitly invoked
+by two prior sessions on this exact investigation), **did not attempt a
+new live capture or further bisection**. The wrapper is doing exactly what
+it was built for: as of this entry, attempt 1/6 has processed 144/288 (all
+`harness_failure`, same ~60.15s-per-run signature as every prior
+occurrence) and is still running, unattended — no intervention taken.
+
+**New finding, read-only, no crawl processes spawned (safe to do while the
+retry wrapper has the machine):** re-mined `data/phase1-500-report.json`'s
+`by_background`/`by_species` stratifications (same method that found
+decision 012's Shapeshifter bug and the caster-spell-mana item) looking
+past the archetype/background clusters already explained by decisions
+011/012/014. **Delver** (n=23, 4.6% of the sampled population) stands out:
+score median **0** (tied with Shapeshifter for the single worst background
+in the entire baseline), XL median 1, turns-survived median **60** — and
+critically, **0% of its 23 runs are `lua_error`/`quit_stuck`/any abnormal
+status** (all 23 are clean `died`), so this is not explained by any
+existing fix and wouldn't be caught by re-checking 011/012/014's crash
+signatures. Death causes are varied and look like organic early monsters
+(jellies ×4, orc wizards ×2, hounds ×2, several unique early monsters) —
+not a single crash pattern, more consistent with a systematically weak
+opening (4 Str, `weapon_choice::plain`, kit built around
+`scroll of fog`/`scroll of revelation`/`scroll of fear`/`potion of
+haste`/`wand of digging charges:3` per `job-data.h:124-132` — a kit that
+only pays off if something actually *uses* the utility items reactively,
+not pure melee). Have **not** yet read `vendor/qw/source/plans-*.lua` to
+check whether qw's planner has any Delver-specific or scroll-of-
+fog/fear/wand-of-digging usage logic at all — that source-first read is
+the next step before concluding this is a bug rather than an intentionally
+fragile background, per this project's established discipline (decisions
+006/011/012/014 all did the source read before writing a fix).
+
+**Result:** No code change this session (investigation + data mining only).
+Indefinite-transform-bugfix's treatment arm is still not collected — the
+retry wrapper is mid-attempt-1/6, same documented failure signature,
+unattended, no new root cause found or chased. Caster-spell-mana-fix
+experiment remains queued (script written, not launched, per the existing
+one-campaign-at-a-time policy). New, real Phase 2 candidate identified
+(Delver) for after caster-spell-mana-fix closes, ahead of PLAN §352-359's
+other listed items on population share alone being roughly comparable to
+several of them and not yet explained by any existing fix.
+
+**Next step:** Check `pgrep -fa
+run-indefinite-transform-treatment-with-retry` (PID 60732) and `tail
+logs/indefinite-transform-treatment-retry-wrapper-2.log` for `== attempt
+N/6 ==` / `EXPERIMENT_DONE` markers — apply the same non-negotiable
+discipline the last four entries already established (don't silently use
+partial data if the retry budget exhausts; if it reaches `== no
+welcome-timeout failures left, done ==` with an organic-looking status
+mix, sanity-check per the standing checklist, then `ops/collector.py
+--runs-dir data/runs --db data/experiments/indefinite-transform-bugfix/
+results.db --strict`, compute each arm's `quit_stuck` count/n,
+`experiment.evaluate_predeclaration`, commit
+`{results.db,result.json,control-summary.json,treatment-summary.json}`
+plus decision 012's Follow-up section). If it exhausts the 6-attempt
+budget again: this would be a second full retry-wrapper exhaustion, worth
+its own decision-013 addendum, and the next escalation per decision 013's
+own ordered list is (a) try the whole wrapper fresh again before (b)
+loosening `MAX_ATTEMPTS`/purge aggressiveness or (c) `strace -f`-from-
+`fork()` — still, per every session so far, not worth pre-emptively
+jumping to (c) without (a) first, since full fresh attempts have both
+succeeded and failed 100% with zero code difference.
+
+Once that experiment closes: launch `ops/run-caster-spell-mana-experiment.sh`
+detached (same hardened `setsid nohup ... & disown` form, PID/log recorded
+here first), collect it the same way (`ops/collector.py --db
+data/experiments/caster-spell-mana-fix/results.db --strict`, `xl>=3`
+count/n per arm, `experiment.evaluate_predeclaration`, commit +
+`docs/decisions/014` Follow-up).
+
+After *that* closes: start the Delver investigation — read
+`vendor/qw/source/plans-rest.lua`/`plans-explore.lua`/anything referencing
+`SCROLL_OF_FOG`/`SCROLL_OF_FEAR`/`wand.*dig` or similar to characterize
+what qw's planner actually does (if anything) with Delver's specific
+starting kit, the same source-first discipline used for every fix so far,
+before writing any patch.
