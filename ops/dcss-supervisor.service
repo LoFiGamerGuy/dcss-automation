@@ -1,0 +1,26 @@
+[Unit]
+Description=dcss-automation autonomous supervisor
+Documentation=file:%h/work/dcss-automation/CLAUDE.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/work/dcss-automation
+ExecStart=%h/work/dcss-automation/ops/supervise.sh
+
+# supervise.sh exits 0 for every deliberate stop — the ops/STOP kill switch,
+# MAX_ITERATIONS, MAX_RUNTIME_HOURS, and the stall detector all go through
+# halt(). So on-failure restarts only genuine crashes and never fights a
+# halt that was meant to stick.
+Restart=on-failure
+RestartSec=60
+
+# systemd services do not get a login shell, so claude must be on PATH here.
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+
+StandardOutput=append:%h/work/dcss-automation/logs/supervisor/service.log
+StandardError=append:%h/work/dcss-automation/logs/supervisor/service.log
+
+[Install]
+WantedBy=default.target
