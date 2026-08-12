@@ -1,0 +1,775 @@
+{
+  "n_games": 50,
+  "safety_cap_secs": 900,
+  "workers": 8,
+  "sample_seed": 42,
+  "wall_secs": {
+    "median": 87.95,
+    "p95": 2650.218151807785
+  },
+  "user_cpu_secs": {
+    "median": 6.17,
+    "p95": 72.07
+  },
+  "max_rss_mb": {
+    "median": 78.70703125,
+    "p95": 79.0390625
+  },
+  "safety_cap_hit_count": 23,
+  "rune_milestone_count": 0,
+  "runs": [
+    {
+      "combo": "CoAl",
+      "seed": 1000,
+      "run_idx": 0,
+      "status": "completed",
+      "wall_secs": 82.6,
+      "user_secs": 65.68,
+      "sys_secs": 5.22,
+      "max_rss_kb": 79420,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 82.68701076507568
+    },
+    {
+      "combo": "SpEn",
+      "seed": 1005,
+      "run_idx": 5,
+      "status": "completed",
+      "wall_secs": 87.95,
+      "user_secs": 65.37,
+      "sys_secs": 7.13,
+      "max_rss_kb": 79224,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 88.00091528892517
+    },
+    {
+      "combo": "DsSu",
+      "seed": 1003,
+      "run_idx": 3,
+      "status": "completed",
+      "wall_secs": 94.55,
+      "user_secs": 72.07,
+      "sys_secs": 8.21,
+      "max_rss_kb": 79256,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 94.61733865737915
+    },
+    {
+      "combo": "AtAl",
+      "seed": 1010,
+      "run_idx": 10,
+      "status": "completed",
+      "wall_secs": 48.83,
+      "user_secs": 36.37,
+      "sys_secs": 1.69,
+      "max_rss_kb": 80632,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 48.87085199356079
+    },
+    {
+      "combo": "MuAl",
+      "seed": 1009,
+      "run_idx": 9,
+      "status": "completed",
+      "wall_secs": 72.57,
+      "user_secs": 61.92,
+      "sys_secs": 5.24,
+      "max_rss_kb": 79880,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 72.63763427734375
+    },
+    {
+      "combo": "DECj",
+      "seed": 1012,
+      "run_idx": 12,
+      "status": "completed",
+      "wall_secs": 24.88,
+      "user_secs": 25.17,
+      "sys_secs": 1.1,
+      "max_rss_kb": 80892,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 24.916156768798828
+    },
+    {
+      "combo": "MiBe",
+      "seed": 1004,
+      "run_idx": 4,
+      "status": "safety_cap_hit",
+      "wall_secs": 2650.2155158519745,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 2650.2155158519745
+    },
+    {
+      "combo": "NaCK",
+      "seed": 1001,
+      "run_idx": 1,
+      "status": "safety_cap_hit",
+      "wall_secs": 2650.218151807785,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 2650.218151807785
+    },
+    {
+      "combo": "OnWr",
+      "seed": 1006,
+      "run_idx": 6,
+      "status": "safety_cap_hit",
+      "wall_secs": 2650.232931613922,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 2650.232931613922
+    },
+    {
+      "combo": "NaBe",
+      "seed": 1007,
+      "run_idx": 7,
+      "status": "safety_cap_hit",
+      "wall_secs": 2650.219174146652,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 2650.219174146652
+    },
+    {
+      "combo": "DEFi",
+      "seed": 1002,
+      "run_idx": 2,
+      "status": "safety_cap_hit",
+      "wall_secs": 2650.217528104782,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 2650.217528104782
+    },
+    {
+      "combo": "SpNe",
+      "seed": 1015,
+      "run_idx": 15,
+      "status": "completed",
+      "wall_secs": 20.1,
+      "user_secs": 18.84,
+      "sys_secs": 0.53,
+      "max_rss_kb": 80172,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 20.155483961105347
+    },
+    {
+      "combo": "MuHs",
+      "seed": 1014,
+      "run_idx": 14,
+      "status": "completed",
+      "wall_secs": 20.44,
+      "user_secs": 18.81,
+      "sys_secs": 0.69,
+      "max_rss_kb": 80056,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 20.50007200241089
+    },
+    {
+      "combo": "MDHW",
+      "seed": 1018,
+      "run_idx": 18,
+      "status": "completed",
+      "wall_secs": 23.63,
+      "user_secs": 22.22,
+      "sys_secs": 0.67,
+      "max_rss_kb": 80572,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 23.66177749633789
+    },
+    {
+      "combo": "GnFE",
+      "seed": 1020,
+      "run_idx": 20,
+      "status": "completed",
+      "wall_secs": 4.33,
+      "user_secs": 3.78,
+      "sys_secs": 0.13,
+      "max_rss_kb": 80732,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 4.371078252792358
+    },
+    {
+      "combo": "DgBr",
+      "seed": 1021,
+      "run_idx": 21,
+      "status": "completed",
+      "wall_secs": 8.65,
+      "user_secs": 6.17,
+      "sys_secs": 0.19,
+      "max_rss_kb": 80828,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin",
+        "shaft"
+      ],
+      "wall_secs_measured": 8.679544448852539
+    },
+    {
+      "combo": "OpAl",
+      "seed": 1022,
+      "run_idx": 22,
+      "status": "completed",
+      "wall_secs": 9.93,
+      "user_secs": 7.56,
+      "sys_secs": 0.21,
+      "max_rss_kb": 80888,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin",
+        "uniq"
+      ],
+      "wall_secs_measured": 9.976094961166382
+    },
+    {
+      "combo": "DjWn",
+      "seed": 1024,
+      "run_idx": 24,
+      "status": "completed",
+      "wall_secs": 6.46,
+      "user_secs": 6.12,
+      "sys_secs": 0.18,
+      "max_rss_kb": 80748,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin",
+        "uniq"
+      ],
+      "wall_secs_measured": 6.523633003234863
+    },
+    {
+      "combo": "AtEE",
+      "seed": 1025,
+      "run_idx": 25,
+      "status": "completed",
+      "wall_secs": 4.23,
+      "user_secs": 4.04,
+      "sys_secs": 0.09,
+      "max_rss_kb": 80112,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 4.271451711654663
+    },
+    {
+      "combo": "DsAl",
+      "seed": 1026,
+      "run_idx": 26,
+      "status": "completed",
+      "wall_secs": 3.04,
+      "user_secs": 2.96,
+      "sys_secs": 0.06,
+      "max_rss_kb": 80676,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 3.0696306228637695
+    },
+    {
+      "combo": "BaWr",
+      "seed": 1008,
+      "run_idx": 8,
+      "status": "safety_cap_hit",
+      "wall_secs": 2648.6923785209656,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 2648.6923785209656
+    },
+    {
+      "combo": "TrAl",
+      "seed": 1028,
+      "run_idx": 28,
+      "status": "completed",
+      "wall_secs": 5.88,
+      "user_secs": 5.69,
+      "sys_secs": 0.17,
+      "max_rss_kb": 80272,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin",
+        "shaft",
+        "uniq"
+      ],
+      "wall_secs_measured": 5.921862363815308
+    },
+    {
+      "combo": "MfBr",
+      "seed": 1029,
+      "run_idx": 29,
+      "status": "completed",
+      "wall_secs": 5.75,
+      "user_secs": 5.55,
+      "sys_secs": 0.13,
+      "max_rss_kb": 80000,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 5.77309513092041
+    },
+    {
+      "combo": "TrIE",
+      "seed": 1030,
+      "run_idx": 30,
+      "status": "completed",
+      "wall_secs": 20.62,
+      "user_secs": 18.1,
+      "sys_secs": 0.62,
+      "max_rss_kb": 80392,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin",
+        "uniq",
+        "uniq",
+        "uniq",
+        "uniq",
+        "br.exit",
+        "br.enter",
+        "br.exit",
+        "god.worship",
+        "shaft"
+      ],
+      "wall_secs_measured": 20.65743589401245
+    },
+    {
+      "combo": "OpMo",
+      "seed": 1011,
+      "run_idx": 11,
+      "status": "safety_cap_hit",
+      "wall_secs": 2647.7996051311493,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 2647.7996051311493
+    },
+    {
+      "combo": "DEBe",
+      "seed": 1013,
+      "run_idx": 13,
+      "status": "safety_cap_hit",
+      "wall_secs": 2647.227308511734,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 2647.227308511734
+    },
+    {
+      "combo": "MuAr",
+      "seed": 1033,
+      "run_idx": 33,
+      "status": "completed",
+      "wall_secs": 3.16,
+      "user_secs": 2.91,
+      "sys_secs": 0.08,
+      "max_rss_kb": 80936,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 3.219207286834717
+    },
+    {
+      "combo": "VpAr",
+      "seed": 1034,
+      "run_idx": 34,
+      "status": "completed",
+      "wall_secs": 5.46,
+      "user_secs": 5.36,
+      "sys_secs": 0.14,
+      "max_rss_kb": 80700,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 5.526423692703247
+    },
+    {
+      "combo": "HuHu",
+      "seed": 1027,
+      "run_idx": 27,
+      "status": "completed",
+      "wall_secs": 143.53,
+      "user_secs": 140.84,
+      "sys_secs": 1.89,
+      "max_rss_kb": 139220,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin",
+        "br.exit",
+        "br.enter",
+        "god.worship",
+        "uniq",
+        "uniq",
+        "uniq",
+        "uniq",
+        "br.enter",
+        "uniq",
+        "br.end",
+        "god.maxpiety",
+        "br.exit",
+        "br.enter",
+        "br.exit",
+        "uniq",
+        "br.end",
+        "uniq",
+        "uniq",
+        "br.enter",
+        "br.end",
+        "br.exit",
+        "br.enter",
+        "uniq",
+        "uniq",
+        "br.exit",
+        "br.enter",
+        "br.exit",
+        "uniq",
+        "uniq",
+        "uniq",
+        "uniq",
+        "br.end"
+      ],
+      "wall_secs_measured": 143.58024287223816
+    },
+    {
+      "combo": "SpWr",
+      "seed": 1016,
+      "run_idx": 16,
+      "status": "safety_cap_hit",
+      "wall_secs": 957.3326554298401,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 957.3326554298401
+    },
+    {
+      "combo": "VSGl",
+      "seed": 1017,
+      "run_idx": 17,
+      "status": "safety_cap_hit",
+      "wall_secs": 957.3316848278046,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 957.3316848278046
+    },
+    {
+      "combo": "MDNe",
+      "seed": 1038,
+      "run_idx": 38,
+      "status": "completed",
+      "wall_secs": 2.41,
+      "user_secs": 2.16,
+      "sys_secs": 0.08,
+      "max_rss_kb": 80596,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 2.4674386978149414
+    },
+    {
+      "combo": "MfEn",
+      "seed": 1037,
+      "run_idx": 37,
+      "status": "completed",
+      "wall_secs": 3.48,
+      "user_secs": 3.26,
+      "sys_secs": 0.11,
+      "max_rss_kb": 79944,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 3.520533800125122
+    },
+    {
+      "combo": "DEWn",
+      "seed": 1040,
+      "run_idx": 40,
+      "status": "completed",
+      "wall_secs": 6.6,
+      "user_secs": 6.69,
+      "sys_secs": 0.1,
+      "max_rss_kb": 80780,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin",
+        "shaft",
+        "uniq"
+      ],
+      "wall_secs_measured": 6.626515626907349
+    },
+    {
+      "combo": "DEGl",
+      "seed": 1019,
+      "run_idx": 19,
+      "status": "safety_cap_hit",
+      "wall_secs": 957.3315572738647,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 957.3315572738647
+    },
+    {
+      "combo": "BaFE",
+      "seed": 1042,
+      "run_idx": 42,
+      "status": "completed",
+      "wall_secs": 2.26,
+      "user_secs": 2.13,
+      "sys_secs": 0.04,
+      "max_rss_kb": 80748,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 2.3197848796844482
+    },
+    {
+      "combo": "OnNe",
+      "seed": 1043,
+      "run_idx": 43,
+      "status": "completed",
+      "wall_secs": 4.38,
+      "user_secs": 4.35,
+      "sys_secs": 0.12,
+      "max_rss_kb": 80184,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin"
+      ],
+      "wall_secs_measured": 4.420696258544922
+    },
+    {
+      "combo": "SpBe",
+      "seed": 1023,
+      "run_idx": 23,
+      "status": "safety_cap_hit",
+      "wall_secs": 957.8938121795654,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 957.8938121795654
+    },
+    {
+      "combo": "SpFi",
+      "seed": 1031,
+      "run_idx": 31,
+      "status": "safety_cap_hit",
+      "wall_secs": 958.2477219104767,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 958.2477219104767
+    },
+    {
+      "combo": "MfFi",
+      "seed": 1032,
+      "run_idx": 32,
+      "status": "safety_cap_hit",
+      "wall_secs": 958.3501946926117,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 958.3501946926117
+    },
+    {
+      "combo": "NaFi",
+      "seed": 1035,
+      "run_idx": 35,
+      "status": "safety_cap_hit",
+      "wall_secs": 958.3152041435242,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 958.3152041435242
+    },
+    {
+      "combo": "MfCA",
+      "seed": 1036,
+      "run_idx": 36,
+      "status": "safety_cap_hit",
+      "wall_secs": 958.3150658607483,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 958.3150658607483
+    },
+    {
+      "combo": "CoNe",
+      "seed": 1048,
+      "run_idx": 48,
+      "status": "completed",
+      "wall_secs": 4.67,
+      "user_secs": 4.77,
+      "sys_secs": 0.1,
+      "max_rss_kb": 80876,
+      "rune_milestone": false,
+      "milestone_types": [
+        "begin",
+        "shaft"
+      ],
+      "wall_secs_measured": 4.721065521240234
+    },
+    {
+      "combo": "DsFi",
+      "seed": 1039,
+      "run_idx": 39,
+      "status": "safety_cap_hit",
+      "wall_secs": 965.2420446872711,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 965.2420446872711
+    },
+    {
+      "combo": "GrBe",
+      "seed": 1041,
+      "run_idx": 41,
+      "status": "safety_cap_hit",
+      "wall_secs": 965.2421360015869,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 965.2421360015869
+    },
+    {
+      "combo": "VpWr",
+      "seed": 1044,
+      "run_idx": 44,
+      "status": "safety_cap_hit",
+      "wall_secs": 965.2420909404755,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 965.2420909404755
+    },
+    {
+      "combo": "MuBe",
+      "seed": 1045,
+      "run_idx": 45,
+      "status": "safety_cap_hit",
+      "wall_secs": 962.8331317901611,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 962.8331317901611
+    },
+    {
+      "combo": "GnFi",
+      "seed": 1046,
+      "run_idx": 46,
+      "status": "safety_cap_hit",
+      "wall_secs": 965.6430275440216,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 965.6430275440216
+    },
+    {
+      "combo": "GhBe",
+      "seed": 1047,
+      "run_idx": 47,
+      "status": "safety_cap_hit",
+      "wall_secs": 965.7178907394409,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 965.7178907394409
+    },
+    {
+      "combo": "MDWr",
+      "seed": 1049,
+      "run_idx": 49,
+      "status": "safety_cap_hit",
+      "wall_secs": 965.9422137737274,
+      "user_secs": null,
+      "sys_secs": null,
+      "max_rss_kb": null,
+      "rune_milestone": false,
+      "milestone_types": [],
+      "wall_secs_measured": 965.9422137737274
+    }
+  ]
+}

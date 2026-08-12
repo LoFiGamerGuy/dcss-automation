@@ -47,11 +47,16 @@ def build_manifest_row(run_id, char_seed, game_seed, manifest=None, digest=None)
     }
 
 
-def write_run_dir(row, workdir):
+def write_run_dir(row, workdir, turn_budget=0):
     """Materialize the rc file + save/morgue dirs a launch needs. Returns the
-    crawl CLO args a caller appends to its binary/-rcdir invocation."""
+    crawl CLO args a caller appends to its binary/-rcdir invocation.
+    turn_budget=0 disables the harness turn-budget quit (see
+    campaign.rc.tmpl) — the default, so existing callers that don't pass it
+    (rc-gen-test.py) keep testing the sampler->rc->crawl handoff only."""
     workdir = pathlib.Path(workdir)
-    rc_text = RC_TMPL_PATH.read_text().replace("__COMBO__", row["character"]["rc_combo"])
+    rc_text = (RC_TMPL_PATH.read_text()
+               .replace("__COMBO__", row["character"]["rc_combo"])
+               .replace("__TURN_BUDGET__", str(turn_budget)))
     rc_path = workdir / "run.rc"
     rc_path.write_text(rc_text)
     save_dir = workdir / "saves"
@@ -80,11 +85,13 @@ def main():
     ap.add_argument("--char-seed", type=int, required=True)
     ap.add_argument("--game-seed", type=int, required=True)
     ap.add_argument("--workdir", help="if given, materialize run.rc/saves/morgue here")
+    ap.add_argument("--turn-budget", type=int, default=0,
+                     help="harness turn-budget quit (0 disables); see campaign.rc.tmpl")
     args = ap.parse_args()
 
     row = build_manifest_row(args.run_id, args.char_seed, args.game_seed)
     if args.workdir:
-        layout = write_run_dir(row, args.workdir)
+        layout = write_run_dir(row, args.workdir, turn_budget=args.turn_budget)
         row["clo_args"] = layout["clo_args"]
     print(json.dumps(row, default=str))
 

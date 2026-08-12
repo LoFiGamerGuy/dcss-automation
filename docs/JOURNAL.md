@@ -428,3 +428,155 @@ pending). Forced-failure drills (induced Lua error, `kill -9`, hang) are
 Phase 1's exit criterion for this piece and should be written alongside it,
 the same way `sampler-test.py`/`rc-gen-test.py` were written alongside their
 subjects this session — don't build the classifier and defer testing it.
+
+## 2026-08-12 — Runner state machine built and drilled; throughput campaign still running
+
+**Did:** Picked up with the throughput probe (PID 21247) still running —
+checked it repeatedly across this session (13, 30, 42, 47 min marks), always
+alive with workers actively cycling through combos (`/tmp/dcss-throughput-*`
+churn, no stall signs). Left it running the whole session; still no report
+at time of writing.
+
+Before writing the classifier, dispatched a research agent to read the
+pinned crawl source (not guess) for exactly how a game's end is recorded.
+Key findings, all file:line-cited in `docs/decisions/006`: crawl's
+end-of-game xlog row ("logfile", separate from the DGL_MILESTONES
+"milestones" file) lands at `<-dir>/saves/logfile-seeded` (extra nested
+`saves/`, `-seeded` qualifier from `-seed`), written synchronously
+(fopen/write/fclose) the instant the game ends, before any post-game UI —
+so polling for its appearance is race-free and doesn't need the process to
+reach EOF. Its `ktyp=` field is authoritative: `winning`→won,
+`quitting`→qw's own Ctrl-Q stuck-quit (`QUIT_TURNS`, the *only*
+self-initiated quit path qw's `determine_goal()` has), `leaving`→qw's
+"Escape" goal walking out D:1 without the Orb (a genuinely different,
+deliberate exit), anything else→died (no single generic "died" value, it's
+whichever real cause fired). No row is written at all if the process is
+killed before reaching `ouch()`'s terminal branch — confirmed via the call
+chain, not assumed.
+
+Built `ops/xlog.py`: factored the milestones-file field parser out of
+`telemetry-test.py` (unchanged behavior, re-verified: still PASSes) so
+`runner.py` can reuse the same escape-aware parsing for the logfile row
+instead of duplicating it.
+
+Extended `campaign.rc.tmpl`/`rc-gen.py` with a harness turn-budget hook
+(`TURN_BUDGET` Lua global, wraps qw's own `ready()`) for PLAN §6's
+`timeout_turns`. First version also tried sending the Ctrl-Q "yes" quit
+sequence from inside that same Lua hook — **hung**, reproduced twice by
+hand: those keys queue into the same in-process macro buffer qw's own
+`ready()` concurrently feeds every tick, and the two interleaved
+unpredictably (once the process just sat alive forever after the sentinel
+fired; once it produced an unrelated qw Lua error later in the run instead
+of quitting). Fixed by having the Lua hook *only* print an on-screen
+sentinel (`HARNESS_TIMEOUT_TURNS`) and moving the actual kill to
+`runner.py`, watching the pty stream from outside — the same external
+channel a human or `util/qw.exp` types into, so it can't race qw's
+internal queueing. Verified: `--turn-budget 5` reliably classifies
+`timeout_turns` in ~2s.
+
+Built `ops/runner.py`: write-ahead `manifest.json` (written before spawn,
+into the run's own directory — no shared-file locking needed since every
+run already gets a unique dir) → materialize rc via `rc-gen.py` → spawn →
+supervise (poll for the logfile row; watch for the timeout sentinel; the
+established run-canary.py fix of checking error patterns before concluding
+hang, now also applied before concluding wall-cap) → classify →
+`result.json`. Library split into `monitor_game()` (spawn+supervise only)
+and `run_game()` (adds the write-ahead/rc-gen/result.json wrapper), so
+drills can inject failures into a hand-modified rc via `monitor_game()`
+directly.
+
+Built `ops/runner-drills-test.py` (Phase 1 exit criterion): all three named
+drills against the real pinned binary, not a mocked classifier.
+- **lua_error**: hand-broken `ready()` that always errors — clua catches it
+  internally (non-fatal to the process), correctly caught by the
+  error-pattern-before-hang check rather than misfiled as a hang.
+- **kill -9**: external `SIGKILL` mid-run (via a background thread once
+  `on_spawn` hands back the pid) — classified via `child.signalstatus`,
+  distinct from every other "process disappeared" case.
+- **hang**: found the *real* way to induce this took two tries. Overriding
+  `AUTO_START = false` after `campaign.rc.tmpl`'s forced-on default did
+  **not** stick (qw kept playing regardless — whatever it reads that from
+  isn't a simple last-write-wins Lua global by the time `ready()` first
+  fires; not fully root-caused, not worth chasing further since a cleaner
+  option existed). Switched to a from-scratch rc with no `qw.lua` include
+  at all — `combo=` is crawl-native and still drives non-interactive
+  chargen, but with no `ready()` hook defined nothing ever sends another
+  key, so the pty genuinely goes quiet post-chargen. This surfaced a real
+  second bug: the hang path's graceful-save attempt (Ctrl-S) calls
+  `save_game(true)`, which **exits the process after saving**
+  (`files.cc:2603`) — a plain save doesn't touch the logfile, so the
+  original code misrouted that EOF into `invalid_telemetry`. Fixed: EOF
+  observed while the grace-save is in flight now classifies `timeout_wall`
+  directly. All three drills pass after the fix; full writeup in
+  `docs/decisions/006-runner-terminal-status-classification.md`.
+
+Also spot-checked `runner.py` against real (non-drilled) play: a normal
+run died correctly (`ktyp=mon`, killer `Natasha`, classified `died`) in
+3.6s wall time, with both `manifest.json` and `result.json` written.
+Re-ran `sampler-test.py` and `rc-gen-test.py` after the `rc-gen.py`/
+`campaign.rc.tmpl` changes (new `--turn-budget`/`__TURN_BUDGET__`
+plumbing, defaulted to 0/disabled for existing callers) — both still pass
+unchanged.
+
+**Result:** Phase 1 now has three tested, independent pieces: the sampler,
+rc generation, and the runner state machine (write-ahead accounting +
+turn-budget/hang/wall-cap enforcement + all ten §6 terminal statuses
+reachable and correctly classified, three drills passing). **Not yet
+built:** the collector (reconciling `manifest.json`/`result.json` pairs
+across a campaign into SQLite) and the outcome-vector report — these are
+what turn a pile of per-run JSON files into the ≥500-game campaign PLAN.md
+requires for "running success." Phase 0 still has its two long-open items:
+throughput report (campaign still running, unattended across this entire
+session, no completions signal seen yet in the block-buffered log) and
+rune-milestone verification (still deferred, unchanged status).
+
+Checked the probe one final time before ending this entry: still alive at
+~48 min elapsed, still within the ~94 min worst case. **Leaving it running
+across this session boundary again** — this is now its fourth session
+running unattended; if a future session finds it still going past ~100 min,
+that itself is worth investigating (possible stall) rather than assuming
+it's still just slow.
+
+**Update, same session:** the throughput probe finished (`data/throughput-report.json`
+appeared) while writing up the entry above — did not need to wait for a
+future session. Results: 50 games, 900s safety cap, 8 workers — wall_secs
+median **87.95s**, p95 **2650s** (inflated by censoring: 23/50, 46%, hit the
+900s cap without dying/quitting rather than genuinely taking that long);
+user_cpu_secs median 6.17s/p95 72.07s; max_rss_mb median/p95 ~79MB (crawl is
+cheap on memory — RAM was never going to be the fleet-sizing constraint,
+CPU/wall-clock is). `rune_milestone_count=0` across all 50 — consistent
+with the prior session's finding that reaching a rune needs real depth a
+900s-capped sample mostly doesn't reach; per the standing guidance from that
+entry, **accepting this as "rune verification deferred to Phase 1 campaign
+data, not a Phase 0 blocker"** rather than spending a third synchronous probe
+on it. Folded the wall/hang numbers into `runner.py`'s
+`DEFAULT_WALL_CAP_SECS`/`DEFAULT_HANG_SECS` comments (values themselves
+unchanged — 1800s/120s already sat in a reasonable place relative to this
+data) and committed the report alongside this entry.
+
+**Phase 0 exit criteria — final status, all five now satisfied:**
+reproducible build ✓, telemetry test (exact fields) ✓, canary suite (8/8) ✓,
+sampler support-set diff empty ✓, throughput report ✓ (this entry). Phase 0
+is **closed**. Rune-milestone exact-field verification specifically is the
+one item carried forward as accepted-fallback rather than fully resolved
+(logfile-row-only framing, same as death already was per decision 005) —
+not re-opened unless a future campaign's data makes it easy to fold in
+opportunistically.
+
+**Next step:** Build the collector: glob `data/runs/*/manifest.json` vs
+`*/result.json` into SQLite (the reconciliation invariant from §6 — a
+manifest with no result is exactly the "crashed with no row, never silently
+dropped" case), plus the outcome-vector report with stratified tables (§1).
+Once the collector exists, a real campaign driver (parallel `runner.py`
+invocations across sampled characters, writing into `data/runs/<run_id>/`,
+mirroring `throughput-probe.py`'s `ProcessPoolExecutor` pattern but calling
+`runner.run_game()` instead of the ad-hoc `/usr/bin/time` wrapper) is the
+last piece before the ≥500-game campaign that's Phase 1's actual exit
+criterion — parallel-isolation (N workers, zero cross-contamination) should
+be checked directly on that campaign, since per-run directory isolation is
+already built into `rc-gen.py`/`runner.py` by construction but hasn't been
+verified under real concurrent load yet. The campaign driver will also need
+an actual turn-budget number decided (still open — this session's
+throughput data only measured wall-clock, not turns; a quick way in: sample
+final `turn=` fields from a handful of the `data/runs/` results once the
+collector/driver exist, rather than guessing one up front).

@@ -23,37 +23,12 @@ import time
 import pexpect
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "ops"))
+import xlog  # noqa: E402
+
 CRAWL_BIN = ROOT / "vendor/crawl/crawl-ref/source/crawl"
 QW_DIR = ROOT / "vendor/qw"
 RC_TMPL = ROOT / "ops/canary/canary.rc.tmpl"
-
-
-def xlog_parse_line(line):
-    """Mirror hiscores.cc's _xlog_split_fields/_xlog_unescape: fields are
-    ':'-separated key=value pairs, and a literal ':' inside a value is
-    escaped as '::'."""
-    fields = {}
-    parts = []
-    start = 0
-    i = 0
-    n = len(line)
-    while i < n:
-        if line[i] == ":":
-            if i + 1 < n and line[i + 1] == ":":
-                i += 2
-                continue
-            parts.append(line[start:i])
-            i += 1
-            start = i
-            continue
-        i += 1
-    parts.append(line[start:])
-    for part in parts:
-        if "=" not in part:
-            continue
-        key, _, val = part.partition("=")
-        fields[key] = val.replace("::", ":")
-    return fields
 
 
 def run_game(combo, seed, budget_secs, workdir):
@@ -128,7 +103,7 @@ def main():
             print(f"FAIL: milestones file never created ({mfile})")
             sys.exit(1)
 
-        records = [xlog_parse_line(l) for l in mfile.read_text().splitlines() if l.strip()]
+        records = [xlog.parse_line(l) for l in mfile.read_text().splitlines() if l.strip()]
         types_seen = [r.get("type") for r in records]
 
         def find(type_):

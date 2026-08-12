@@ -15,3 +15,37 @@ include = qw.lua
 : AUTO_START = true
 : DELAYED = false
 combo = __COMBO__
+
+# Harness-enforced turn budget (PLAN.md §6 timeout_turns) — distinct from
+# qw's own QUIT_TURNS "stuck" detection (line ~103 of qw.rc, that's
+# quit_stuck). clua has no io/os library (clua.cc: LUA_IOLIBNAME/OSLIBNAME
+# are commented out of the loaded lib list) so this can't write a marker
+# file from inside the game; it wraps qw's own ready() hook instead (must
+# come after `include = qw.lua` above, since ready() must already exist to
+# wrap) and, when the budget is hit, prints an on-screen sentinel via
+# crawl.mpr — visible in the captured pty output, same channel runner.py
+# already scans for error patterns.
+#
+# Deliberately does NOT also send the Ctrl-Q "yes" quit sequence from here:
+# an earlier version tried that with magic()/crawl.process_keys, and it hung
+# — the quit keys got queued into the same in-process macro buffer qw's own
+# ready() is concurrently feeding movement/action keys into every tick, and
+# the two interleaved unpredictably (confirmed by hand: the sentinel fired
+# but the process never reached EOF). Sending keys is therefore runner.py's
+# job once it observes the sentinel in the pty stream — that's the same
+# external channel a human (or qw's own util/qw.exp) types into, so it can't
+# race qw's internal queueing. __TURN_BUDGET__ of 0 disables this (used by
+# tests that don't want turn-budget behavior in scope).
+: TURN_BUDGET = __TURN_BUDGET__
+{
+local harness_orig_ready = ready
+local harness_budget_fired = false
+function ready()
+    harness_orig_ready()
+    if TURN_BUDGET and TURN_BUDGET > 0 and not harness_budget_fired
+            and you.turns() >= TURN_BUDGET then
+        harness_budget_fired = true
+        crawl.mpr("HARNESS_TIMEOUT_TURNS turns=" .. you.turns())
+    end
+end
+}
