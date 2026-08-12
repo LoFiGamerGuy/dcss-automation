@@ -1,0 +1,16 @@
+{
+  "crawl": {
+    "repo": "https://github.com/crawl/crawl.git",
+    "commit": "a7cece931a0f6eb29acd71721463a2d2f9d4cde7",
+    "ref_label": "tags/0.32-a0",
+    "note": "Annotated tag 0.32-a0 dereferences to this commit. qw master's changelog.md states 'This version supports DCSS 0.32-a0.' (PLAN.md §3)."
+  },
+  "qw": {
+    "repo": "https://github.com/crawl/qw.git",
+    "commit": "8698adcf9b7103524abb7080dbc8e5fcd36465f6",
+    "ref_label": "heads/master",
+    "note": "master tip as of 2026-08-12; changelog top entry declares 0.32-a0 support, matching the crawl pin above."
+  },
+  "pinned_date": "2026-08-12",
+  "decision": "docs/decisions/002-vendoring-mechanism.md"
+}

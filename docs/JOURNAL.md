@@ -35,3 +35,33 @@ candidate commit pair — qw master, plus a crawl commit near the 0.32-a0
 changelog reference per `PLAN.md` §3 — into the vendor location, and record both
 SHAs in a lock file. Do **not** start the build before writing the lock file and
 a journal entry saying you are starting it.
+
+## 2026-08-12 — Vendoring decided and pinned; commit-pin candidate found
+
+**Did:** Wrote `docs/decisions/002-vendoring-mechanism.md`: vendoring is
+pinned shallow clones driven by `ops/vendor-lock.json` (not submodules —
+`vendor/` is gitignored and disposable, matching the existing `.gitignore`
+comment), qw patches are an overlay dir (`patches/qw/*.patch`, empty so far),
+applied by `ops/fetch-vendor.sh`. For the commit pair (§3): confirmed network
+egress works from the `dcss-agent` distro (github.com reachable). qw master's
+`changelog.md` states verbatim "This version supports DCSS 0.32-a0" for its
+top (0.4-a) entry. crawl's repo has an exact annotated tag `0.32-a0` whose
+dereferenced commit is `a7cece931a0f6eb29acd71721463a2d2f9d4cde7`. Pinned:
+crawl `a7cece93...` (tag 0.32-a0), qw `8698adcf...` (master tip
+2026-08-12). Ran `ops/fetch-vendor.sh`: both shallow-fetched the exact pinned
+SHA on the first try (GitHub allows shallow fetch of an arbitrary commit, not
+just branch tips) into `vendor/crawl` and `vendor/qw`.
+
+**Result:** Vendor fetch reproducible and fast (shallow, seconds). Have not
+yet attempted a build — that's next and is the risky/long part.
+
+**Next step:** Build crawl from `vendor/crawl` with `DGL_MILESTONES` defined
+(PLAN.md §6 — stock local console builds do NOT write milestones without this;
+it's normally gated behind the `DGAMELAUNCH` server block in `AppHdr.h`, so
+this needs either a small patch to `AppHdr.h` or an equivalent build define).
+Check crawl's `Makefile`/`INSTALL.md` under `vendor/crawl/crawl-ref/source`
+for the exact define mechanism before patching blindly. If the build is going
+to take more than a couple minutes, start it detached per `CLAUDE.md` (nohup +
+log to `logs/`) rather than blocking the session on it. After a successful
+build, verify `-list-combos` on the binary (Task #3) before going further —
+that flag's existence/format is unverified for this exact commit.
