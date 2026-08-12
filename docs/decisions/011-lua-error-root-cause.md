@@ -199,3 +199,20 @@ the CI excluding zero in the declared "decrease" direction —
 `data/experiments/lua-error-bugfix/result.json`. **`QW_BUGFIX_LUA_ERRORS` is
 confirmed effective; no code change needed since it already defaults to
 fixed-on.**
+
+### Addendum — Troll/Felid `lua_error` clusters in phase1-500 fully explained, no new bug
+
+The Phase 1 exit review flagged Troll (46.2% bad rate) and Felid (36.8%) as
+the next candidates worth checking against this fix's shape before assuming
+they need new investigation. Checked directly: grepped every
+`phase1-500-*` run whose `combo` starts `Tr`/`Fe` and status is `lua_error`
+(9 runs total: 6 Felid, 3 Troll) against each run's own
+`morgue/*.txt` crash text. All 9 land on exactly one of this decision's two
+bugs — 5 at the combined-`qw.lua:3791` site (bug 1, `cur_equip` boolean
+index — Felid's near-permanent zero-equipment state makes it the most
+exposed species) and 4 at `qw.lua:14282` (bug 2, `hostile_servants_timer` —
+Makhleb worship, unrelated to species; these happened to sample as
+Troll/Felid characters who worshipped Makhleb, not a species-specific
+mechanism). No third crash signature found. **No new Phase 2 item needed
+for Troll/Felid specifically** — their elevated phase1-500 bad-rate is
+this decision's two bugs, already fixed and already measured above.

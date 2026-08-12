@@ -144,3 +144,21 @@ drills pass.**
 A pre-declared Phase 2 experiment (`data/experiments/indefinite-transform-bugfix/`)
 measures the fix's actual effect on the `quit_stuck` rate on held-out
 validation seeds against the frozen phase1-500 baseline, per PLAN.md §8.
+
+### Addendum — confirmed background-driven, not species-driven
+
+The Phase 1 exit review's `by_species` table shows `quit_stuck` spread
+across many species (Merfolk 23%, Mountain Dwarf 19%, Naga 15.8%, Octopode
+15.8%, Minotaur 15%, Djinni, Armataur, Demigod, Oni, ...), which could look
+like it needs separate per-species investigation. Checked directly:
+every one of phase1-500's 28 `quit_stuck` runs' sampled `combo` (from
+each run's own `manifest.json`) ends in `Sh` — i.e. all 28 are
+Shapeshifter-background characters of 17 different species (`MiSh`, `MDSh`,
+`OnSh`, `DjSh`, `NaSh`, `DsSh`, `AtSh`, `FeSh`, `TrSh`, `KoSh`, `FoSh`,
+`SpSh`, `OpSh`, `DgSh`, `DESh`, `MfSh`, `VpSh`). The species-level spread in
+the report is exactly this one background's failures landing on whichever
+species happened to sample it — not evidence of independent per-species
+bugs. This fix should therefore clear (most of) the `quit_stuck` bucket
+across every species-level row that showed it, not just the
+`by_background: Shapeshifter` row. No further per-species investigation
+needed.
