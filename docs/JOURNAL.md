@@ -348,13 +348,83 @@ first thing next session. If done: pull `wall_secs`/`max_rss_mb`
 median+p95 for Phase 1 fleet sizing, check `rune_milestone_count`, commit the
 report. If still running (plausible — worst case ~94 min from its 08:20
 start, and this session ended before that), leave it and keep checking at
-the start of future sessions rather than blocking on it. Either way, Phase 1
-work can continue in parallel: next concrete piece is `ops/rc-gen.py` (or
-extend `combos.py`) to produce a full per-run rc file (generalizing
-`ops/canary/canary.rc.tmpl`'s pattern — this file forces `AUTO_START`/
-`DELAYED` for canaries; the real per-run template needs qw's `QUIT_TURNS`
-and `c_persist`-clearing per §7 baked in, not just a forced combo), then the
-runner state machine (§6: write-ahead manifest, the 10 terminal statuses,
-progress-based hang detection) — note turn-budget *sizing* specifically
-should wait for the throughput numbers, but the state machine's structure
-does not depend on them.
+the start of future sessions rather than blocking on it.
+
+## 2026-08-12 — rc generation built (sampler → rc → crawl handoff); throughput campaign still running
+
+**Did:** Continued straight on from the prior entry rather than waiting idle
+on the throughput probe (still running, checked again: `ps -p 21247` alive,
+25+ min elapsed, `/tmp/dcss-throughput-*` churn shows ~8+ of 50 games already
+completed and torn down, 8 still in flight — consistent with the plan, not a
+stall).
+
+Read `newgame.cc`'s `_choose_char` to confirm the (undocumented) rc `combo=`
+weapon syntax: `"SpJo.weapon name"`, split on `.` — needed this to generate
+weapon-choice combos correctly, not just guess at it.
+
+Built `ops/campaign.rc.tmpl` (a generalization of `ops/canary/canary.rc.tmpl`
+for real runs — `AUTO_START=true`/`DELAYED=false`, forced `combo=`) and
+`ops/rc-gen.py`: combines `ops/combos.py`'s sampler output with the template
+to produce (a) the write-ahead manifest row §6 requires before launch (run
+ID, character, seeds, crawl commit, rc template hash) and (b) the materialized
+rc file + save/morgue directory layout a launch needs. Confirmed `c_persist`
+(§7 cross-game memory) needs no explicit clearing code: crawl's clua persist
+API keys it to the save under `-dir`/`-name`, and every run already gets a
+fresh unique pair of both — documented this reasoning inline rather than
+adding dead code to "clear" something that can't be populated yet.
+
+Built `ops/rc-gen-test.py`, an integration smoke test: samples 5 characters
+(seeds 0-4, chosen because they already cover both a weapon-choice combo,
+`FeFi.unarmed`, and a plain combo, `OnEE`, without needing to hunt for more),
+materializes each via `rc-gen.py`, and confirms the pinned binary actually
+accepts the generated rc and reaches the "Welcome," chargen banner — proving
+the sampler → rc-gen → crawl handoff works end to end, not just that the
+Python code runs. Hit real timing flakiness while building it: with the
+throughput campaign's 8 concurrent crawl+lua processes competing for
+CPU/disk, even a 40s expect-timeout produced one spurious failure
+(`SpCA.falchion`); hand-verified via a manual `script`-wrapped run under the
+same load that the game had in fact reached "Welcome," and full chargen
+(`dbgSpCA the Spriggan Cinder Acolyte`, `-1 falchion (flame)` equipped) — it
+was just slower than the timeout, not broken. Bumped the test's timeout to
+60s and documented why in a comment (this is a real, load-dependent
+timing fact worth remembering, not a one-off fluke to shrug off — if a
+future runner's hang-detection thresholds are tuned only under idle-machine
+conditions they'll misfire under real campaign concurrency). Reran clean:
+5/5 pass.
+
+Committed both pieces (`429a15c` → rebased to `9e60ad1` after a push
+rejection from a concurrent session's unrelated systemd-supervisor commit,
+`9efea34` — no file overlap, clean rebase, matches the recovery pattern
+`docs/decisions` already established for this).
+
+**Result:** Phase 1 now has two tested, independent building blocks done:
+the §2 sampler (`combos.py`) and the launch-artifact generation
+(`rc-gen.py`) that turns a sampled character into something crawl will
+actually run. Both proven against the real pinned binary, not just unit
+logic. Still not started: the runner state machine itself (§6 terminal-
+status classification off real process/output signals, write-ahead
+accounting persistence, progress-based hang detection), the collector, and
+the outcome-vector report. Phase 0 still open on the same two items as
+before: throughput report, rune-milestone verification.
+
+Checked the probe once more before ending this entry: still running,
+unchanged status. **Leaving it running across this session boundary again.**
+
+**Next step:** First: collect the throughput probe result (`ps -p 21247`,
+`data/throughput-report.json`) — same instructions as the last two entries,
+not repeating them a third time, just: do this first. Then Phase 1's next
+piece is the runner state machine proper: a `runner.py` that takes a
+manifest row from `rc-gen.py`, launches crawl (reusing the CLO-building
+pattern `rc-gen.py`'s `write_run_dir` already returns), and classifies the
+outcome into exactly one of the §6 terminal statuses (`won | died |
+quit_intentional | quit_stuck | lua_error | crashed | timeout_turns |
+timeout_wall | invalid_telemetry | harness_failure`) using turn-count
+instrumentation (not just wall-clock, which `run-canary.py`/
+`throughput-probe.py` use as a stand-in — real turn-budget tracking needs
+reading `you.turns`/similar from clua or the logfile, not built yet) plus
+progress-based hang detection (no save/logfile/message mtime change for N
+minutes — the specific N is a throughput-report-informed choice, still
+pending). Forced-failure drills (induced Lua error, `kill -9`, hang) are
+Phase 1's exit criterion for this piece and should be written alongside it,
+the same way `sampler-test.py`/`rc-gen-test.py` were written alongside their
+subjects this session — don't build the classifier and defer testing it.
