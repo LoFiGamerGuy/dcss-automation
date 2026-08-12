@@ -739,32 +739,89 @@ is collecting data for. No committed campaign data exists yet
 (`data/runs/` only has this pilot's still-in-flight `pilot-turns-*` dirs,
 not committed — they're intermediate pilot data, not the real campaign).
 
-**Next step:** Check `ps -p 28802` / `logs/pilot-turns-campaign.log` /
-`data/pilot-turns-summary.json`. Once done (or even partially done — the
-per-run `data/runs/pilot-turns-*/result.json` files land incrementally, so
-partial data can be inspected without waiting for full completion if this
-session needs to end first): run `ops/collector.py --runs-dir data/runs
---db /tmp/pilot.db` (or a fresh scratch DB — don't overwrite
-`data/campaign.db` if a real campaign has since started using it) and
-`ops/report.py --db /tmp/pilot.db`, filtering to the `pilot-turns-*` run_ids
-if the real campaign has also started, and read the `turns_survived`
-percentiles for `died`/`quit_stuck` runs (natural ends only — exclude
-`timeout_wall` runs, whose turn count is censored by the wall cap, not a
-real endpoint). Pick a turn-budget from that (e.g., somewhat above p95, so
-the budget rarely truncates a natural run but still bounds the survivors
-that would otherwise sit at the wall cap) and record the choice + reasoning
-in `docs/decisions/008-turn-budget.md`. Delete/don't commit the
-`pilot-turns-*` run directories once the number is extracted (they're
-throwaway calibration data, not campaign data — `data/runs/` should hold
-only the real ≥500-game campaign when that starts). Then launch the real
-campaign with `--turn-budget <chosen>`, `--run-prefix campaign` (or similar,
-distinct from `pilot-turns`), sized for ≥500 games, **started detached**
-with PID/log recorded here before it's kicked off, since at even a
-turn-budget-shortened per-game time this will run for a long while at
-real campaign scale. After it completes (or once enough of it has, on a
-later session), run `collector.py --strict` + `report.py` and commit
-`data/campaign.db` + the generated report — that combination is Phase 1's
-"running success for the project" per `PROMPT.md`.
+**Update, same session — pilot contamination found, root-caused, fixed,
+relaunched clean:** Rather than idle-wait on the pilot (PID 28802), used
+the window to (a) verify Phase 1's "god policy v0" deliverable and (b) build
+the §7 fairness probe test — both real, useful, independent work (see the
+two entries below), each committed separately. But doing that work meant
+running my *own* concurrent crawl+qw processes (several
+`fairness-probe-test.py` debug iterations, a `campaign-test.py` run) on the
+same machine *while* the 10-worker pilot was also running in the
+background — exactly the kind of self-inflicted contention `CLAUDE.md`'s
+"leave headroom" guidance is meant to prevent, and it bit here even though
+raw CPU headroom existed (24 cores, only ~17 processes peak).
+
+Caught it before trusting the data: checked pilot progress and found **all
+30 completed runs classified `timeout_wall` with a near-identical
+`wall_secs` (~248-250s) and `output_bytes` around 2KB** (i.e. essentially
+zero pty output past the initial Welcome banner, for every single sampled
+character regardless of species/class) — far too uniform to be organic
+per-character gameplay variance, and 248s matches the hang path's own
+arithmetic almost exactly (120s hang detect + up to another 120s grace-save
+window + overhead). Investigated rather than assumed a runner bug:
+- A single isolated manual replay of the *exact same* character/seed
+  (`char_seed=0` → `FeFi.unarmed`, `game_seed=500000`) died naturally in
+  1.2s with 415KB of real output — so the rc/character/turn_budget=0
+  combination is not inherently broken.
+- A clean re-run of `campaign.py` with the same seeds at **2 workers**: all
+  4 died normally, no hangs.
+- A clean re-run at **10 workers** (matching the pilot): 9/10 died
+  normally, 1 `lua_error` — no hangs either.
+
+Both clean re-tests (including at the pilot's own worker count) came back
+healthy once nothing else was competing for the machine, which points at
+transient contention from my own concurrent foreground work during the
+original window, not a `campaign.py`/`runner.py` defect. Discarded the
+contaminated `data/runs/pilot-turns-*` (all 30, deleted, plus the debug
+scratch dirs in `/tmp`) rather than trying to salvage or use any of it — it
+would only skew the turn-count distribution this pilot exists to measure.
+
+**Relaunched clean**, same command as originally, and this time deliberately
+not running other crawl-spawning work in the foreground while it's up:
+
+    nohup python3 ops/campaign.py --n-games 40 --workers 10 --turn-budget 0 \
+      --wall-cap-secs 900 --run-prefix pilot-turns --runs-dir data/runs \
+      --out data/pilot-turns-summary.json > logs/pilot-turns-campaign.log 2>&1 &
+
+PID **30813** (disowned), confirmed running.
+
+**Result:** Phase 1 building blocks unchanged from the prior entry (all
+five pieces done and tested) plus two more real pieces landed this session:
+god policy v0 verified as already satisfied by qw's own defaults
+(`docs/decisions/008`, no code change needed), and a live fairness probe
+for the §7 monster-visibility claim (`ops/fairness-probe-test.py`,
+`docs/decisions/009`) — found the API's bounds guarantee is stronger than
+PLAN's own description (a hard Lua error beyond LOS radius, not just a nil),
+and hit + fixed a real `crawl.mpr()` message-loss bug along the way (fixed
+via `crawl.stderr()`). Turn-budget is still the one open item, now
+correctly in flight on clean data.
+
+**Next step:** Check `ps -p 30813` / `logs/pilot-turns-campaign.log` /
+`data/pilot-turns-summary.json`. **Do not run other crawl-spawning
+processes in the foreground while it's up** — that's exactly what
+contaminated the first attempt. Once done (or partially done — per-run
+`data/runs/pilot-turns-*/result.json` files land incrementally): run
+`ops/collector.py --runs-dir data/runs --db /tmp/pilot.db` (a scratch DB,
+don't overwrite `data/campaign.db`) and `ops/report.py --db /tmp/pilot.db`,
+and read the `turns_survived` percentiles for `died`/`quit_stuck` runs
+(natural ends only — exclude `timeout_wall`, whose turn count is censored,
+not a real endpoint). Before trusting the numbers this time, sanity-check
+`output_bytes`/`wall_secs` aren't suspiciously uniform across runs the way
+the contaminated batch was. Pick a turn-budget (e.g. somewhat above p95)
+and record it + reasoning in `docs/decisions/010-turn-budget.md` (009 is
+now taken by the fairness-probe-scope note). Delete/don't commit the
+`pilot-turns-*` run directories once the number is extracted — throwaway
+calibration data, not campaign data. Then launch the real campaign with
+`--turn-budget <chosen>`, a `--run-prefix` distinct from `pilot-turns`,
+sized for ≥500 games, **started detached** with PID/log recorded here
+before it's kicked off — and this time, once it's running, actually leave
+it alone rather than doing more concurrent crawl-spawning work in the same
+session; use the wait for genuinely CPU-light work only (docs, review,
+reading), or just end the session and let it run. After it completes (or
+enough of it has, on a later session), run `collector.py --strict` +
+`report.py` and commit `data/campaign.db` + the generated report — that
+combination is Phase 1's "running success for the project" per
+`PROMPT.md`.
 
 **Next step (superseded by the entry above — kept for history only):**
 Build the campaign driver: a `ops/campaign.py` (or similar)
