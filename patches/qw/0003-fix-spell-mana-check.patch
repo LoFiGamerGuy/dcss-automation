@@ -1,0 +1,49 @@
+diff --git a/source/plans-spells.lua b/source/plans-spells.lua
+index 76c6998..68eacdf 100644
+--- a/source/plans-spells.lua
++++ b/source/plans-spells.lua
+@@ -24,12 +24,43 @@ function spell_range(sp)
+     end
+ end
+ 
++-- can_use_mp(mp) (player.lua) returns true when the mana (or, for a
++-- Djinni, hp) cost is affordable -- every other call site in this codebase
++-- (religion.lua's ability gates) uses it that way, `and can_use_mp(cost)`,
++-- to permit an action only when affordable. spell_castable()'s original
++-- `or can_use_mp(...)` term inside this `if ... then return false` guard
++-- was backwards: it declared the spell not castable exactly when it WAS
++-- affordable, and fell through to castable=true exactly when it was NOT --
++-- effectively disabling the one attack spell qw's whole caster combat
++-- cascade (plans-attack.lua's plan_starting_spell, ahead of melee/throwing/
++-- launcher) relies on, whenever the character actually had the mana to use
++-- it. Matches the phase1-500 baseline data exactly: caster archetype (42.8%
++-- of the sampled population) dead last on every outcome axis (median score
++-- 8 vs 44-109 for other archetypes, median XL 2 vs 3-4). Confirmed live:
++-- docs/decisions/014. QW_BUGFIX_SPELL_MANA_CHECK (rc-settable, default
++-- true/unset) can be set to false to disable this guard and reproduce the
++-- original inverted behavior, for the Phase 2 A/B experiment's control arm.
++-- affordable optional and defaulting to can_use_mp(spells.mana_cost(sp))
++-- (rather than always reading it internally) so a test can drive both
++-- branches directly by value without needing to actually be in either MP
++-- state in a real game -- same reasoning as qw_transform_is_indefinite's
++-- explicit transform_name override (docs/decisions/012).
++function qw_spell_uncastable_for_mana(sp, affordable)
++    if affordable == nil then
++        affordable = can_use_mp(spells.mana_cost(sp))
++    end
++    if QW_BUGFIX_SPELL_MANA_CHECK == false then
++        return affordable
++    end
++    return not affordable
++end
++
+ function spell_castable(sp)
+     if you.silenced()
+             or you.confused()
+             or you.berserk()
+             or in_bad_form()
+-            or can_use_mp(spells.mana_cost(sp)) then
++            or qw_spell_uncastable_for_mana(sp) then
+         return false
+     end
+ 

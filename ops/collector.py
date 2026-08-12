@@ -96,6 +96,7 @@ CREATE TABLE runs (
     hang_secs INTEGER,
     bugfix_lua_errors INTEGER,
     bugfix_indefinite_transform INTEGER,
+    bugfix_spell_mana_check INTEGER,
     started_at REAL,
     reconciled INTEGER,
     status TEXT,
@@ -238,8 +239,9 @@ def build_db(runs_dir, db_path, strict=False, now=None):
 
         bugfix_lua_errors = manifest_row.get("bugfix_lua_errors")
         bugfix_indefinite_transform = manifest_row.get("bugfix_indefinite_transform")
+        bugfix_spell_mana_check = manifest_row.get("bugfix_spell_mana_check")
         conn.execute(
-            "INSERT INTO runs VALUES (" + ",".join(["?"] * 33) + ")",
+            "INSERT INTO runs VALUES (" + ",".join(["?"] * 34) + ")",
             (
                 run_id,
                 manifest_row.get("char_seed"),
@@ -251,6 +253,8 @@ def build_db(runs_dir, db_path, strict=False, now=None):
                 None if bugfix_lua_errors is None else int(bool(bugfix_lua_errors)),
                 None if bugfix_indefinite_transform is None
                     else int(bool(bugfix_indefinite_transform)),
+                None if bugfix_spell_mana_check is None
+                    else int(bool(bugfix_spell_mana_check)),
                 manifest_row.get("started_at"),
                 reconciled, status, detail,
                 (result or {}).get("wall_secs"), (result or {}).get("output_bytes"),

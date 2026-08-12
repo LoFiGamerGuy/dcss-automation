@@ -31,6 +31,17 @@ combo = __COMBO__
 # of "false" reproduces the original stall, for the experiment's control arm.
 : QW_BUGFIX_INDEFINITE_TRANSFORM = __BUGFIX_INDEFINITE_TRANSFORM__
 
+# Phase 2 A/B flag (docs/decisions/014): guards plans-spells.lua's
+# spell_castable() mana-affordability check, which had can_use_mp()'s
+# sense inverted -- blocking the cast exactly when affordable and
+# "allowing" it exactly when not, effectively disabling qw's one attack
+# spell (the primary damage source for the caster archetype, 42.8% of the
+# sampled population) whenever there was mana to spend it with.
+# Default/unset behaves as true (fix applied); __BUGFIX_SPELL_MANA_CHECK__
+# of "false" reproduces the original inverted check, for the experiment's
+# control arm.
+: QW_BUGFIX_SPELL_MANA_CHECK = __BUGFIX_SPELL_MANA_CHECK__
+
 # Harness-enforced turn budget (PLAN.md §6 timeout_turns) — distinct from
 # qw's own QUIT_TURNS "stuck" detection (line ~103 of qw.rc, that's
 # quit_stuck). clua has no io/os library (clua.cc: LUA_IOLIBNAME/OSLIBNAME

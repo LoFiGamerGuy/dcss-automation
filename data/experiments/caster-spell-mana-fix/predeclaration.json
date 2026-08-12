@@ -1,0 +1,21 @@
+{
+  "alpha": 0.05,
+  "arms": {
+    "control": {
+      "bugfix_spell_mana_check": false,
+      "description": "QW_BUGFIX_SPELL_MANA_CHECK=false, reproduces original inverted check"
+    },
+    "treatment": {
+      "bugfix_spell_mana_check": true,
+      "description": "QW_BUGFIX_SPELL_MANA_CHECK=true (default), guard active"
+    }
+  },
+  "baseline_ref": "data/phase1-500.db",
+  "direction": "increase",
+  "hypothesis": "docs/decisions/014: patching qw.lua plans-spells.lua's spell_castable() so its mana-affordability check is no longer inverted (the original `or can_use_mp(...)` term blocked casting exactly when the mana was affordable, and let it through exactly when it wasn't) increases the population-wide xl_at_least_3_rate versus the phase1-500 baseline (232/500 = 46.4% overall; caster archetype alone, 42.8% of the sampled population, was 61/214 = 28.5%, far behind hybrid/melee/utility), gated by QW_BUGFIX_SPELL_MANA_CHECK.",
+  "minimum_effect": 0.03,
+  "name": "caster-spell-mana-fix",
+  "primary_outcome": "xl_at_least_3_rate",
+  "sample_size_per_arm": 300,
+  "seed_split": "validation"
+}

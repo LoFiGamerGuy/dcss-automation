@@ -323,7 +323,8 @@ def monitor_game(cmd, workdir, logfile_path, *, run_id="run",
 
 def run_game(row, workdir, *, turn_budget=0, wall_cap_secs=DEFAULT_WALL_CAP_SECS,
              hang_secs=DEFAULT_HANG_SECS, welcome_timeout_secs=DEFAULT_WELCOME_TIMEOUT_SECS,
-             bugfix_lua_errors=True, bugfix_indefinite_transform=True):
+             bugfix_lua_errors=True, bugfix_indefinite_transform=True,
+             bugfix_spell_mana_check=True):
     """Write-ahead manifest -> materialize rc -> spawn -> supervise ->
     classify -> result.json. This is the entry point a campaign driver
     uses; monitor_game() is the lower-level piece drills use directly.
@@ -334,7 +335,10 @@ def run_game(row, workdir, *, turn_budget=0, wall_cap_secs=DEFAULT_WALL_CAP_SECS
     hashes").
 
     bugfix_indefinite_transform (default True) is docs/decisions/012's
-    Phase 2 A/B flag, same threading/provenance treatment."""
+    Phase 2 A/B flag, same threading/provenance treatment.
+
+    bugfix_spell_mana_check (default True) is docs/decisions/014's Phase 2
+    A/B flag, same threading/provenance treatment."""
     # Resolve before use: rc_gen.write_run_dir also resolves, but the
     # manifest/result paths and crawl's cwd must agree with it no matter
     # what shape of path the caller handed us (see write_run_dir's docstring
@@ -346,6 +350,7 @@ def run_game(row, workdir, *, turn_budget=0, wall_cap_secs=DEFAULT_WALL_CAP_SECS
         **row, "turn_budget": turn_budget, "wall_cap_secs": wall_cap_secs,
         "hang_secs": hang_secs, "bugfix_lua_errors": bugfix_lua_errors,
         "bugfix_indefinite_transform": bugfix_indefinite_transform,
+        "bugfix_spell_mana_check": bugfix_spell_mana_check,
         "started_at": time.time(),
     }
     (workdir / "manifest.json").write_text(json.dumps(manifest_row, default=str))
@@ -353,7 +358,8 @@ def run_game(row, workdir, *, turn_budget=0, wall_cap_secs=DEFAULT_WALL_CAP_SECS
     try:
         layout = rc_gen.write_run_dir(row, workdir, turn_budget=turn_budget,
                                        bugfix_lua_errors=bugfix_lua_errors,
-                                       bugfix_indefinite_transform=bugfix_indefinite_transform)
+                                       bugfix_indefinite_transform=bugfix_indefinite_transform,
+                                       bugfix_spell_mana_check=bugfix_spell_mana_check)
     except Exception as e:
         result = {"run_id": row["run_id"], "status": "harness_failure",
                    "detail": f"write_run_dir failed: {e}", "wall_secs": 0, "output_bytes": 0,
@@ -387,6 +393,9 @@ def main():
     ap.add_argument("--disable-bugfix-indefinite-transform", action="store_true",
                      help="reproduce the original qw indefinite-transform rest stall "
                           "(docs/decisions/012); for the Phase 2 A/B experiment's control arm")
+    ap.add_argument("--disable-bugfix-spell-mana-check", action="store_true",
+                     help="reproduce the original qw inverted spell-mana-affordability check "
+                          "(docs/decisions/014); for the Phase 2 A/B experiment's control arm")
     args = ap.parse_args()
 
     if not CRAWL_BIN.exists():
@@ -398,7 +407,8 @@ def main():
     result = run_game(row, args.workdir, turn_budget=args.turn_budget,
                        wall_cap_secs=args.wall_cap_secs, hang_secs=args.hang_secs,
                        bugfix_lua_errors=not args.disable_bugfix_lua_errors,
-                       bugfix_indefinite_transform=not args.disable_bugfix_indefinite_transform)
+                       bugfix_indefinite_transform=not args.disable_bugfix_indefinite_transform,
+                       bugfix_spell_mana_check=not args.disable_bugfix_spell_mana_check)
     print(json.dumps(result, indent=2, default=str))
     sys.exit(0 if result["status"] in ("won", "died", "quit_intentional", "quit_stuck") else 1)
 
