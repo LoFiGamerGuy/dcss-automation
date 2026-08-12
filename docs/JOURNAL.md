@@ -580,3 +580,114 @@ an actual turn-budget number decided (still open — this session's
 throughput data only measured wall-clock, not turns; a quick way in: sample
 final `turn=` fields from a handful of the `data/runs/` results once the
 collector/driver exist, rather than guessing one up front).
+
+## 2026-08-12 — Collector + outcome-vector report built and tested
+
+**Did:** No long-running campaigns were left in flight from prior sessions
+(checked `ps`/`logs/` first — nothing running, throughput report already
+committed). Built the last Phase-1 piece before the real ≥500-game campaign.
+
+Read the actual `manifest.json`/`result.json` shapes `ops/runner.py` writes
+(re-derived from source rather than assumed) and confirmed the milestones
+file path convention (`<workdir>/saves/saves/milestones-seeded`, same
+double-`saves/` nesting as the logfile) by cross-reading
+`ops/telemetry-test.py`. Grepped every `mark_milestone(...)` call site in
+the pinned crawl source to get the exact type strings PLAN §1's per-branch
+vector needs: `br.enter` (branch entered) and `br.end` (branch end reached,
+distinct from `br.exit` which just means "left" — the plan's exact phrase
+"branch end reached" maps to `br.end`, not `br.exit`) — this is a fact I
+would otherwise have guessed wrong. Confirmed logfile-row field names
+straight from `hiscores.cc`: `xl`, `urune` (present only when >0, defaults
+to absent/0 otherwise — collector coalesces that), `sc` (score), `turn`.
+
+PLAN §1 requires stratifying by "species, background, and archetype" but
+never defines archetype — invented one from objective fields in the pinned
+`job-data.h` (has starting spells × has a weapon choice → caster/hybrid/
+melee/utility, covers all 25 current jobs with no leftovers) rather than
+from memory of general DCSS lore, and wrote up the reasoning and the
+rejected alternative (deferring the field entirely) in
+`docs/decisions/007-archetype-classification.md`.
+
+Built `ops/collector.py`: `build_db(runs_dir, db_path, strict=False)` does a
+from-scratch SQLite rebuild (JSON files are the source of truth, not the
+DB, so no incremental-update state to get out of sync) with two tables
+(`runs`, `milestones`). The reconciliation invariant (§6: "every scheduled
+run appears exactly once with a terminal status") is enforced by
+construction — every `manifest.json` found produces exactly one `runs` row.
+A manifest with no `result.json` is *not* automatically a failure: since no
+PID is recorded, "still running" and "runner process was killed externally"
+look identical from outside, so it's split by a grace-period heuristic off
+the manifest's own `started_at`/`wall_cap_secs`/`hang_secs` (+ a fixed
+buffer for teardown overhead) into `pending` (excluded from the invariant)
+vs. `harness_failure` (counted, attributed, never dropped). `--strict`
+(for a campaign driver that already knows every worker has exited)
+collapses the ambiguity: nothing stays `pending`. Species/background are
+decoded from the sampled combo against `data/manifests/legal-characters.json`,
+keyed by the run's own `crawl_commit` so a future re-pin mismatch warns
+loudly instead of silently mislabeling.
+
+Built `ops/report.py`: `generate(db_path)` is a pure function of the DB
+(no wall-clock reads, every dict/list sorted) producing the §1 outcome
+vector — terminal-status distribution, win/rune rates, rune-count
+distribution, XL/score/turns percentiles, per-branch entered/end-reached
+rates (from the `milestones` table, not just the single final logfile row,
+which only has the *last* place visited), and death-cause counts — broken
+out overall and by each of species/background/archetype per §1's
+stratification requirement.
+
+Built `ops/collector-test.py` (Phase 1 exit-criterion test): four synthetic
+run fixtures (a won run with 3 runes and a Lair enter+end, a died run, a
+genuinely-recent pending run, and a stale run past its budget+grace) —
+verifies the reconciliation invariant holds in both strict and non-strict
+modes with the right counts in each, stratification correctness
+(species/background/archetype buckets contain exactly the expected runs),
+and report byte-identical reproducibility (`report.generate()` called twice
+against an unchanged DB produces identical JSON text). Deliberately uses
+hand-built fixtures rather than a real campaign — this tests the
+collector/report logic itself; `runner-drills-test.py` and this session's
+own spot-check (below) already prove `runner.py` produces exactly this
+manifest/result shape against the real binary. **Passes.**
+
+Fixed one bug while building it: the `runs` table has 31 columns but the
+first INSERT used a 29-`?` placeholder string (silent miscount, caught
+immediately by `sqlite3.OperationalError`, not a logic bug that could have
+passed silently) — replaced with a generated `",".join(["?"] * 31)` so the
+placeholder count can't drift from the column count again.
+
+Spot-checked end-to-end against a real (non-synthetic) run: ran
+`ops/runner.py` once against the live pinned binary (`char_seed=42`,
+sampled `CoAl` — Coglin Alchemist), fed its real `manifest.json`/
+`result.json` through `collector.py`/`report.py`, and confirmed the decoded
+species/background/archetype (`Coglin`/`Alchemist`/`caster`) and the
+death-cause/XL/turn numbers in the report matched the run's actual logfile
+row by hand inspection. Scratch dirs were in `/tmp`, not committed.
+
+**Result:** Phase 1 now has all four building blocks: sampler, rc
+generation, runner state machine, and collector+report — each independently
+tested against the real pinned binary or, for the collector/report (which
+don't need crawl at all to test their own logic), against realistic
+synthetic fixtures plus one real spot-check. **Not yet built:** the actual
+campaign driver (parallel `runner.py` invocations at scale, writing into
+`data/runs/<run_id>/`) and the real ≥500-game campaign itself — everything
+up to this point has been machinery, not a completed campaign. No
+long-running process was started this session (nothing to leave running
+across the boundary).
+
+**Next step:** Build the campaign driver: a `ops/campaign.py` (or similar)
+that mirrors `ops/throughput-probe.py`'s `ProcessPoolExecutor` pattern but
+calls `runner.run_game()` for real (turn-budget-bearing) runs across N
+sampled characters, writing each into its own `data/runs/<run_id>/`
+directory, with `char_seed` drawn from a dedicated counter/RNG stream
+(never reusing `game_seed`, per §2) — this is what actually produces the
+≥500-game campaign data Phase 1's exit criterion needs. Before or alongside
+it, decide the turn-budget number (still genuinely open — only wall-clock
+was measured in the Phase 0 throughput probe): a cheap way in is to sample
+`turn=` from a first small batch of real `data/runs/` results via
+`ops/collector.py`+`ops/report.py` (now built) and pick a budget from that
+distribution, rather than guessing one before any data exists. Once the
+driver exists and turn-budget is chosen: run the parallel-isolation check
+(N concurrent workers, assert zero cross-contamination — directory
+isolation is already correct by construction in `rc-gen.py`/`runner.py` but
+unverified under real concurrent load) as part of launching the real
+≥500-game campaign, started **detached** per `CLAUDE.md` since it will run
+for hours, with the PID/log path recorded here *before* starting it.
