@@ -1640,3 +1640,119 @@ closes, resume mining `data/phase1-500-report.json`'s stratified tables
 for the next Phase 2 candidate (Troll/Felid lua_error clusters are likely
 already covered by decision 011's two fixes, not a new bug — check before
 assuming otherwise).
+
+## 2026-08-12 (session 4) — confirmed 011/012 fully explain their clusters (no new bugs); found casters are the real next Phase 2 target; treatment-arm retry campaign still fighting the unresolved intermittent race
+
+**Did:** Picked up the prior session's retry-wrapper (`ops/run-indefinite-
+transform-treatment-with-retry.sh`, PID **55313**, `setsid nohup bash ... &
+disown`) — still alive, launched moments before this session started
+(confirmed via `ps` elapsed time, not a stale carryover). Before touching
+it, did the two checks the prior entry queued up, both read-only against
+existing `data/runs/phase1-500-*` artifacts (no new crawl processes
+spawned, out of caution while the retry campaign has the machine):
+
+1. **Troll/Felid `lua_error` clusters (decision 011 follow-up):** grepped
+   all 9 Troll/Felid `lua_error` runs' `morgue/*.txt` crash text. All 9
+   land on exactly one of decision 011's two already-fixed bugs (5 at the
+   `cur_equip` boolean-index site, 4 at `hostile_servants_timer`) — no
+   third signature. **No new bug.**
+2. **Multi-species `quit_stuck` spread (decision 012 follow-up):** every
+   one of phase1-500's 28 `quit_stuck` runs' sampled `combo`
+   (`manifest.json`) ends in `Sh` — 17 different species, all
+   Shapeshifter-background. The species-level spread in the report is
+   this one background's failures landing on whatever species sampled it,
+   not independent per-species bugs. **No new bug**, and decision 012's
+   fix should clear (most of) `quit_stuck` across every species-level row
+   that showed it, not just the `by_background: Shapeshifter` row.
+
+Appended both findings as addenda to `docs/decisions/011` and `012` and
+committed (`1cf6e12`, pushed) — this is real, useful confirmation that
+saves a future session from re-opening either as a fresh investigation.
+
+**New finding while looking for the next candidate:** rather than default
+to PLAN.md §352-359's example list, pulled `by_archetype` medians from
+`data/phase1-500-report.json` directly. Casters are 214/500 (42.8%) of the
+sampled population — the single largest archetype bucket — and are far
+behind every other archetype on every outcome axis: median score **8**
+(vs. 44 melee, 109 hybrid, 27 utility), median XL **2** (vs. 3-4), median
+turns survived **330** (vs. 1299-2589). This is a direct, data-backed
+confirmation of PLAN.md's "casters played as weak melee" concern (line
+~144), not just an assumption carried over from the plan text — and
+because casters are nearly half the sampled population, fixing this has
+the largest possible leverage on the project's overall floor of any
+candidate on PLAN's list. **This is the recommended next Phase 2 item**,
+ahead of the Felid/Mummy/Gnoll/Djinn/Formicid/Demigod species-specific
+items PLAN also lists — those are each a much smaller slice of the
+population. Before starting: read `vendor/qw/source/plans-spells.lua`
+(exists — qw does have *some* built-in spellcasting planning already, so
+the actual gap needs to be characterized from source + a scripted repro,
+not assumed to be "zero spellcasting logic" outright) to find what qw's
+existing caster logic actually does and doesn't do, the same
+source-first discipline decisions 006/011/012 already used.
+
+**Treatment-arm retry campaign — still unresolved, not newly diagnosed.**
+Watched attempt 1/6 for the bulk of this session (via a persistent
+background `Monitor` on the log rather than manual polling): as of this
+entry, **144/144 (100%) `harness_failure`**, zero organic completions,
+`wall_secs` uniformly ~60.15s per the by-now-familiar signature. This is
+not new evidence beyond what `docs/decisions/013` already documents (full
+300-scale attempts have both succeeded and failed 100% with literally no
+code difference between some pairs); considered and rejected one new
+hypothesis before writing it down as a lead — checked whether the retry
+wrapper's structural shape (each attempt's `python3 ops/campaign.py`
+sharing its SID with the already-`setsid`'d wrapper `bash`, rather than
+being its own session leader) explains the failure, since that topology
+matches the original chained-launch failure that started this
+investigation. Confirmed via `ps -o pid,ppid,pgid,sid` that this is indeed
+the case here (55313 bash and 55315 python3 share SID 55313) — **but**
+decision 013 already recorded that a *genuinely* standalone
+`setsid`-owning python3 invocation also reproduced 100% failure once, so
+this doesn't actually distinguish the failing case from a working one;
+not chased further as a fix, recorded here only so a future session
+doesn't waste time re-deriving and then re-discarding the same idea.
+
+Did not intervene in the running retry loop — per `CLAUDE.md`'s
+diminishing-returns guidance and decision 013's own conclusion that this
+needs kernel-level tooling budget not available this session either.
+Left it running, detached, unattended, monitored via the background
+`Monitor` task rather than blocking on it.
+
+**Result:** Two real, committed confirmations (011/012 addenda) plus a
+concrete, data-justified recommendation for the next Phase 2 item
+(caster spellcasting) once the current experiment closes. The
+indefinite-transform-bugfix experiment's control arm is done and healthy
+(`data/experiments/indefinite-transform-bugfix/control-summary.json`,
+still uncommitted — bundling with the treatment-arm artifacts once both
+exist, matching this project's per-experiment single-commit convention).
+Treatment arm still not collected; attempt 1/6 of the retry wrapper is
+very likely to finish at or near 300/300 `harness_failure` given the
+sustained signature, at which point the wrapper auto-purges and starts
+attempt 2 unattended.
+
+**Next step:** Check `pgrep -fa
+run-indefinite-transform-treatment-with-retry` (PID 55313) and `tail
+logs/indefinite-transform-treatment-retry-wrapper.log` for further
+`== attempt N/6 ==` lines and each attempt's purge-count output. If it
+eventually reaches `== no welcome-timeout failures left, done ==` with a
+non-empty, organic-looking (not uniform) final run set: sanity-check per
+the last three entries' checklist, then `ops/collector.py --runs-dir
+data/runs --db data/experiments/indefinite-transform-bugfix/results.db
+--strict`, compute each arm's `quit_stuck` count/n, run
+`experiment.evaluate_predeclaration`, commit
+`{results.db,result.json,control-summary.json,treatment-summary.json}`.
+If it instead reaches `== retry budget exhausted ==` with runs still
+purged-and-unretried after all 6 attempts: **do not silently use partial
+data** — this would mean purge-and-retry has stopped being a viable
+mitigation for whatever is happening right now on this machine/session,
+which is new information worth its own decision-013 addendum. In that
+case, options to consider in order of cost: (a) simply try the whole
+wrapper again fresh (this project has seen both 100%-fail and 100%-pass
+full launches with zero code difference, so a full retry of the retry
+itself is not unreasonable), (b) raise `MAX_ATTEMPTS` and/or don't purge
+between attempts as aggressively, (c) escalate to the `strace -f`-from-
+`fork()` comparison decision 013 flagged as the next real diagnostic step
+if this recurs, which no session has done yet. Once the experiment
+closes (success or documented-exhausted), start the caster-spellcasting
+Phase 2 item: read `plans-spells.lua` first, characterize the actual gap
+against a scripted repro before writing any fix, per this project's
+established source-first discipline.
