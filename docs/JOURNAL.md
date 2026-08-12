@@ -1001,3 +1001,78 @@ as the last two entries (collector+report on a scratch DB, pick a turn
 budget from `turns_survived` percentiles of natural-end runs, record
 `docs/decisions/010-turn-budget.md`, delete pilot run dirs, launch the real
 ≥500-game campaign with the chosen budget, detached the same hardened way).
+
+## 2026-08-12 (cont.) — Pilot survived with setsid hardening; turn budget chosen; real ≥500-game campaign launched
+
+**Did:** Checked on the pilot relaunched earlier this session (PID 33276,
+`setsid nohup ... & disown`). It **survived and completed**: process exited
+cleanly, all 40/40 runs produced `result.json` in ~161s. This confirms the
+working theory from the prior entry — plain `nohup ... &` without `setsid`
+did not survive this harness's session/turn boundary, `setsid` does. Every
+future detached launch in this project should use the same
+`setsid nohup ... > log 2>&1 < /dev/null & disown` form.
+
+Sanity-checked the pilot data wasn't a repeat of the earlier relative-path
+contamination bug (642e3ec) before trusting it: 40/40 unique `char_seed`
+values, manifest `run_id` matches its directory name for all 40 — clean.
+Ran `ops/collector.py` against it into a scratch DB: `n_reconciled: 40,
+n_pending: 0, n_harness_failure_missing_result: 0, invariant_holds: true`.
+
+Outcome mix (n=40): 32 `died`, 4 `lua_error`, 2 `quit_stuck` (qw's own
+QUIT_TURNS at turn 8000/9000), 2 `timeout_wall` (both the 120s hang path,
+not the literal 900s cap — no run hit that in this pilot).
+`turns_survived` over the 34 natural-end (`died`+`quit_stuck`) runs:
+median 1015, p95 9595, max 11794. Confirmed `lua_error` is a real,
+distinctly-classified PLAN.md §6 terminal status, not a harness defect, and
+doesn't count against the invalid-run-rate target (that's
+`invalid_telemetry`/`harness_failure`); left as a Phase-2-relevant
+observation, not a Phase 1 blocker, per CLAUDE.md ("adapt with the smallest
+working alternative... do not stop to renegotiate").
+
+Recorded the choice in `docs/decisions/010-turn-budget.md`:
+**`--turn-budget 20000`** (~2.1x pilot p95, ~1.7x observed max — generous on
+purpose since under-budgeting biases the outcome report by misclassifying
+real deaths/quits as `timeout_turns`; turns/s accelerates sharply with game
+depth in this data, so the generous cap costs at most tens of seconds of
+extra wall-clock even for outlier survivors). `--wall-cap-secs 900` and
+`--hang-secs 120` kept at their existing defaults as the operational
+backstops under the turn budget.
+
+Deleted the pilot artifacts (`data/runs/pilot-turns-*`,
+`data/pilot-turns-summary.json`, scratch `/tmp` DB/report) — not part of
+the campaign deliverable.
+
+**Launched the real Phase 1 campaign**, detached with the confirmed-working
+hardened form:
+
+    setsid nohup python3 ops/campaign.py --n-games 500 --workers 16 \
+      --turn-budget 20000 --wall-cap-secs 900 --run-prefix phase1-500 \
+      --runs-dir data/runs --out data/phase1-500-summary.json \
+      > logs/phase1-500-campaign.log 2>&1 < /dev/null &
+    disown
+
+16 workers chosen (of 24 CPUs) to leave headroom per `CLAUDE.md`. Confirmed
+alive: driver **PID 34524** with 16 live worker children (34525-34540,
+already reparented off this shell — parent no longer this session's bash).
+Log: `logs/phase1-500-campaign.log`. Summary (on completion):
+`data/phase1-500-summary.json`. Runs land in `data/runs/phase1-500-*`
+(gitignored via the `runs/` pattern).
+
+**Result:** Real ≥500-game Phase 1 campaign running unattended. This is the
+"running success for the project" campaign PROMPT.md Phase 1 names.
+
+**Next step:** On a future invocation (or later this session if time
+allows), check `ps -p 34524` / `tail logs/phase1-500-campaign.log` /
+`data/phase1-500-summary.json`. If complete: run `ops/collector.py
+--runs-dir data/runs --db data/phase1-500.db` (this time a **committed**
+DB, not scratch) and `ops/report.py --db data/phase1-500.db --out
+data/phase1-500-report.json`, then check the Phase 1 exit bar precisely:
+reconciliation invariant holds, invalid-run rate
+(`invalid_telemetry`+`harness_failure` share) <2%, report reproduces
+byte-identically on a second run against the same DB. If all pass, Phase 1
+is exit-complete per PROMPT.md and the next session should move to Phase 2
+(§8 experiment protocol, first candidate items per PLAN.md §352-359). If
+still running: leave it, do not idle-wait — there is no other open Phase 0/1
+item, so use idle time for doc cleanup / re-verifying the existing test
+suite still passes (`ops/*-test.py`) rather than sitting idle, per
+`CLAUDE.md`'s "no invocation with zero trace" rule.
