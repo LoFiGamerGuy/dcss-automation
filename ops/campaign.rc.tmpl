@@ -1,0 +1,17 @@
+# Generated per-run campaign rc — do not hand-edit, see ops/rc-gen.py.
+# Loads qw's own rc unmodified, then its bot logic (qw.rc's own
+# `include = qw.lua` line ships commented out, see README.md "Method 1"),
+# then overrides just what a campaign run needs: non-interactive, full-speed
+# start on a specific sampled combo.
+#
+# c_persist (qw's cross-game memory, §7 of PLAN.md) is not explicitly cleared
+# here — it doesn't need to be. crawl's clua persist API keys it to the save
+# under -dir/-name, and every run gets its own freshly created, unique -dir
+# and -name (ops/rc-gen.py / the runner never reuses either across runs), so
+# each run starts with an empty c_persist by construction.
+include = qw.rc
+include = qw.lua
+
+: AUTO_START = true
+: DELAYED = false
+combo = __COMBO__
