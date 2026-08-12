@@ -673,7 +673,101 @@ up to this point has been machinery, not a completed campaign. No
 long-running process was started this session (nothing to leave running
 across the boundary).
 
-**Next step:** Build the campaign driver: a `ops/campaign.py` (or similar)
+## 2026-08-12 — Campaign driver + isolation test built; turn-count pilot running
+
+**Did:** No long-running jobs were left from prior sessions (checked
+`ps`/`logs/` first — clean). Built `ops/campaign.py`, the last missing
+Phase 1 piece: a `ProcessPoolExecutor` driver over `runner.run_game()`
+(mirrors `throughput-probe.py`'s pattern but drives the real state machine
+instead of a bare `/usr/bin/time` wrapper), writing each run into its own
+`data/runs/<run_id>/` directory. `run_id` is deterministic in
+(`--run-prefix`, `--index-start` + i), which makes the driver resumable by
+construction: re-invoking with the same args skips every run_id that
+already has a `result.json`, and safely retries any that only got as far as
+`manifest.json` (interrupted mid-run) by moving the stale directory aside
+first rather than letting crawl resume into the existing save under the
+same `-dir`/`-name` — that would silently violate §6's "no resume into
+metrics".
+
+Built `ops/campaign-test.py`, the Phase 1 "parallel-isolation test with N
+workers shows zero cross-contamination" exit criterion: ran 12 real
+concurrent games (6 workers, `--turn-budget 25` so it finishes in ~10s) and
+asserted, per run — manifest/result `run_id` matches its own directory;
+char_seed/game_seed unique across the batch; the sampled character in
+`manifest.json` exactly reproduces `combos.sample_character(char_seed)`
+standalone (would diverge under a cross-write); and no file anywhere under
+one run's directory tree mentions another run's run_id (the concrete
+signature of leaked save/rc data). Also asserted a resume pass launches
+nothing and skips all 12. Hit one real bug while building it: the test
+loads `campaign.py` dynamically via `importlib.util.module_from_spec`
+without registering it in `sys.modules`, and `ProcessPoolExecutor` pickles
+submitted functions by (module name, qualname), resolved via `sys.modules`
+in the submitting process — every one of the first run's 12 tasks came back
+`harness_failure` with `wall_secs=None` immediately (not a real game
+failure, a pickling failure) until fixed with an explicit
+`sys.modules["campaign"] = campaign` before `exec_module`. `campaign.py`
+itself didn't hit this when run directly, since as `__main__` it's already
+registered under that name — only mattered for a test importing it as a
+library. Reran after the fix: **PASS**, 12/12 self-consistent, zero
+cross-contamination, resume pass replayed nothing. Committed and pushed
+(`dddc69e`).
+
+**Turn-budget decision, still open — this is now the pilot in flight:**
+PLAN §6 wants the per-run cap to be a turn/action budget, not wall-clock
+(wall-clock caps make host load and policy speed an evaluation confound),
+but no turn-count data exists yet — Phase 0's throughput probe measured
+only wall-clock. Started a pilot campaign, `turn_budget=0` (disabled) so
+games run to their own natural end (death/quit) or the wall safety cap,
+purely to sample real `turn=` values to pick a sensible budget from:
+
+    nohup python3 ops/campaign.py --n-games 40 --workers 10 --turn-budget 0 \
+      --wall-cap-secs 900 --run-prefix pilot-turns --runs-dir data/runs \
+      --out data/pilot-turns-summary.json > logs/pilot-turns-campaign.log 2>&1 &
+
+PID **28802** (disowned), confirmed running 3s in. 10 workers of 24 CPUs
+(leaves headroom per `CLAUDE.md`). Using the Phase 0 throughput-report
+numbers as a rough estimate (46% of games hit a 900s cap rather than dying
+naturally, out of 50 at 8 workers) this should take roughly ~25-35 min
+wall-clock for 40 games at 10 workers — not started blocking on it, moving
+to other work while it runs.
+
+**Result:** Phase 1 now has all five building blocks: sampler, rc
+generation, runner state machine, collector+report, and campaign driver —
+each independently tested. The only remaining gap before the real
+≥500-game campaign is picking a turn-budget number, which the pilot above
+is collecting data for. No committed campaign data exists yet
+(`data/runs/` only has this pilot's still-in-flight `pilot-turns-*` dirs,
+not committed — they're intermediate pilot data, not the real campaign).
+
+**Next step:** Check `ps -p 28802` / `logs/pilot-turns-campaign.log` /
+`data/pilot-turns-summary.json`. Once done (or even partially done — the
+per-run `data/runs/pilot-turns-*/result.json` files land incrementally, so
+partial data can be inspected without waiting for full completion if this
+session needs to end first): run `ops/collector.py --runs-dir data/runs
+--db /tmp/pilot.db` (or a fresh scratch DB — don't overwrite
+`data/campaign.db` if a real campaign has since started using it) and
+`ops/report.py --db /tmp/pilot.db`, filtering to the `pilot-turns-*` run_ids
+if the real campaign has also started, and read the `turns_survived`
+percentiles for `died`/`quit_stuck` runs (natural ends only — exclude
+`timeout_wall` runs, whose turn count is censored by the wall cap, not a
+real endpoint). Pick a turn-budget from that (e.g., somewhat above p95, so
+the budget rarely truncates a natural run but still bounds the survivors
+that would otherwise sit at the wall cap) and record the choice + reasoning
+in `docs/decisions/008-turn-budget.md`. Delete/don't commit the
+`pilot-turns-*` run directories once the number is extracted (they're
+throwaway calibration data, not campaign data — `data/runs/` should hold
+only the real ≥500-game campaign when that starts). Then launch the real
+campaign with `--turn-budget <chosen>`, `--run-prefix campaign` (or similar,
+distinct from `pilot-turns`), sized for ≥500 games, **started detached**
+with PID/log recorded here before it's kicked off, since at even a
+turn-budget-shortened per-game time this will run for a long while at
+real campaign scale. After it completes (or once enough of it has, on a
+later session), run `collector.py --strict` + `report.py` and commit
+`data/campaign.db` + the generated report — that combination is Phase 1's
+"running success for the project" per `PROMPT.md`.
+
+**Next step (superseded by the entry above — kept for history only):**
+Build the campaign driver: a `ops/campaign.py` (or similar)
 that mirrors `ops/throughput-probe.py`'s `ProcessPoolExecutor` pattern but
 calls `runner.run_game()` for real (turn-budget-bearing) runs across N
 sampled characters, writing each into its own `data/runs/<run_id>/`
