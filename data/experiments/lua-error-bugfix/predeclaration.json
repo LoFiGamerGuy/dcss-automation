@@ -1,0 +1,21 @@
+{
+  "alpha": 0.05,
+  "arms": {
+    "control": {
+      "bugfix_lua_errors": false,
+      "description": "QW_BUGFIX_LUA_ERRORS=false, reproduces original qw crashes"
+    },
+    "treatment": {
+      "bugfix_lua_errors": true,
+      "description": "QW_BUGFIX_LUA_ERRORS=true (default), both guards active"
+    }
+  },
+  "baseline_ref": "data/phase1-500.db",
+  "direction": "decrease",
+  "hypothesis": "docs/decisions/011: patching qw.lua for the cur_equip boolean-index crash (equipment.lua) and the hostile_servants_timer nil-arithmetic crash (plans-rest.lua), gated by QW_BUGFIX_LUA_ERRORS, reduces the lua_error terminal-status rate versus the phase1-500 baseline (26/500 = 5.2%).",
+  "minimum_effect": 0.02,
+  "name": "lua-error-bugfix",
+  "primary_outcome": "lua_error_rate",
+  "sample_size_per_arm": 300,
+  "seed_split": "validation"
+}

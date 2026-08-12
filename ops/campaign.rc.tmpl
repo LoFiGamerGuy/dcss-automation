@@ -16,6 +16,13 @@ include = qw.lua
 : DELAYED = false
 combo = __COMBO__
 
+# Phase 2 A/B flag (docs/decisions/011): guards two qw upstream Lua crash
+# fixes (equipment.lua's cur_equip boolean-index, plans-rest.lua's
+# hostile_servants_timer nil-arithmetic). Default/unset behaves as true
+# (fixes applied); __BUGFIX_LUA_ERRORS__ of "false" reproduces the original
+# crashes, for the experiment's control arm.
+: QW_BUGFIX_LUA_ERRORS = __BUGFIX_LUA_ERRORS__
+
 # Harness-enforced turn budget (PLAN.md §6 timeout_turns) — distinct from
 # qw's own QUIT_TURNS "stuck" detection (line ~103 of qw.rc, that's
 # quit_stuck). clua has no io/os library (clua.cc: LUA_IOLIBNAME/OSLIBNAME

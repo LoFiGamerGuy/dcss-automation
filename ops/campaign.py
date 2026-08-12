@@ -62,11 +62,13 @@ def _ensure_fresh_workdir(workdir):
     print(f"  [{workdir.name}] interrupted run found, moved aside to {stale.name}")
 
 
-def _run_one(run_id, char_seed, game_seed, workdir, turn_budget, wall_cap_secs, hang_secs):
+def _run_one(run_id, char_seed, game_seed, workdir, turn_budget, wall_cap_secs, hang_secs,
+             bugfix_lua_errors=True):
     manifest, digest = runner.combos.load_manifest()
     row = runner.rc_gen.build_manifest_row(run_id, char_seed, game_seed, manifest, digest)
     return runner.run_game(row, workdir, turn_budget=turn_budget,
-                            wall_cap_secs=wall_cap_secs, hang_secs=hang_secs)
+                            wall_cap_secs=wall_cap_secs, hang_secs=hang_secs,
+                            bugfix_lua_errors=bugfix_lua_errors)
 
 
 def run_campaign(n_games, *, workers=8, turn_budget=0,
@@ -75,35 +77,54 @@ def run_campaign(n_games, *, workers=8, turn_budget=0,
                   run_prefix="campaign", index_start=0,
                   char_seed_base=DEFAULT_CHAR_SEED_BASE,
                   game_seed_base=DEFAULT_GAME_SEED_BASE,
-                  runs_dir=DEFAULT_RUNS_DIR):
+                  runs_dir=DEFAULT_RUNS_DIR,
+                  bugfix_lua_errors=True, char_seeds=None):
+    """char_seeds, if given, overrides the default contiguous
+    char_seed_base+i / game_seed_base+i allocation with an explicit list of
+    char_seed ints (game_seed = game_seed_base + char_seed for each) --
+    ops/experiment.py's seed-split selection produces exactly this shape,
+    for a §8 experiment that needs a specific (possibly non-contiguous)
+    subset of seeds rather than "the next n_games in order". n_games/
+    index_start are ignored when char_seeds is given; run_id is keyed by
+    char_seed directly so re-invoking with the same list is still
+    resumable via the same result.json-exists skip below."""
     if not runner.CRAWL_BIN.exists():
         raise SystemExit(f"campaign.py: {runner.CRAWL_BIN} not found; build it first")
 
     runs_dir = pathlib.Path(runs_dir)
     runs_dir.mkdir(parents=True, exist_ok=True)
 
+    if char_seeds is not None:
+        id_seed_pairs = [(f"{run_prefix}-{cs:07d}", cs) for cs in char_seeds]
+    else:
+        id_seed_pairs = [(f"{run_prefix}-{i:06d}", char_seed_base + i)
+                          for i in range(index_start, index_start + n_games)]
+
     jobs = []
     n_skipped = 0
-    for i in range(index_start, index_start + n_games):
-        run_id = f"{run_prefix}-{i:06d}"
+    for run_id, char_seed in id_seed_pairs:
         workdir = runs_dir / run_id
         if (workdir / "result.json").exists():
             n_skipped += 1
             continue
         if workdir.exists():
             _ensure_fresh_workdir(workdir)
-        jobs.append((run_id, char_seed_base + i, game_seed_base + i, workdir))
+        game_seed = game_seed_base + char_seed
+        jobs.append((run_id, char_seed, game_seed, workdir))
 
+    range_desc = (f"{len(char_seeds)} explicit char_seeds" if char_seeds is not None
+                  else f"index {index_start}..{index_start + n_games - 1}")
     print(f"campaign.py: {len(jobs)} run(s) to launch, {n_skipped} already complete "
-          f"(prefix={run_prefix!r}, index {index_start}..{index_start + n_games - 1}), "
-          f"workers={workers}, turn_budget={turn_budget}, wall_cap_secs={wall_cap_secs}")
+          f"(prefix={run_prefix!r}, {range_desc}), "
+          f"workers={workers}, turn_budget={turn_budget}, wall_cap_secs={wall_cap_secs}, "
+          f"bugfix_lua_errors={bugfix_lua_errors}")
 
     results = []
     start = time.time()
     with ProcessPoolExecutor(max_workers=workers) as ex:
         futs = {
             ex.submit(_run_one, run_id, char_seed, game_seed, workdir,
-                      turn_budget, wall_cap_secs, hang_secs): run_id
+                      turn_budget, wall_cap_secs, hang_secs, bugfix_lua_errors): run_id
             for run_id, char_seed, game_seed, workdir in jobs
         }
         for fut in as_completed(futs):
@@ -122,15 +143,16 @@ def run_campaign(n_games, *, workers=8, turn_budget=0,
         status_counts[r.get("status", "unknown")] = status_counts.get(r.get("status", "unknown"), 0) + 1
 
     return {
-        "n_requested": n_games,
+        "n_requested": len(char_seeds) if char_seeds is not None else n_games,
         "n_launched": len(jobs),
         "n_skipped_already_complete": n_skipped,
         "workers": workers,
         "turn_budget": turn_budget,
         "wall_cap_secs": wall_cap_secs,
         "hang_secs": hang_secs,
+        "bugfix_lua_errors": bugfix_lua_errors,
         "run_prefix": run_prefix,
-        "index_range": [index_start, index_start + n_games - 1],
+        "index_range": None if char_seeds is not None else [index_start, index_start + n_games - 1],
         "wall_secs_total": time.time() - start,
         "status_counts": status_counts,
     }
@@ -139,7 +161,12 @@ def run_campaign(n_games, *, workers=8, turn_budget=0,
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--n-games", type=int, required=True)
+    ap.add_argument("--n-games", type=int,
+                     help="required unless --seeds-file is given")
+    ap.add_argument("--seeds-file",
+                     help="JSON file: a list of explicit char_seed ints, overriding the "
+                          "default contiguous char-seed-base/n-games/index-start allocation "
+                          "(see ops/experiment.py's seed splits)")
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--turn-budget", type=int, default=0)
     ap.add_argument("--wall-cap-secs", type=int, default=runner.DEFAULT_WALL_CAP_SECS)
@@ -150,14 +177,24 @@ def main():
     ap.add_argument("--game-seed-base", type=int, default=DEFAULT_GAME_SEED_BASE)
     ap.add_argument("--runs-dir", default=str(DEFAULT_RUNS_DIR))
     ap.add_argument("--out", help="write the run summary JSON here")
+    ap.add_argument("--disable-bugfix-lua-errors", action="store_true",
+                     help="reproduce the original qw crashes (docs/decisions/011); "
+                          "for the Phase 2 A/B experiment's control arm")
     args = ap.parse_args()
+
+    char_seeds = None
+    if args.seeds_file:
+        char_seeds = json.loads(pathlib.Path(args.seeds_file).read_text())
+    elif args.n_games is None:
+        ap.error("--n-games is required unless --seeds-file is given")
 
     summary = run_campaign(
         args.n_games, workers=args.workers, turn_budget=args.turn_budget,
         wall_cap_secs=args.wall_cap_secs, hang_secs=args.hang_secs,
         run_prefix=args.run_prefix, index_start=args.index_start,
         char_seed_base=args.char_seed_base, game_seed_base=args.game_seed_base,
-        runs_dir=args.runs_dir,
+        runs_dir=args.runs_dir, bugfix_lua_errors=not args.disable_bugfix_lua_errors,
+        char_seeds=char_seeds,
     )
     text = json.dumps(summary, indent=2, default=str)
     print(text)

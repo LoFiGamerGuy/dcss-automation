@@ -1,0 +1,83 @@
+diff --git a/source/equipment.lua b/source/equipment.lua
+index ffd0c1d..a7af076 100644
+--- a/source/equipment.lua
++++ b/source/equipment.lua
+@@ -680,6 +680,28 @@ function slot_max_items(slot)
+     end
+ end
+ 
++-- inventory_equip() returns nil when nothing is equipped, but
++-- turn_memo_args() (its caller's memoization wrapper, see qw.lua's
++-- turn_memo_args) caches a nil result as false so it can tell "not yet
++-- cached" apart from "cached nil" -- so cur_equip can be the boolean false,
++-- not just a table. Every direct indexer of it must account for that.
++-- equip_letter_for_item() below did not, and crashed ("attempt to index
++-- local 'cur_equip' (a boolean value)") for any character with zero
++-- equipped items (e.g. an unarmed Felid) being offered a ring or, for a
++-- Coglin, a two-handed weapon -- the only slots with max_items > 1, so the
++-- only ones that reach this line instead of short-circuiting on
++-- max_items == 1. Confirmed live via the phase1-500 campaign
++-- (FeFi.unarmed, char_seed=0) and docs/decisions/011.
++-- QW_BUGFIX_LUA_ERRORS (rc-settable, default true/unset) can be set to
++-- false to disable this guard and reproduce the original crash, for the
++-- Phase 2 A/B experiment's control arm.
++function qw_equip_slot_or_empty(cur_equip, slot)
++    if QW_BUGFIX_LUA_ERRORS == false then
++        return cur_equip[slot]
++    end
++    return cur_equip and cur_equip[slot]
++end
++
+ function equip_letter_for_item(item, slot, keep_items, upgrade)
+     if not item or item.equipped then
+         return
+@@ -700,9 +722,10 @@ function equip_letter_for_item(item, slot, keep_items, upgrade)
+     end
+ 
+     local max_items = slot_max_items(slot)
++    local equip_in_slot = qw_equip_slot_or_empty(cur_equip, slot)
+     if max_items == 1
+-            or not cur_equip[slot]
+-            or #cur_equip[slot] < max_items then
++            or not equip_in_slot
++            or #equip_in_slot < max_items then
+         return ""
+     end
+ 
+diff --git a/source/plans-rest.lua b/source/plans-rest.lua
+index 0139b36..def7b3f 100644
+--- a/source/plans-rest.lua
++++ b/source/plans-rest.lua
+@@ -24,6 +24,23 @@ function plan_cure_poison()
+     return false
+ end
+ 
++-- hostile_servants_timer is referenced below but never assigned anywhere in
++-- qw's source (grepped the whole tree) -- an orphaned global, presumably
++-- left behind by a removed or renamed Makhleb-ally-timer feature. Every
++-- Makhleb worshipper crashed here ("attempt to perform arithmetic on
++-- global 'hostile_servants_timer' (a nil value)") the first time
++-- should_rest() ran. Confirmed live via the phase1-500 campaign and the
++-- dlua console; see docs/decisions/011. QW_BUGFIX_LUA_ERRORS (rc-settable,
++-- default true/unset) can be set to false to disable this guard and
++-- reproduce the original crash, for the Phase 2 A/B experiment's control
++-- arm.
++function qw_hostile_servants_timer()
++    if QW_BUGFIX_LUA_ERRORS == false then
++        return hostile_servants_timer
++    end
++    return hostile_servants_timer or 0
++end
++
+ function should_rest()
+     if qw.danger_in_los and not qw.all_enemies_safe or qw.position_is_cloudy then
+         return false
+@@ -45,7 +62,7 @@ function should_rest()
+     return you.berserk()
+         or you.turns() < hiding_turn_count + 10
+         or you.god() == "Makhleb"
+-            and you.turns() <= hostile_servants_timer + 100
++            and you.turns() <= qw_hostile_servants_timer() + 100
+         or reason_to_rest(99.9)
+ end
+ 

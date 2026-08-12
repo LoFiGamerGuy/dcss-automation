@@ -322,10 +322,16 @@ def monitor_game(cmd, workdir, logfile_path, *, run_id="run",
 
 
 def run_game(row, workdir, *, turn_budget=0, wall_cap_secs=DEFAULT_WALL_CAP_SECS,
-             hang_secs=DEFAULT_HANG_SECS, welcome_timeout_secs=DEFAULT_WELCOME_TIMEOUT_SECS):
+             hang_secs=DEFAULT_HANG_SECS, welcome_timeout_secs=DEFAULT_WELCOME_TIMEOUT_SECS,
+             bugfix_lua_errors=True):
     """Write-ahead manifest -> materialize rc -> spawn -> supervise ->
     classify -> result.json. This is the entry point a campaign driver
-    uses; monitor_game() is the lower-level piece drills use directly."""
+    uses; monitor_game() is the lower-level piece drills use directly.
+
+    bugfix_lua_errors (default True) is docs/decisions/011's Phase 2 A/B
+    flag, threaded straight through to rc_gen.write_run_dir and recorded in
+    the manifest for provenance (PLAN §8: "every run records ... config ...
+    hashes")."""
     # Resolve before use: rc_gen.write_run_dir also resolves, but the
     # manifest/result paths and crawl's cwd must agree with it no matter
     # what shape of path the caller handed us (see write_run_dir's docstring
@@ -335,12 +341,14 @@ def run_game(row, workdir, *, turn_budget=0, wall_cap_secs=DEFAULT_WALL_CAP_SECS
 
     manifest_row = {
         **row, "turn_budget": turn_budget, "wall_cap_secs": wall_cap_secs,
-        "hang_secs": hang_secs, "started_at": time.time(),
+        "hang_secs": hang_secs, "bugfix_lua_errors": bugfix_lua_errors,
+        "started_at": time.time(),
     }
     (workdir / "manifest.json").write_text(json.dumps(manifest_row, default=str))
 
     try:
-        layout = rc_gen.write_run_dir(row, workdir, turn_budget=turn_budget)
+        layout = rc_gen.write_run_dir(row, workdir, turn_budget=turn_budget,
+                                       bugfix_lua_errors=bugfix_lua_errors)
     except Exception as e:
         result = {"run_id": row["run_id"], "status": "harness_failure",
                    "detail": f"write_run_dir failed: {e}", "wall_secs": 0, "output_bytes": 0,
@@ -368,6 +376,9 @@ def main():
     ap.add_argument("--turn-budget", type=int, default=0)
     ap.add_argument("--wall-cap-secs", type=int, default=DEFAULT_WALL_CAP_SECS)
     ap.add_argument("--hang-secs", type=int, default=DEFAULT_HANG_SECS)
+    ap.add_argument("--disable-bugfix-lua-errors", action="store_true",
+                     help="reproduce the original qw crashes (docs/decisions/011); "
+                          "for the Phase 2 A/B experiment's control arm")
     args = ap.parse_args()
 
     if not CRAWL_BIN.exists():
@@ -377,7 +388,8 @@ def main():
     manifest, digest = combos.load_manifest()
     row = rc_gen.build_manifest_row(args.run_id, args.char_seed, args.game_seed, manifest, digest)
     result = run_game(row, args.workdir, turn_budget=args.turn_budget,
-                       wall_cap_secs=args.wall_cap_secs, hang_secs=args.hang_secs)
+                       wall_cap_secs=args.wall_cap_secs, hang_secs=args.hang_secs,
+                       bugfix_lua_errors=not args.disable_bugfix_lua_errors)
     print(json.dumps(result, indent=2, default=str))
     sys.exit(0 if result["status"] in ("won", "died", "quit_intentional", "quit_stuck") else 1)
 
