@@ -917,3 +917,87 @@ chosen turn budget in `docs/decisions/010-turn-budget.md`, delete the pilot
 run dirs, then launch the real ≥500-game campaign detached with the chosen
 `--turn-budget` and a distinct `--run-prefix`, PID/log journaled before
 launch.
+
+## 2026-08-12 — Pilot found dead-on-arrival this session; relaunched with setsid; investigating non-survival separately from the earlier contamination bug
+
+**Did:** Started this session by checking the prior entry's pilot (PID
+30813, launched via plain `nohup ... &` without `disown`/`setsid`) per
+`CLAUDE.md`/`PROMPT.md`'s "check logs for unresolved long-running jobs
+first" step. Found it **not running** (`ps -p 30813` empty) and **zero
+progress**: `logs/pilot-turns-campaign.log` contains only the startup
+banner line ("40 run(s) to launch...") with no per-game completion lines,
+no traceback, no exception; `data/runs/` is completely empty (not even a
+stale `manifest.json`-only directory from an interrupted first game).
+`data/pilot-turns-summary.json` never got written.
+
+This is a **different failure mode than the relative-path contamination**
+the orchestrator review found and fixed (`642e3ec`) — that pilot ran to
+completion and produced 30 *classified-but-wrong* results; this one
+produced **no results at all**, meaning either the process never
+progressed past printing the launch banner, or it was killed near-
+immediately afterward. Checked for a machine reboot as the simple
+explanation (`nohup` alone doesn't protect against the whole VM stopping):
+`uptime -s` / `/proc/uptime` put boot at 08:03:55, while the log file's
+birth time is 09:56:00 and last-modified 10:12:38 — both comfortably after
+boot, so **no reboot occurred**; the process died mid-boot-session for some
+other reason. Checked `dmesg`/`journalctl -k` for an OOM kill or similar
+around that window — nothing (though `journalctl` warned it can't see
+system-wide messages as a non-adm user, so this check has limited power).
+No cgroup `pids.max`/`memory.max` file found to check a hard limit against.
+Not fully root-caused — recording the negative results rather than
+guessing further, since the machine itself gives no evidence either way and
+chasing it further would trade real progress for speculation.
+
+**Working theory (unconfirmed):** the original launch command was
+`nohup python3 ... &` with no `disown` and no `setsid` — if the harness's
+Bash-tool session boundary does something stronger than SIGHUP to a
+command's process group when a turn/session ends (e.g. killing the whole
+group rather than just closing the controlling terminal), plain `nohup`
+would not save it, while the earlier throughput probe (PID 21247, which
+*did* survive across several session boundaries per this journal) might
+have differed in some way not yet identified — worth comparing exact launch
+commands if this recurs. Not spending more time on the theory now; instead
+hardening the relaunch against it directly.
+
+**Relaunched** with `setsid` (new session, immune to controlling-terminal/
+job-control signals from this Bash session specifically) in addition to
+`nohup` and explicit `disown`, stdin redirected from `/dev/null`:
+
+    setsid nohup python3 ops/campaign.py --n-games 40 --workers 10 --turn-budget 0 \
+      --wall-cap-secs 900 --run-prefix pilot-turns --runs-dir data/runs \
+      --out data/pilot-turns-summary.json > logs/pilot-turns-campaign.log 2>&1 < /dev/null &
+    disown
+
+Confirmed alive 2s later: main driver **PID 33276** (parent PID 329, i.e.
+already reparented off this shell) with 10 live worker children
+(33277-33286). Log path unchanged: `logs/pilot-turns-campaign.log`;
+summary path unchanged: `data/pilot-turns-summary.json`. `data/runs/` was
+already empty (nothing to clean up from the dead attempt).
+
+**Result:** No campaign data collected yet for a third session running —
+still the same open item (turn-budget pilot) as the last two entries, now
+relaunched with a more robust detach method. Will check progress within
+this same session (not just defer to a future one) before deciding whether
+`setsid` actually fixed survivability or whether this needs escalating to
+`docs/BLOCKED.md` as an environment limitation.
+
+**Next step:** Check `ps -p 33276` and `tail logs/pilot-turns-campaign.log`
+— expect to start seeing `[N/40] pilot-turns-NNNNNN status=... wall=...s`
+lines within the first couple minutes if it's healthy this time (contrast
+with the dead run, which never printed a single one). If it dies again with
+the same zero-progress signature, that's strong evidence against the
+"my Bash session teardown" theory (since `setsid` should specifically
+defeat that) and worth escalating: try running it via a fully separate
+mechanism (e.g. `at now`, or a systemd user unit/transient scope via
+`systemd-run --user`) rather than shell job control at all, and if that
+*also* silently dies, write `docs/BLOCKED.md` describing the exact symptom
+(process disappears with no log output, no core, no dmesg/journalctl
+evidence) since at that point it's a genuine environment question, not a
+harness bug — per `CLAUDE.md`, keep working on whatever isn't blocked
+(there is no other Phase 1 item left, so idle time should go to re-verifying
+existing tests still pass / doc cleanup rather than sitting idle) while
+this is sorted out. If it does survive and completes: same extraction steps
+as the last two entries (collector+report on a scratch DB, pick a turn
+budget from `turns_survived` percentiles of natural-end runs, record
+`docs/decisions/010-turn-budget.md`, delete pilot run dirs, launch the real
+≥500-game campaign with the chosen budget, detached the same hardened way).
