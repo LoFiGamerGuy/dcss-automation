@@ -1443,3 +1443,89 @@ still open — but re-mining `data/phase1-500-report.json`'s stratified
 tables the way this session found the Shapeshifter bug (by measured
 failure rate, not by guessing off PLAN's example list) is probably a better
 way to pick the next one than working PLAN's list in order.
+
+## 2026-08-12 (session 3) — indefinite-transform-bugfix: control arm collected clean; treatment arm 100% contaminated, root-cause not pinned down, mitigated and relaunched
+
+**Did:** Picked up the prior session's Next step: checked the
+indefinite-transform-bugfix experiment (PID 45766, `setsid nohup ... &
+disown`, launched last session). Control arm (300/300) finished healthy —
+status mix (285 died, 8 quit_stuck, 3 lua_error, 3 timeout_wall) matched
+organic variance, no uniform-signature red flags.
+
+**Treatment arm came back 100% `harness_failure`** (300/300, every run
+`"no 'Welcome,' banner within 60s (chargen stuck or crashed)"`,
+`output_bytes=0`) — exactly the suspiciously-uniform pattern this project
+has learned to distrust rather than average into a result (per the
+relative-workdir pilot contamination precedent, `642e3ec`). Investigated
+rather than accepted: ruled out the rc content/flag itself (manual replay
+of the literal failing run.rc reached deep gameplay in ~3s), ruled out
+`ProcessPoolExecutor`-at-16-workers-with-treatment-flavor as sufficient on
+its own (a standalone post-hoc repro of the identical call path, same
+worker count, same flag, run clean after the real experiment finished,
+came back 14/16 died + 1 lua_error + 1 timeout_wall — zero
+`harness_failure`), and ruled out generic host contention (idle CPU,
+zero zombies, pty/fd counts trivial, identical des-cache footprint between
+a healthy control run and a stuck treatment run; manual processes spawned
+*while* the real pool was actively failing succeeded in ~3s every time,
+which a genuinely exhausted shared resource wouldn't allow). Did **not**
+find a single pinned-down root cause — full investigation log and the
+one real (but insufficient-alone) contention data point in
+`docs/decisions/013-treatment-arm-chained-launch-contamination.md`.
+
+**Decision:** rather than continue open-ended forensics (diminishing
+returns, per `CLAUDE.md`'s "adapt with the smallest working alternative...
+do not stop to renegotiate"), discarded the contaminated treatment data
+(300 run dirs moved to `/tmp/contaminated-exp-transform-treatment/`, not
+committed; stale `treatment-summary.json` deleted) and relaunched the
+treatment arm as its **own independent** `setsid nohup ... & disown`
+process, decoupled from the control arm's wrapper script (the one
+structural difference between every failing invocation and every
+successful standalone reproduction), reusing the same `seeds.json` so the
+paired-character design stays intact. Control arm's already-good data is
+untouched and kept.
+
+**Relaunched treatment arm standalone:**
+
+    setsid nohup python3 ops/campaign.py \
+      --seeds-file data/experiments/indefinite-transform-bugfix/seeds.json \
+      --run-prefix exp-transform-treatment \
+      --turn-budget 20000 --wall-cap-secs 900 --workers 16 \
+      --runs-dir data/runs \
+      --out data/experiments/indefinite-transform-bugfix/treatment-summary.json \
+      > logs/indefinite-transform-treatment-retry.log 2>&1 < /dev/null &
+    disown
+
+**Result:** Control arm data good and preserved. Treatment arm redone from
+scratch after contamination, cause not fully identified — flagged
+explicitly in decision 013 for a future session if it recurs even fully
+decoupled (would newly implicate `ProcessPoolExecutor`/`setsid`
+interaction itself, worth an `strace`-level look at that point, not
+before). No other Phase 2 work should be treated as blocked by this.
+
+**Next step:** Check the retried treatment arm (`pgrep -fa
+"exp-transform-treatment"` / `tail
+logs/indefinite-transform-treatment-retry.log` /
+`data/experiments/indefinite-transform-bugfix/treatment-summary.json`).
+**Sanity-check before trusting it this time**, explicitly: status mix
+should be organic-looking (mostly `died`, some `quit_stuck`, near-zero
+`quit_stuck` if the fix works — control's quit_stuck rate was 8/300=2.67%
+already lower than the phase1-500 baseline's 5.6%, curiously — worth a
+second look once treatment's own numbers exist too), wall_secs/output_bytes
+varied per run, and specifically **zero or near-zero `harness_failure`** —
+if it comes back significantly non-zero `harness_failure` again, do not
+retry a third time blind; escalate straight to the `strace`-level
+investigation decision 013 flags, since two contaminated attempts back to
+back would rule out "unlucky one-off." Once clean: `ops/collector.py
+--runs-dir data/runs --db data/experiments/indefinite-transform-bugfix/results.db
+--strict` (this will also reconcile the still-live `phase1-500`,
+`lua-error-bugfix` run dirs already on disk — expect a large total count,
+not just 600), compute each arm's `quit_stuck` count/n
+(`run_id LIKE 'exp-transform-control-%'` / `'exp-transform-treatment-%'`),
+`experiment.evaluate_predeclaration`, write `result.json`. Commit
+`{results.db,result.json,control-summary.json,treatment-summary.json}` plus
+decision 013 and this entry once collected. After that closes, resume
+mining `data/phase1-500-report.json`'s stratified tables for the next
+Phase 2 candidate (Troll/Felid lua_error clusters are likely already
+explained by decision 011's two generic fixes rather than new bugs — worth
+a quick check against decision 011's fix shape before assuming they need a
+new investigation).
